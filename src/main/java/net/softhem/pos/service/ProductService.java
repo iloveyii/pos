@@ -64,6 +64,8 @@ public class ProductService {
         ProductDTO dto = new ProductDTO();
         dto.setId(product.getId());
         dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setImage(String.format("/%s/%s", "images/products", product.getImage()));
         dto.setPrice(product.getPrice());
         dto.setInStock(product.getInStock());
         return dto;

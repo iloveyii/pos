@@ -1,5 +1,5 @@
 // Product Data with Unsplash images
-const products = [
+let products = [
     {
         id: 1,
         name: "Wireless Headphones",
@@ -99,13 +99,46 @@ const notificationMessage = document.getElementById('notificationMessage');
 
 // Initialize the POS
 function initPOS() {
-    renderProducts();
+    loadProducts();
     renderCart();
     setupEventListeners();
+}
+// Load Products
+function loadProducts() {
+// Make GET request to /api/products
+fetch('/api/products')
+  .then(response => {
+    // Check if response is successful (status code 200-299)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json(); // Parse JSON response
+  })
+  .then(pros => {
+    // Success - log products to console
+    console.log('Products:', pros);
+    products = pros;
+    renderProducts();
+
+    // You can also display them on the page
+    // displayProducts(products);
+  })
+  .catch(error => {
+    // Error handling
+    console.error('Error fetching products:', error);
+
+    // Show user-friendly message
+    const shouldRefresh = confirm('Failed to load products. Click OK to refresh the page.');
+
+    if (shouldRefresh) {
+      window.location.reload(); // Refresh the page
+    }
+  });
 }
 
 // Render Products
 function renderProducts() {
+    console.log('inside renderProducts');
     productsContainer.innerHTML = '';
 
     products.forEach(product => {
@@ -119,7 +152,7 @@ function renderProducts() {
                     <p class="card-text text-muted small">${product.description}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="product-price">$${product.price.toFixed(2)}</span>
-                        <span class="badge bg-success badge-stock">${product.stock} in stock</span>
+                        <span class="badge bg-success badge-stock">${product.inStock} in stock</span>
                     </div>
                 </div>
             </div>
