@@ -299,11 +299,40 @@ function processPayment() {
         return;
     }
 
-    // In a real POS, this would connect to a payment processor
-    showNotification('Payment processed successfully', 'success');
+    createOrder();
 
-    // Reset for next sale
-    clearCart();
+}
+
+function createOrder() {
+    // Create the order request
+    fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // Add authorization header if needed
+            // 'Authorization': 'Bearer your-token-here'
+        },
+        body: JSON.stringify({
+            items: cart  // Assuming your backend expects an "items" property
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(order => {
+        console.log('Order created successfully:', order);
+        showNotification('Order created successfully', 'success');
+        clearCart();
+        // You can redirect or update UI here
+        // window.location.href = `/order-confirmation/${order.id}`;
+    })
+    .catch(error => {
+        console.error('Error creating order:', error);
+        alert('Failed to create order. Please try again.');
+    });
 }
 
 // Show Notification
