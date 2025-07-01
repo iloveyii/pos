@@ -51,4 +51,22 @@ Content-Type: application/json
   ]
 }
 
+#############
+## Send Put
+PUT http://localhost:8080/api/orders/7
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 5
+    },
+    {
+      "productId": 2,
+      "quantity": 10
+    }
+  ]
+}
+
 
