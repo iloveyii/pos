@@ -9,8 +9,3 @@ public class CreateOrderRequest {
     private List<OrderItemRequest> items;
 }
 
-@Data
-class OrderItemRequest {
-    private Long productId;
-    private Integer quantity;
-}
