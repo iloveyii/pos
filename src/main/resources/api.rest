@@ -21,7 +21,6 @@ Content-Type: application/json
   "price": 15.345,
   "inStock": 200
 }
-
 ##################
 ## Get request
 GET http://localhost:8080/api/products
