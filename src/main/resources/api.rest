@@ -34,3 +34,22 @@ GET http://localhost:8080/api/products
 ## Get request
 GET http://localhost:8080/api/orders
 
+###################
+## Send Post
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 5
+    },
+    {
+      "productId": 2,
+      "quantity": 10
+    }
+  ]
+}
+
+
