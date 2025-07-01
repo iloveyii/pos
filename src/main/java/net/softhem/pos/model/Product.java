@@ -19,6 +19,12 @@ public class Product {
     @Column(nullable = false)
     private Float price;
 
+    @Column(nullable = true)
+    private String description;
+
+    @Column(nullable = true)
+    private String image;
+
     @Column(name = "in_stock", nullable = false)
     private Integer inStock;
 }
