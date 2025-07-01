@@ -19,9 +19,9 @@ public class PosViewController {
         return "index";
     }
 
-    @GetMapping("/kassa")
+    @GetMapping("/products")
     public String showProducts(Model model) {
         model.addAttribute("products", productService.getAllProducts());
-        return "index";
+        return "products";
     }
 }

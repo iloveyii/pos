@@ -1,29 +1,176 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Index List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium POS System - Retail Pro</title>
+    <!-- Bootstrap 5.4 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
-<h1>Index Management</h1>
+<div class="container-fluid p-0">
+    <div class="row g-0">
+        <!-- Products Section -->
+        <div class="col-md-8 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="header mb-0 text-dark">Product Catalog</h2>
+                <div class="d-flex align-items-center">
+                    <div class="input-group me-3" style="width: 300px;">
+                        <input type="text" class="form-control search-box" placeholder="Search products...">
+                        <button class="btn btn-pos-primary" type="button" style="border-radius: 0 50px 50px 0;">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-pos-outline dropdown-toggle category-btn" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-tags me-2"></i>Categories
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-list-ul me-2"></i>All Categories</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-laptop me-2"></i>Electronics</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-tshirt me-2"></i>Clothing</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-shopping-basket me-2"></i>Groceries</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-home me-2"></i>Home & Garden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Stock</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="product : ${products}">
-        <td th:text="${product.id}"></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${'$' + #numbers.formatDecimal(product.price, 1, 2)}"></td>
-        <td th:text="${product.inStock}"></td>
-    </tr>
-    </tbody>
-</table>
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <!-- Product items will be dynamically generated -->
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div class="col-md-4 sidebar p-0">
+            <div class="p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="header mb-0 text-dark">Current Sale</h3>
+                    <button id="clearCart" class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash-alt me-1"></i>Clear All
+                    </button>
+                </div>
+
+                <!-- Customer Info -->
+                <div class="card mb-3 border-0 shadow-sm">
+                    <div class="card-body py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-muted"><i class="fas fa-user me-2"></i>Customer:</span>
+                            <div>
+                                <span class="me-2">Walk-in</span>
+                                <button class="btn btn-sm btn-pos-outline py-0 px-2">
+                                    <i class="fas fa-edit me-1"></i>Change
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Items -->
+                <div class="mb-3" style="max-height: 300px; overflow-y: auto;" id="cartItemsContainer">
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p class="mb-0">Your cart is empty<br><small class="text-muted">Add products to get started</small></p>
+                    </div>
+                </div>
+
+                <!-- Discount & Notes -->
+                <div class="card mb-3 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label text-muted fw-bold">Discount</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Amount" id="discountAmount">
+                                <select class="form-select" style="max-width: 80px;" id="discountType">
+                                    <option value="fixed">$</option>
+                                    <option value="percent">%</option>
+                                </select>
+                                <button class="btn btn-pos-primary" id="applyDiscount">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label text-muted fw-bold">Notes</label>
+                            <textarea class="form-control form-control-sm" rows="2" id="saleNotes"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Totals -->
+                <div class="card mb-3 total-card shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (8%):</span>
+                            <span id="tax">$0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Discount:</span>
+                            <span class="text-white" id="discount">-$0.00</span>
+                        </div>
+                        <hr style="border-color: rgba(255,255,255,0.2);">
+                        <div class="d-flex justify-content-between fw-bold fs-5">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Buttons -->
+                <div class="d-grid gap-2 mb-3">
+                    <button class="btn btn-pos-primary btn-lg payment-btn" id="processPayment">
+                        <i class="fas fa-credit-card me-2"></i> Process Payment
+                    </button>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-secondary"><i class="fas fa-pause me-1"></i> Hold</button>
+                        <button class="btn btn-outline-secondary"><i class="fas fa-file-invoice me-1"></i> Quote</button>
+                        <button class="btn btn-outline-secondary"><i class="fas fa-receipt me-1"></i> Invoice</button>
+                    </div>
+                </div>
+
+                <!-- Quick Payment Options -->
+                <div class="mt-3">
+                    <h6 class="text-muted mb-2 fw-bold"><i class="fas fa-bolt me-1"></i> Quick Payment</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-success payment-btn flex-grow-1">
+                            <i class="fas fa-money-bill-wave me-1"></i> Cash
+                        </button>
+                        <button class="btn btn-outline-primary payment-btn flex-grow-1">
+                            <i class="fas fa-credit-card me-1"></i> Card
+                        </button>
+                        <button class="btn btn-outline-info payment-btn flex-grow-1">
+                            <i class="fas fa-mobile-alt me-1"></i> Mobile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Notification -->
+<div class="toast align-items-center text-white bg-success border-0 floating-notification" role="alert" aria-live="assertive" aria-atomic="true" id="notificationToast">
+    <div class="d-flex">
+        <div class="toast-body">
+            <i class="fas fa-check-circle me-2"></i>
+            <span id="notificationMessage">Product added to cart</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
+<!-- Bootstrap 5.4 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>
