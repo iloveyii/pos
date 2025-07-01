@@ -1,0 +1,36 @@
+## Send Post
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "iPhone 20",
+  "price": 12.345,
+  "inStock": 200
+}
+##################
+## Send DELETE
+DELETE http://localhost:8080/api/products/6
+Content-Type: application/json
+##################
+## Update request
+PUT  http://localhost:8080/api/products/8
+Content-Type: application/json
+
+{
+  "name": "iPhone 30",
+  "price": 15.345,
+  "inStock": 200
+}
+
+##################
+## Get request
+GET http://localhost:8080/api/products
+
+
+
+###################
+####### ORDER #####
+###################
+## Get request
+GET http://localhost:8080/api/orders
+
