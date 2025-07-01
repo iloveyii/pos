@@ -31,15 +31,15 @@ CREATE TABLE IF NOT EXISTS ORDERS_PRODUCTS (
 
 -- Insert sample products
 INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
-('iPhone 15 Pro', 'Noise cancelling Bluetooth', 'wireless-headphones.avif', 999.00, 100),
-('MacBook Pro 14"', 'Fitness tracker & notifications', 'smart-watch.avif', 1999.00, 50),
-('AirPods Pro (2nd Gen)', 'Portable waterproof speaker', 'bluetooth-phones.avif', 249.00, 200),
-('Apple Watch Series 9', 'Fast charging 3ft cable', 'ear-buds.avif', 429.00, 75),
+('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.avif', 99.00, 100),
+('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.avif', 149.99, 50),
+('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-phones.avif', 59.99, 200),
+('USB-C Cable', 'Fast charging 3ft cable', 'ear-buds.avif', 12.99, 75),
 
-('iPad Air', 'Ergonomic design', 'wireless-mouse.avif', 599.00, 60),
-('iPad Air', 'Water resistant with USB port', 'laptop-bag.avif', 599.00, 60),
-('iPad Air', '10000mAh dual USB', 'power-bank.avif', 599.00, 60),
-('iPad Air', 'Tempered glass for smartphones', 'screen-protector.avif', 599.00, 60);
+('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.avif', 24.99, 60),
+('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.avif', 39.99, 30),
+('Power Bank', '10000mAh dual USB', 'power-bank.avif', 29.99, 50),
+('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100);
 
 -- Insert sample orders
 INSERT INTO ORDERS (status, total_amount) VALUES
