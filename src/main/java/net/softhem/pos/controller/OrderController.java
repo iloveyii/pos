@@ -2,6 +2,7 @@ package net.softhem.pos.controller;
 
 import net.softhem.pos.dto.CreateOrderRequest;
 import net.softhem.pos.dto.OrderDTO;
+import net.softhem.pos.dto.UpdateOrderRequest;
 import net.softhem.pos.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,12 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest request) {
         OrderDTO order = orderService.createOrder(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderRequest request) {
+        OrderDTO order = orderService.updateOrder(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 

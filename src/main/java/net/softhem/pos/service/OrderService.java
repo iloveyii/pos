@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -20,13 +21,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ProductService productService;
+    private final OrderProductService orderProductService;
 
     public OrderService(OrderRepository orderRepository,
                         ProductRepository productRepository,
-                        ProductService productService) {
+                        ProductService productService,
+                        OrderProductService orderProductService) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.productService = productService;
+        this.orderProductService = orderProductService;
     }
 
     @Transactional(readOnly = true)
@@ -117,5 +121,65 @@ public class OrderService {
 
         dto.setOrderProducts(orderProductDTOs);
         return dto;
+    }
+
+    private Optional<OrderProduct> getOldOrderProductById(Order oldOrder, Long id) {
+        Optional<OrderProduct> orderProductOpt = oldOrder.getOrderProducts().stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
+
+        if (orderProductOpt.isPresent()) {
+            Product product = orderProductOpt.get().getProduct();
+            System.out.println("Found: " + product.getName());
+            return orderProductOpt;
+        } else {
+            System.out.println("Product not found");
+            return  null;
+        }
+    }
+
+    @Transactional
+    public OrderDTO updateOrder(Long id, UpdateOrderRequest request) {
+        Order oldOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+        List<OrderProduct> orderProducts = oldOrder.getOrderProducts();
+        // Remove previous orderProducts
+        orderProductService.deleteOrderProduct(oldOrder.getId());
+        float totalAmount = 0.0f;
+
+        for (OrderItemRequest item : request.getItems()) {
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + item.getProductId()));
+
+            totalAmount += product.getPrice() * item.getQuantity();
+
+            Optional<OrderProduct> olderOrderProduct = getOldOrderProductById(oldOrder, item.getProductId());
+            if(olderOrderProduct.isPresent()) {
+                // Case 1 old product in cart/request.getItems
+                // return the old stock to product inStock
+                product.setInStock(product.getInStock() + olderOrderProduct.get().getQuantity());
+                // Update product stock
+                product.setInStock(product.getInStock() - item.getQuantity());
+                productRepository.save(product);
+            } else {
+                // Case 2 new product in cart/request.getItems
+                if (product.getInStock() < item.getQuantity()) {
+                    throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
+                }
+                // Update product stock
+                product.setInStock(product.getInStock() - item.getQuantity());
+                productRepository.save(product);
+            }
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setOrder(oldOrder);
+            orderProduct.setProduct(product);
+            orderProduct.setQuantity(item.getQuantity());
+            orderProduct.setPriceAtPurchase(product.getPrice());
+            orderProducts.add(orderProduct);
+        }
+        //oldOrder.setOrderProducts(orderProducts);
+        oldOrder.setTotalAmount(totalAmount);
+        // Order savedOrder = orderRepository.save(oldOrder);
+        return convertToDTO(oldOrder);
     }
 }

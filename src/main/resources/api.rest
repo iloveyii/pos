@@ -53,7 +53,7 @@ Content-Type: application/json
 
 #############
 ## Send Put
-PUT http://localhost:8080/api/orders/7
+PUT http://localhost:8080/api/orders/1
 Content-Type: application/json
 
 {
@@ -69,4 +69,13 @@ Content-Type: application/json
   ]
 }
 
+###################
+## ORDER PRODUCT ##
+###################
+## Get request
+GET http://localhost:8080/api/order-products
+##################
+## Send DELETE
+DELETE http://localhost:8080/api/order-products/order/4
+Content-Type: application/json
 
