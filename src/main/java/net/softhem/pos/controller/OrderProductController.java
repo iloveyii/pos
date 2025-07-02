@@ -22,7 +22,7 @@ public class OrderProductController {
     }
 
     @GetMapping
-    public List<OrderProduct> getAll() {
+    public List<OrderProductDTO> getAll() {
         return orderProductService.getAll();
     }
 

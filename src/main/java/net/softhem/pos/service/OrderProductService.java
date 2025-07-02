@@ -21,8 +21,10 @@ public class OrderProductService {
         this.orderProductRepository = orderProductRepository;
     }
 
-    public List<OrderProduct> getAll() {
-        return orderProductRepository.findAll();
+    public List<OrderProductDTO> getAll() {
+        return orderProductRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public List<OrderProduct> getByOrderId(Long orderId) {
@@ -40,5 +42,14 @@ public class OrderProductService {
 
     public void deleteById(Long id) {
         orderProductRepository.deleteById(id);
+    }
+
+    private OrderProductDTO convertToDTO(OrderProduct orderProduct) {
+        OrderProductDTO dto = new OrderProductDTO();
+        dto.setId(orderProduct.getId());
+        dto.setProductId(orderProduct.getProduct().getId());
+        dto.setProductName(orderProduct.getProduct().getName());
+        dto.setQuantity(orderProduct.getQuantity());
+        return dto;
     }
 }
