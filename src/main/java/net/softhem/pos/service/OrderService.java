@@ -22,6 +22,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final ProductService productService;
     private final OrderProductService orderProductService;
+    List<OrderProduct> orderProducts = new ArrayList<>();
 
     public OrderService(OrderRepository orderRepository,
                         ProductRepository productRepository,
@@ -53,7 +54,6 @@ public class OrderService {
         order.setStatus("PENDING");
         order.setTotalAmount(0.0f);
 
-        List<OrderProduct> orderProducts = new ArrayList<>();
         float totalAmount = 0.0f;
 
         for (OrderItemRequest item : request.getItems()) {
@@ -64,13 +64,7 @@ public class OrderService {
                 throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
             }
 
-            OrderProduct orderProduct = new OrderProduct();
-            orderProduct.setOrder(order);
-            orderProduct.setProduct(product);
-            orderProduct.setQuantity(item.getQuantity());
-            orderProduct.setPriceAtPurchase(product.getPrice());
-            orderProducts.add(orderProduct);
-
+            addOrderProduct(order, product, item.getQuantity());
             totalAmount += product.getPrice() * item.getQuantity();
 
             // Update product stock
@@ -82,6 +76,15 @@ public class OrderService {
         order.setTotalAmount(totalAmount);
         Order savedOrder = orderRepository.save(order);
         return convertToDTO(savedOrder);
+    }
+
+    private void addOrderProduct(Order order, Product product, Integer quantity) {
+        OrderProduct orderProduct = new OrderProduct();
+        orderProduct.setOrder(order);
+        orderProduct.setProduct(product);
+        orderProduct.setQuantity(quantity);
+        orderProduct.setPriceAtPurchase(product.getPrice());
+        orderProducts.add(orderProduct);
     }
 
     @Transactional
@@ -142,44 +145,28 @@ public class OrderService {
     public OrderDTO updateOrder(Long id, UpdateOrderRequest request) {
         Order oldOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        List<OrderProduct> orderProducts = oldOrder.getOrderProducts();
         // Remove previous orderProducts
-        orderProductService.deleteOrderProduct(oldOrder.getId());
+        orderProductService.deleteByOrderId(id); // @todo release stock
         float totalAmount = 0.0f;
 
         for (OrderItemRequest item : request.getItems()) {
             Product product = productRepository.findById(item.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + item.getProductId()));
 
+            if (product.getInStock() < item.getQuantity()) {
+                throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
+            }
+
+            addOrderProduct(oldOrder, product, item.getQuantity());
             totalAmount += product.getPrice() * item.getQuantity();
 
-            Optional<OrderProduct> olderOrderProduct = getOldOrderProductById(oldOrder, item.getProductId());
-            if(olderOrderProduct.isPresent()) {
-                // Case 1 old product in cart/request.getItems
-                // return the old stock to product inStock
-                product.setInStock(product.getInStock() + olderOrderProduct.get().getQuantity());
-                // Update product stock
-                product.setInStock(product.getInStock() - item.getQuantity());
-                productRepository.save(product);
-            } else {
-                // Case 2 new product in cart/request.getItems
-                if (product.getInStock() < item.getQuantity()) {
-                    throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
-                }
-                // Update product stock
-                product.setInStock(product.getInStock() - item.getQuantity());
-                productRepository.save(product);
-            }
-            OrderProduct orderProduct = new OrderProduct();
-            orderProduct.setOrder(oldOrder);
-            orderProduct.setProduct(product);
-            orderProduct.setQuantity(item.getQuantity());
-            orderProduct.setPriceAtPurchase(product.getPrice());
-            orderProducts.add(orderProduct);
+            // Update product stock
+            product.setInStock(product.getInStock() - item.getQuantity());
+            productRepository.save(product);
         }
-        //oldOrder.setOrderProducts(orderProducts);
+        oldOrder.setOrderProducts(orderProducts);
         oldOrder.setTotalAmount(totalAmount);
-        // Order savedOrder = orderRepository.save(oldOrder);
-        return convertToDTO(oldOrder);
+        Order savedOrder = orderRepository.save(oldOrder);
+        return convertToDTO(savedOrder);
     }
 }

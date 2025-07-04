@@ -34,6 +34,12 @@ GET http://localhost:8080/api/products
 GET http://localhost:8080/api/orders
 
 ###################
+## Send DELETE
+DELETE http://localhost:8080/api/orders/1
+Content-Type: application/json
+
+
+###################
 ## Send Post
 POST http://localhost:8080/api/orders
 Content-Type: application/json
@@ -53,7 +59,7 @@ Content-Type: application/json
 
 #############
 ## Send Put
-PUT http://localhost:8080/api/orders/1
+PUT http://localhost:8080/api/orders/4
 Content-Type: application/json
 
 {
@@ -76,6 +82,6 @@ Content-Type: application/json
 GET http://localhost:8080/api/order-products
 ##################
 ## Send DELETE
-DELETE http://localhost:8080/api/order-products/order/4
+DELETE http://localhost:8080/api/order-products/order/3
 Content-Type: application/json
 
