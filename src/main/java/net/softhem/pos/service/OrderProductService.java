@@ -1,5 +1,6 @@
 package net.softhem.pos.service;
 
+import net.softhem.pos.dto.OrderItemRequest;
 import net.softhem.pos.dto.OrderProductDTO;
 import net.softhem.pos.model.Order;
 import net.softhem.pos.model.OrderProduct;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -88,5 +90,29 @@ public class OrderProductService {
 
     public void restoreQuantities(List<OrderProduct> orderProducts) {
         restoreProductQuantities(orderProducts);
+    }
+
+    public void updateByItems(List<OrderProduct> orderProducts, List<OrderItemRequest> items) {
+        for(OrderProduct orderProduct: orderProducts) {
+            // if(orderProduct.getProduct().getId() == )
+            boolean itemsHasProductId = items.stream()
+                    .anyMatch(itm -> itm.getProductId().equals(orderProduct.getProduct().getId()));
+            for(OrderItemRequest item: items){
+                // 1. If order product exists in items
+                if(Objects.equals(orderProduct.getProduct().getId(), item.getProductId())) {
+                    // 2. Check if it has the same quantity
+                    if(Objects.equals(orderProduct.getQuantity(), item.getQuantity())) {
+                        System.out.println("Exact match and no further action required");
+                    } else {
+                        // 3. Else update quantity in order product
+                        orderProduct.setQuantity(item.getQuantity());
+                    }
+                } else {
+                    // 4. if product does not exist at all in items then it is not needed, delete it
+                    orderProduct = null;
+
+                }
+            }
+        }
     }
 }

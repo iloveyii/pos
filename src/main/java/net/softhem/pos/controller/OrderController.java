@@ -62,6 +62,9 @@ public class OrderController {
     @PutMapping("/{id}")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderRequest request) {
         List<OrderProduct> orderProducts = orderProductService.getByOrderId(id);
+        orderProductService.updateByItems(orderProducts, request.getItems());
+
+
         logger.info("###################: " + orderProducts.size());
         orderProductService.restoreQuantities(orderProducts);
         logger.info("################### restored: " + orderProducts.size());

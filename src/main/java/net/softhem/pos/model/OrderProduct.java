@@ -36,13 +36,11 @@ public class OrderProduct {
         if(this.getClass() != o.getClass() ) return  false;
 
         OrderProduct orderProduct = (OrderProduct) o;
-        return Objects.equals(order.getId(), orderProduct.getOrder().getId())
-                && Objects.equals(product.getId(), orderProduct.getProduct().getId())
-                && Objects.equals(quantity, orderProduct.getQuantity())
-                && Objects.equals(priceAtPurchase, orderProduct.getPriceAtPurchase());
+        return Objects.equals(product.getId(), orderProduct.getProduct().getId())
+                && Objects.equals(quantity, orderProduct.getQuantity());
     }
     @Override
     public int hashCode() {
-        return Objects.hash(order.getId(), product.getId(), quantity, priceAtPurchase);
+        return Objects.hash(product.getId(), quantity);
     }
 }
