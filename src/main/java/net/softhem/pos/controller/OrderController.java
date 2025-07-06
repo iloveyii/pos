@@ -11,9 +11,12 @@ import net.softhem.pos.repository.ProductRepository;
 import net.softhem.pos.service.OrderProductService;
 import net.softhem.pos.service.OrderService;
 import net.softhem.pos.service.ProductService;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,8 @@ public class OrderController {
     private final ProductService productService;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
 
     public OrderController(OrderService orderService, OrderProductService orderProductService, ProductService productService, ProductRepository productRepository, OrderRepository orderRepository) {
         this.orderService = orderService;
@@ -56,21 +61,19 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderRequest request) {
-        //OrderDTO order = orderService.updateOrder(id, request);
+        List<OrderProduct> orderProducts = orderProductService.getByOrderId(id);
+        logger.info("###################: " + orderProducts.size());
+        orderProductService.restoreQuantities(orderProducts);
+        logger.info("################### restored: " + orderProducts.size());
+
         orderProductService.deleteByOrderId(id);
-        Optional<Order> order = orderRepository.findById(id);
+        orderProducts = orderProductService.getByOrderId(id);
+        logger.info("################### after del: " + orderProducts.size());
 
-        OrderProduct orderProduct1 = new OrderProduct();
-        orderProduct1.setQuantity(5);
-        Optional<Product> product1 = productRepository.findById(1L);
-        orderProductService.createOrderProduct(orderProduct1, order, product1);
 
-        OrderProduct orderProduct2 = new OrderProduct();
-        orderProduct2.setQuantity(10);
-        Optional<Product> product2 = productRepository.findById(2L);
-        orderProductService.createOrderProduct(orderProduct2,order, product2);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        logger.info("################### items new: " + request.getItems().size());
+        OrderDTO order = orderService.updateOrder(id, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
     @PatchMapping("/{id}/status")

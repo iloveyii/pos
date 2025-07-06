@@ -1,8 +1,6 @@
 package net.softhem.pos.service;
 
 import net.softhem.pos.dto.OrderProductDTO;
-import net.softhem.pos.dto.ProductDTO;
-import net.softhem.pos.exception.ResourceNotFoundException;
 import net.softhem.pos.model.Order;
 import net.softhem.pos.model.OrderProduct;
 import net.softhem.pos.model.Product;
@@ -12,15 +10,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderProductService {
     private final OrderProductRepository orderProductRepository;
+    private final ProductRepository productRepository;
 
-    public OrderProductService(OrderProductRepository orderProductRepository) {
+    public OrderProductService(OrderProductRepository orderProductRepository, ProductRepository productRepository) {
         this.orderProductRepository = orderProductRepository;
+        this.productRepository = productRepository;
     }
 
     public List<OrderProductDTO> getAll() {
@@ -33,10 +34,10 @@ public class OrderProductService {
         return orderProductRepository.findByOrderId(orderId);
     }
 
-    public OrderProduct createOrderProduct(OrderProduct orderProduct, Optional<Order> order, Optional<Product> product) {
-        orderProduct.setOrder(order.get());
-        orderProduct.setProduct(product.get());
-        orderProduct.setPriceAtPurchase(product.get().getPrice());
+    public OrderProduct createOrderProduct(OrderProduct orderProduct, Order order, Product product) {
+        orderProduct.setOrder(order);
+        orderProduct.setProduct(product);
+        orderProduct.setPriceAtPurchase(product.getPrice());
         return orderProductRepository.save(orderProduct);
     }
 
@@ -49,6 +50,31 @@ public class OrderProductService {
         orderProductRepository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteOrderProductAndRestoreQuantities(Long orderId) {
+        // 1. Find all products in the order
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(orderId);
+        System.out.print(String.format("Found %d products", orderProducts.size()));
+
+        // 2. Restore quantities
+        restoreProductQuantities(orderProducts);
+    }
+
+    private void restoreProductQuantities(List<OrderProduct> orderProducts) {
+        // Group quantities by product for efficient updates
+        Map<Product, Integer> quantityMap = orderProducts.stream()
+                .collect(Collectors.groupingBy(
+                        OrderProduct::getProduct,
+                        Collectors.summingInt(OrderProduct::getQuantity)
+                ));
+
+        // Update each product
+        quantityMap.forEach((product, quantity) -> {
+            product.setInStock(product.getInStock() + quantity);
+            productRepository.save(product);
+        });
+    }
+
     private OrderProductDTO convertToDTO(OrderProduct orderProduct) {
         OrderProductDTO dto = new OrderProductDTO();
         dto.setId(orderProduct.getId());
@@ -58,5 +84,9 @@ public class OrderProductService {
         dto.setQuantity(orderProduct.getQuantity());
         dto.setPriceAtPurchase(orderProduct.getPriceAtPurchase());
         return dto;
+    }
+
+    public void restoreQuantities(List<OrderProduct> orderProducts) {
+        restoreProductQuantities(orderProducts);
     }
 }

@@ -64,7 +64,7 @@ public class OrderService {
                 throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
             }
 
-            addOrderProduct(order, product, item.getQuantity());
+            addOrderProduct(order, product, item.getQuantity(), false);
             totalAmount += product.getPrice() * item.getQuantity();
 
             // Update product stock
@@ -78,13 +78,15 @@ public class OrderService {
         return convertToDTO(savedOrder);
     }
 
-    private void addOrderProduct(Order order, Product product, Integer quantity) {
+    private void addOrderProduct(Order order, Product product, Integer quantity, boolean save) {
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.setOrder(order);
         orderProduct.setProduct(product);
         orderProduct.setQuantity(quantity);
         orderProduct.setPriceAtPurchase(product.getPrice());
         orderProducts.add(orderProduct);
+        if(save)
+            orderProductService.createOrderProduct(orderProduct, order, product);
     }
 
     @Transactional
@@ -146,7 +148,8 @@ public class OrderService {
         Order oldOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
         // Remove previous orderProducts
-        orderProductService.deleteByOrderId(id); // @todo release stock
+        // orderProductService.deleteByOrderId(id); // @todo release stock
+
         float totalAmount = 0.0f;
 
         for (OrderItemRequest item : request.getItems()) {
@@ -157,14 +160,17 @@ public class OrderService {
                 throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
             }
 
-            addOrderProduct(oldOrder, product, item.getQuantity());
+            addOrderProduct(oldOrder, product, item.getQuantity(), true);
             totalAmount += product.getPrice() * item.getQuantity();
 
             // Update product stock
             product.setInStock(product.getInStock() - item.getQuantity());
             productRepository.save(product);
         }
-        oldOrder.setOrderProducts(orderProducts);
+        oldOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+        //oldOrder.getOrderProducts().clear();
+        // oldOrder.setOrderProducts(orderProducts);
         oldOrder.setTotalAmount(totalAmount);
         Order savedOrder = orderRepository.save(oldOrder);
         return convertToDTO(savedOrder);

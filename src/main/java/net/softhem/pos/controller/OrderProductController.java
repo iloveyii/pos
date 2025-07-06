@@ -31,11 +31,6 @@ public class OrderProductController {
         return orderProductService.getByOrderId(orderId);
     }
 
-    @PostMapping
-    public OrderProduct create(@RequestBody OrderProduct orderProduct) {
-        return orderProductService.create(orderProduct);
-    }
-
     @DeleteMapping("/order/{orderId}")
     public void deleteByOrderId(@PathVariable Long orderId) {
         orderProductService.deleteByOrderId(orderId);

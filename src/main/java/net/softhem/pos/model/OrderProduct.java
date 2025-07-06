@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "ORDERS_PRODUCTS")
 @Getter
@@ -26,4 +28,21 @@ public class OrderProduct {
 
     @Column(name = "price_at_purchase", nullable = false)
     private Float priceAtPurchase;
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return  true;
+        if(o == null) return false;
+        if(this.getClass() != o.getClass() ) return  false;
+
+        OrderProduct orderProduct = (OrderProduct) o;
+        return Objects.equals(order.getId(), orderProduct.getOrder().getId())
+                && Objects.equals(product.getId(), orderProduct.getProduct().getId())
+                && Objects.equals(quantity, orderProduct.getQuantity())
+                && Objects.equals(priceAtPurchase, orderProduct.getPriceAtPurchase());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(order.getId(), product.getId(), quantity, priceAtPurchase);
+    }
 }

@@ -59,7 +59,7 @@ Content-Type: application/json
 
 #############
 ## Send Put
-PUT http://localhost:8080/api/orders/4
+PUT http://localhost:8080/api/orders/2
 Content-Type: application/json
 
 {
