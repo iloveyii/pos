@@ -81,6 +81,9 @@ let discount = {
     type: 'fixed' // 'fixed' or 'percent'
 };
 const taxRate = 0.08; // 8%
+let objOrder = {
+    id: null
+};
 
 // DOM Elements
 const productsContainer = document.querySelector('.row-cols-2');
@@ -241,6 +244,7 @@ function addToCart(productId, quantity = 1) {
     }
 
     renderCart();
+    updateCartOnBackend();
     showNotification(`${quantity} ${quantity > 1 ? 'items' : 'item'} added to cart`);
 }
 
@@ -248,6 +252,7 @@ function addToCart(productId, quantity = 1) {
 function removeFromCart(productId) {
     cart = cart.filter(item => item.productId !== productId);
     renderCart();
+    updateCartOnBackend();
     showNotification('Item removed from cart');
 }
 
@@ -264,6 +269,7 @@ function updateQuantity(productId, newQuantity) {
     }
 
     renderCart();
+    updateCartOnBackend();
 }
 
 // Apply Discount
@@ -298,9 +304,13 @@ function processPayment() {
         showNotification('Cart is empty', 'danger');
         return;
     }
+}
 
-    createOrder();
-
+function updateCartOnBackend() {
+    if(objOrder && objOrder.id)
+        updateOrder(objOrder.id);
+    else
+        createOrder();
 }
 
 function createOrder() {
@@ -325,7 +335,42 @@ function createOrder() {
     .then(order => {
         console.log('Order created successfully:', order);
         showNotification('Order created successfully', 'success');
-        clearCart();
+        objOrder.id = order.id;
+        // clearCart();
+        // You can redirect or update UI here
+        // window.location.href = `/order-confirmation/${order.id}`;
+    })
+    .catch(error => {
+        console.error('Error creating order:', error);
+        alert('Failed to create order. Please try again.');
+    });
+}
+
+
+function updateOrder(id) {
+    // Create the order request
+    fetch(`/api/orders/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            // Add authorization header if needed
+            // 'Authorization': 'Bearer your-token-here'
+        },
+        body: JSON.stringify({
+            items: cart  // Assuming your backend expects an "items" property
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(order => {
+        console.log('Order updated successfully:', order);
+        showNotification('Order updated successfully', 'success');
+        objOrder.id = order.id;
+        // clearCart();
         // You can redirect or update UI here
         // window.location.href = `/order-confirmation/${order.id}`;
     })
