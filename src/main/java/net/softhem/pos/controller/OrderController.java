@@ -3,13 +3,12 @@ package net.softhem.pos.controller;
 import net.softhem.pos.dto.CreateOrderRequest;
 import net.softhem.pos.dto.OrderDTO;
 import net.softhem.pos.dto.UpdateOrderRequest;
-import net.softhem.pos.model.Order;
 import net.softhem.pos.model.OrderProduct;
-import net.softhem.pos.model.Product;
 import net.softhem.pos.repository.OrderRepository;
 import net.softhem.pos.repository.ProductRepository;
 import net.softhem.pos.service.OrderProductService;
 import net.softhem.pos.service.OrderService;
+import net.softhem.pos.service.OrderUpdateService;
 import net.softhem.pos.service.ProductService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -28,15 +26,17 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderProductService orderProductService;
     private final ProductService productService;
+    private final OrderUpdateService orderUpdateService;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 
-    public OrderController(OrderService orderService, OrderProductService orderProductService, ProductService productService, ProductRepository productRepository, OrderRepository orderRepository) {
+    public OrderController(OrderService orderService, OrderProductService orderProductService, ProductService productService, OrderUpdateService orderUpdateService, ProductRepository productRepository, OrderRepository orderRepository) {
         this.orderService = orderService;
         this.orderProductService = orderProductService;
         this.productService = productService;
+        this.orderUpdateService = orderUpdateService;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
     }
@@ -73,6 +73,7 @@ public class OrderController {
 
         logger.info("################### items new: " + request.getItems().size());
         OrderDTO order = orderService.updateOrder(id, request);
+        orderUpdateService.sendOrderUpdate(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
