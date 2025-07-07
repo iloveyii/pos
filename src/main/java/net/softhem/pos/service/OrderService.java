@@ -54,6 +54,7 @@ public class OrderService {
         order.setStatus("PENDING");
         order.setTotalAmount(0.0f);
 
+        List<OrderProduct> orderProducts = new ArrayList<>();
         float totalAmount = 0.0f;
 
         for (OrderItemRequest item : request.getItems()) {
@@ -64,7 +65,13 @@ public class OrderService {
                 throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
             }
 
-            addOrderProduct(order, product, item.getQuantity(), false);
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setOrder(order);
+            orderProduct.setProduct(product);
+            orderProduct.setQuantity(item.getQuantity());
+            orderProduct.setPriceAtPurchase(product.getPrice());
+            orderProducts.add(orderProduct);
+
             totalAmount += product.getPrice() * item.getQuantity();
 
             // Update product stock
