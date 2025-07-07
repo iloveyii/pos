@@ -116,6 +116,7 @@ public class OrderService {
                 .map(op -> {
                     OrderProductDTO opDto = new OrderProductDTO();
                     opDto.setId(op.getId());
+                    opDto.setOrderId(op.getOrder().getId());
                     opDto.setProductId(op.getProduct().getId());
                     opDto.setProductName(op.getProduct().getName());
                     opDto.setQuantity(op.getQuantity());
