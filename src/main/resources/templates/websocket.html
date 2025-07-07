@@ -1,11 +1,438 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Product WebSocket</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Receipt - Retail Pro</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: white;
+            color: black;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        .header p {
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .order-info {
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .order-info div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        .order-items {
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .item-name {
+            flex: 2;
+        }
+
+        .item-price {
+            flex: 1;
+            text-align: right;
+        }
+
+        .item-qty {
+            flex: 1;
+            text-align: center;
+        }
+
+        .item-total {
+            flex: 1;
+            text-align: right;
+        }
+
+        .totals {
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .total-row.total {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        .divider {
+            border-top: 1px dashed #333;
+            margin: 10px 0;
+        }
+
+        .thank-you {
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .barcode {
+            text-align: center;
+            font-family: 'Libre Barcode 39', cursive;
+            font-size: 36px;
+            margin: 10px 0;
+        }
+
+        /* Tab styles */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: 1px solid #333;
+            border-bottom: none;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* QR Code styles */
+        .qr-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .payment-instructions {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
+<div class="tabs">
+    <div class="tab active" onclick="openTab('receipt')">Receipt</div>
+    <div class="tab" onclick="openTab('payment')">Payment QR</div>
+</div>
+
+<!-- Receipt Tab -->
+<div id="receipt" class="tab-content active">
+    <div class="header">
+        <h1>RETAIL PRO</h1>
+        <p>123 Main Street, Anytown, USA</p>
+        <p>Tel: (555) 123-4567</p>
+        <p>receipt.example.com</p>
+    </div>
+
+    <div class="order-info">
+        <div>
+            <span>Order #:</span>
+            <span id="order-id">5</span>
+        </div>
+        <div>
+            <span>Date:</span>
+            <span id="order-date">07/07/2025 5:20 PM</span>
+        </div>
+        <div>
+            <span>Customer:</span>
+            <span>Walk-in</span>
+        </div>
+        <div>
+            <span>Status:</span>
+            <span id="order-status">COMPLETED</span>
+        </div>
+    </div>
+
+    <div id="order-items" class="order-items"></div>
+
+    <div class="totals">
+        <div class="total-row">
+            <span>Subtotal:</span>
+            <span id="subtotal">$321.97</span>
+        </div>
+        <div class="total-row">
+            <span>Tax (8%):</span>
+            <span id="tax">$25.76</span>
+        </div>
+        <div class="total-row">
+            <span>Discount:</span>
+            <span>$0.00</span>
+        </div>
+        <div class="divider"></div>
+        <div class="total-row total">
+            <span>TOTAL:</span>
+            <span id="total">$347.73</span>
+        </div>
+    </div>
+
+    <div class="payment-info">
+        <div style="display: flex; justify-content: space-between;">
+            <span>Payment Method:</span>
+            <span>Credit Card</span>
+        </div>
+        <!--<div style="display: flex; justify-content: space-between;">
+            <span>Payment Amount:</span>
+            <span>$347.73</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Change:</span>
+            <span>$0.00</span>
+        </div>-->
+    </div>
+
+    <div class="thank-you">
+        THANK YOU FOR YOUR BUSINESS!
+    </div>
+
+    <div id="order-barcode" class="barcode">
+        *RETAILPRO-0005*
+    </div>
+
+    <div class="footer">
+        <p>Items can be exchanged within 14 days with receipt</p>
+        <p>Original Receipt - Customer Copy</p>
+    </div>
+</div>
+
+<!-- Payment QR Tab -->
+<div id="payment" class="tab-content">
+    <div class="header">
+        <h1>RETAIL PRO</h1>
+        <p>Scan to Pay</p>
+    </div>
+
+    <div class="order-info">
+        <div>
+            <span>Order #:</span>
+            <span>5</span>
+        </div>
+        <div>
+            <span>Date:</span>
+            <span>07/07/2025 5:20 PM</span>
+        </div>
+        <div>
+            <span>Amount Due:</span>
+            <span id="qr-amount">$347.73</span>
+        </div>
+    </div>
+
+    <div class="qr-container">
+        <div class="qr-code">
+            [QR CODE PLACEHOLDER]
+            <!-- In a real implementation, you would insert an actual QR code image here -->
+            <!-- Example: <img src="qrcode.png" alt="Payment QR Code"> -->
+        </div>
+        <div class="payment-instructions">
+            <p>Scan this QR code with your mobile payment app</p>
+            <p>to complete your payment of $347.73</p>
+        </div>
+    </div>
+
+    <div class="payment-methods">
+        <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+            <p>We accept:</p>
+            <p>Apple Pay, Google Pay, PayPal, Venmo</p>
+        </div>
+    </div>
+
+    <div class="thank-you">
+        THANK YOU FOR SHOPPING WITH US!
+    </div>
+
+    <div class="footer">
+        <p>Payment must be completed within 15 minutes</p>
+        <p>Show confirmation at counter when done</p>
+    </div>
+</div>
+
+<script>
+    // Tab functionality
+    function openTab(tabName) {
+        // Hide all tab contents
+        const tabContents = document.getElementsByClassName('tab-content');
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove('active');
+        }
+
+        // Remove active class from all tabs
+        const tabs = document.getElementsByClassName('tab');
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove('active');
+        }
+
+        // Show the current tab and mark button as active
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Automatically trigger print dialog when page loads (for receipt tab)
+    window.onload = function() {
+        setTimeout(function() {
+            // Only print if we're on the receipt tab
+            if (document.getElementById('receipt').classList.contains('active')) {
+                window.print();
+            }
+        }, 500);
+    };
+</script>
+
+<script>
+    // Order data
+    let orderData = {
+      "id": 5,
+      "orderDate": "2025-07-07T17:20:25.254345",
+      "status": "PENDING",
+      "totalAmount": 321.97,
+      "orderProducts": [
+          {
+              "id": 15,
+              "orderId": 5,
+              "productId": 1,
+              "productName": "Wireless Headphones",
+              "quantity": 1,
+              "priceAtPurchase": 99.0
+          },
+      ]
+    };
+
+    // Helper functions
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+      };
+      return date.toLocaleDateString('en-US', options).replace(',', ' at');
+    }
+
+    function formatCurrency(amount) {
+      return '$' + amount.toFixed(2);
+    }
+
+    function calculateTax(total) {
+      // Assuming 8% tax rate
+      return total * 0.08;
+    }
+
+    // Load order data into receipt
+    function loadOrderData() {
+      // Calculate subtotal, tax, and total
+      const subtotal = orderData.orderProducts.reduce((sum, item) => sum + (item.priceAtPurchase * item.quantity), 0);
+      const tax = calculateTax(subtotal);
+      const total = subtotal + tax;
+
+      // Set order header info
+      document.getElementById('order-id').textContent = orderData.id;
+      document.getElementById('order-date').textContent = formatDate(orderData.orderDate);
+      document.getElementById('order-status').textContent = orderData.status;
+
+      // Load order items
+      const orderItemsContainer = document.getElementById('order-items');
+      orderItemsContainer.innerHTML = ''; // Clear any existing items
+
+      orderData.orderProducts.forEach(item => {
+          const itemElement = document.createElement('div');
+          itemElement.className = 'item';
+          itemElement.innerHTML = `
+              <div class="item-name">${item.productName}</div>
+              <div class="item-price">${formatCurrency(item.priceAtPurchase)}</div>
+              <div class="item-qty">${item.quantity}</div>
+              <div class="item-total">${formatCurrency(item.priceAtPurchase * item.quantity)}</div>
+          `;
+          orderItemsContainer.appendChild(itemElement);
+      });
+
+      // Set totals
+      document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+      document.getElementById('tax').textContent = formatCurrency(tax);
+      document.getElementById('total').textContent = formatCurrency(total);
+
+      // Set payment QR amount
+      document.getElementById('qr-amount').textContent = formatCurrency(total);
+      document.querySelectorAll('.payment-amount').forEach(el => {
+          el.textContent = formatCurrency(total);
+      });
+
+      // Update barcode with order ID
+      document.getElementById('order-barcode').textContent = `*RETAILPRO-${String(orderData.id).padStart(4, '0')}*`;
+    }
+
+
+
+</script>
+
 <script>
     const socket = new SockJS('/ws');
     const stompClient = Stomp.over(socket);
@@ -16,11 +443,18 @@
         // Subscribe to receive messages
         stompClient.subscribe('/topic/orders', function(order) {
             console.log('Received order: ' + JSON.parse(order.body).id);
+            displayOrderUpdate(JSON.parse(order.body));
         });
 
         // Send an order
         const order = {id: 1, status: 'PENDING', totalAmount: 20.25, orderProducts: []};
         stompClient.send("/app/order", {}, JSON.stringify(order));
+
+        function displayOrderUpdate(order) {
+            console.log(order);
+            orderData = order;
+            loadOrderData();
+        }
     });
 </script>
 </body>
