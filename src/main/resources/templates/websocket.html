@@ -286,9 +286,7 @@
 
     <div class="qr-container">
         <div class="qr-code">
-            [QR CODE PLACEHOLDER]
-            <!-- In a real implementation, you would insert an actual QR code image here -->
-            <!-- Example: <img src="qrcode.png" alt="Payment QR Code"> -->
+            <img style="height:222px;" th:src="@{/images/pay/swish.webp}" alt="Swish">
         </div>
         <div class="payment-instructions">
             <p>Scan this QR code with your mobile payment app</p>
@@ -338,7 +336,7 @@
         setTimeout(function() {
             // Only print if we're on the receipt tab
             if (document.getElementById('receipt').classList.contains('active')) {
-                window.print();
+                // window.print();
             }
         }, 500);
     };
@@ -428,9 +426,6 @@
       // Update barcode with order ID
       document.getElementById('order-barcode').textContent = `*RETAILPRO-${String(orderData.id).padStart(4, '0')}*`;
     }
-
-
-
 </script>
 
 <script>
