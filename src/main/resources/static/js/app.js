@@ -304,6 +304,8 @@ function processPayment() {
         showNotification('Cart is empty', 'danger');
         return;
     }
+     clearCart();
+     objOrder.id = null;
 }
 
 function updateCartOnBackend() {
