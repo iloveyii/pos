@@ -12,4 +12,5 @@ public class OrderDTO {
     private String status;
     private Float totalAmount;
     private List<OrderProductDTO> orderProducts;
+    private String command;
 }

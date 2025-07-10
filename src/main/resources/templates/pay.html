@@ -179,8 +179,8 @@
 </head>
 <body>
 <div class="tabs">
-    <div class="tab active" onclick="openTab('receipt')">Receipt</div>
-    <div class="tab" onclick="openTab('payment')">Payment QR</div>
+    <div id="tab-receipt" class="tab active" onclick="openTab('receipt')">Receipt</div>
+    <div id="tab-payment" class="tab" onclick="openTab('payment')">Payment QR</div>
 </div>
 
 <!-- Receipt Tab -->
@@ -328,7 +328,8 @@
 
         // Show the current tab and mark button as active
         document.getElementById(tabName).classList.add('active');
-        event.currentTarget.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+        // event.currentTarget.classList.add('active');
     }
 
     // Automatically trigger print dialog when page loads (for receipt tab)
@@ -448,7 +449,18 @@
         function displayOrderUpdate(order) {
             console.log(order);
             orderData = order;
-            loadOrderData();
+            if(order && order.command && order.command == 'list') {
+                loadOrderData();
+                openTab('receipt');
+            }
+            else if(order && order.command && order.command == 'qr') {
+                openTab('payment');
+            }
+            if(order && !order.command) {
+                loadOrderData();
+                openTab('receipt');
+            }
+
         }
     });
 </script>

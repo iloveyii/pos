@@ -85,3 +85,17 @@ GET http://localhost:8080/api/order-products
 DELETE http://localhost:8080/api/order-products/order/3
 Content-Type: application/json
 
+###################
+##### COMMAND #####
+###################
+
+###################
+## Send Post
+POST http://localhost:8080/command
+Content-Type: application/json
+
+{
+  "id": 2,
+  "command": "list"
+}
+    
