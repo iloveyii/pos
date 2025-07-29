@@ -823,4 +823,53 @@ function showPage(page) {
     });
 }
 
+function sendCommandRequest(data) {
+    // Create the request
+    fetch(`/command`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(commandOutput => {
+        console.log('Command ran successfully:', commandOutput);
+    })
+    .catch(error => {
+        console.error('Error creating command:', error);
+        alert('Failed to create command. Please try again.');
+    });
+
+}
+
+function sendCommandToShow(cmd) {
+    if(cmd == 'qr') {
+        sendCommandRequest({ id: 2, command: 'qr'});
+    }
+    if(cmd == 'invoice') {
+        sendCommandRequest({ id: 2, command: 'list'});
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Your code here
+  console.log("Document is fully loaded.");
+
+  // Show QR to customer
+  document.getElementById('btn-qr').addEventListener('click', function() {
+      sendCommandToShow('qr');
+  });
+  // Show invoice to customer
+  document.getElementById('btn-invoice').addEventListener('click', function() {
+      sendCommandToShow('invoice');
+  });
+
+});
+
 

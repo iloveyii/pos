@@ -17,44 +17,10 @@
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#">
-            <i class="fas fa-cash-register me-2"></i>Retail Pro POS
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active pos-tab" href="#" data-page="pos">
-                        <i class="fas fa-shopping-cart me-1"></i> POS
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link products-tab" href="#" data-page="products">
-                        <i class="fas fa-boxes me-1"></i> Products
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link orders-tab" href="#" data-page="orders">
-                        <i class="fas fa-clipboard-list me-1"></i> Orders
-                    </a>
-                </li>
-            </ul>
-            <div class="d-flex align-items-center">
-                    <span class="text-white me-3">
-                        <i class="fas fa-user-circle me-1"></i> Admin
-                    </span>
-                <button class="btn btn-sm btn-outline-light">
-                    <i class="fas fa-sign-out-alt me-1"></i> Logout
-                </button>
-            </div>
-        </div>
-    </div>
-</nav>
+
+<!-- Include header fragment -->
+<div th:replace="~{fragments/header :: header}"></div>
+
 <!-- POS Page -->
 <div class="container-fluid p-0 page-container active" id="pos-page">
     <div class="row g-0">
@@ -467,6 +433,6 @@
 
 <!-- Bootstrap 5.4 JS Bundle with Popper -->
 <script src="/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/app.js?jkhkhk}"></script>
 </body>
 </html>
