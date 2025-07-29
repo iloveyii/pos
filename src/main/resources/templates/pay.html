@@ -430,39 +430,94 @@
 </script>
 
 <script>
-    const socket = new SockJS('/ws');
-    const stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function(frame) {
-        console.log('Connected: ' + frame);
-
-        // Subscribe to receive messages
-        stompClient.subscribe('/topic/orders', function(order) {
-            console.log('Received order: ' + JSON.parse(order.body).id);
-            displayOrderUpdate(JSON.parse(order.body));
-        });
-
-        // Send an order
-        const order = {id: 1, status: 'PENDING', totalAmount: 20.25, orderProducts: []};
-        stompClient.send("/app/order", {}, JSON.stringify(order));
-
-        function displayOrderUpdate(order) {
-            console.log(order);
-            orderData = order;
-            if(order && order.command && order.command == 'list') {
-                loadOrderData();
-                openTab('receipt');
-            }
-            else if(order && order.command && order.command == 'qr') {
-                openTab('payment');
-            }
-            if(order && !order.command) {
-                loadOrderData();
-                openTab('receipt');
-            }
-
+    function displayOrderUpdate(order) {
+        console.log(order);
+        orderData = order;
+        if(order && order.command && order.command == 'list') {
+            loadOrderData();
+            openTab('receipt');
         }
+        else if(order && order.command && order.command == 'qr') {
+            openTab('payment');
+        }
+        if(order && !order.command) {
+            loadOrderData();
+            openTab('receipt');
+        }
+    }
+
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+    const reconnectDelay = 5000; // 5 seconds
+    let stompClient = null;
+
+    function connectWebSocket() {
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({},
+            (frame)=> {
+                console.log('Connected: ' + frame);
+                reconnectAttempts = 0;
+                // Subscribe to receive messages
+                stompClient.subscribe('/topic/orders', function(order) {
+                    console.log('Received order: ' + JSON.parse(order.body).id);
+                    displayOrderUpdate(JSON.parse(order.body));
+                });
+
+                // Send an order
+                const order = {id: 1, status: 'PENDING', totalAmount: 20.25, orderProducts: []};
+                // stompClient.send("/app/order", {}, JSON.stringify(order));
+            },
+            (error) => {
+                // Connection error
+                console.error('WebSocket connection error:', error);
+                attemptReconnect();
+            });
+    }
+
+    // Optional: Expose disconnect function
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+            console.log('Disconnected from WebSocket');
+        }
+    }
+
+
+
+    function attemptReconnect() {
+        if (reconnectAttempts < maxReconnectAttempts) {
+            reconnectAttempts++;
+            const delay = reconnectDelay * reconnectAttempts;
+            console.log(`Attempting to reconnect in ${delay/1000} seconds... (Attempt ${reconnectAttempts}/${maxReconnectAttempts})`);
+
+            setTimeout(() => {
+                connectWebSocket();
+            }, delay);
+        } else {
+            console.error('Max reconnection attempts reached. Please refresh the page.');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        connectWebSocket();
+
+        // Handle unexpected socket close
+        if(socket)
+            socket.onclose = () => {
+                console.log('WebSocket connection closed');
+                attemptReconnect();
+            };
+
+        // Handle page refresh/closing
+        window.addEventListener('beforeunload', () => {
+            disconnect();
+        });
     });
+
+
+
 </script>
 </body>
 </html>
