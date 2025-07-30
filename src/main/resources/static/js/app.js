@@ -869,7 +869,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById('btn-invoice').addEventListener('click', function() {
       sendCommandToShow('invoice');
   });
-
 });
 
 

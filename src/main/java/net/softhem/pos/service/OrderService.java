@@ -117,7 +117,11 @@ public class OrderService {
         dto.setId(order.getId());
         dto.setOrderDate(order.getOrderDate());
         dto.setStatus(order.getStatus());
+        dto.setDiscount(order.getDiscount());
+        dto.setSubTotal(order.getSubTotal());
         dto.setTotalAmount(order.getTotalAmount());
+        dto.setPaymentMethod(order.getPaymentMethod());
+        dto.setNotes(order.getNotes());
 
         List<OrderProductDTO> orderProductDTOs = order.getOrderProducts().stream()
                 .map(op -> {

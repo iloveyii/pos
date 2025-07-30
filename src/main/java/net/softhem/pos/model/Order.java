@@ -23,8 +23,20 @@ public class Order {
     @Column(nullable = false)
     private String status = "PENDING";
 
+    @Column(name = "sub_total", nullable = false)
+    private Float subTotal;
+
+    @Column(name = "discount", nullable = false)
+    private Float discount;
+
     @Column(name = "total_amount", nullable = false)
     private Float totalAmount;
+
+    @Column(name = "payment_method", nullable = false)
+    private String paymentMethod;
+
+    @Column(name = "notes", nullable = false)
+    private String notes;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts = new ArrayList<>();

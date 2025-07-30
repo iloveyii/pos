@@ -15,7 +15,11 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'PENDING',
-    total_amount FLOAT NOT NULL
+    sub_total FLOAT NOT NULL,
+    discount FLOAT NOT NULL,
+    total_amount FLOAT NOT NULL,
+    payment_method VARCHAR(50) DEFAULT 'CARD',
+    notes VARCHAR(200)
 );
 
 CREATE TABLE IF NOT EXISTS ORDERS_PRODUCTS (
@@ -42,11 +46,11 @@ INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
 ('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100);
 
 -- Insert sample orders
-INSERT INTO ORDERS (status, total_amount) VALUES
-('COMPLETED', 1248.00),
-('SHIPPED', 2998.00),
-('PENDING', 678.00),
-('PROCESSING', 599.00);
+INSERT INTO ORDERS (status, discount, sub_total, total_amount) VALUES
+('COMPLETED', 0.0, 1248.0, 1248.00),
+('SHIPPED', 10.0, 2998.00, 2698.2),
+('PENDING', 50.0, 678.00, 339.0),
+('PROCESSING', 10.0, 599.00, 539.1);
 
 -- Insert order items (products in each order)
 INSERT INTO ORDERS_PRODUCTS (order_id, product_id, quantity, price_at_purchase) VALUES
