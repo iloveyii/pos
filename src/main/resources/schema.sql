@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'PENDING',
     sub_total FLOAT NOT NULL,
-    discount FLOAT NOT NULL,
+    discount FLOAT DEFAULT 0.0,
     total_amount FLOAT NOT NULL,
     payment_method VARCHAR(50) DEFAULT 'CARD',
     notes VARCHAR(200)
