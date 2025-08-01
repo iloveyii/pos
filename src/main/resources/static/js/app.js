@@ -105,7 +105,6 @@ const notificationMessage = document.getElementById('notificationMessage');
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
         const pageContainers = document.querySelectorAll('.page-container');
         const navLinks = document.querySelectorAll('.nav-link');
-        const filterButtons = document.querySelectorAll('.filter-btn');
 
 
 // Initialize the POS
@@ -476,20 +475,7 @@ function setupEventListeners() {
         });
     });
 
-    // Filter buttons for orders
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            filterButtons.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            const filter = this.getAttribute('data-filter');
-            filterOrders(filter);
-        });
-    });
 
-    // Date filter for orders
-    orderDateFilter.addEventListener('change', function() {
-        filterOrders('date', this.value);
-    });
 }
 
 // Initialize the POS when DOM is loaded

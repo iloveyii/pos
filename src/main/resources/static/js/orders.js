@@ -84,17 +84,52 @@ let orders = [
 const ordersTableBody = document.getElementById('ordersTableBody');
 const orderDetailsModal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
 const orderDateFilter = document.getElementById('orderDateFilter');
+const searchOrders = document.getElementById('searchOrders');
+const filterButtonsOrders = document.querySelectorAll('.filter-btn-orders');
+
 
 // Initialize the POS
-function initPOSOrders() {
+async function initPOSOrders() {
     console.log('initPOSOrders');
+    console.log("Document is fully loaded.");
+    const _orders = await makeApiRequest('GET', 'orders', {});
+    console.log('orders', _orders);
+    orders = _orders;
     renderOrdersTable(orders);
+    addEventListenerForOrders();
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
-    console.log("Document is fully loaded.");
-    const orders = await makeApiRequest('GET', 'orders', {});
-});
+function addEventListenerForOrders() {
+    // Listen for input and filter orders
+    searchOrders.addEventListener('input', () => {
+      const query = searchOrders.value.trim().toLowerCase();
+      console.log(query);
+
+      const filtered = orders.filter(order =>
+        order.notes?.toLowerCase().includes(query) ||
+        (order.totalAmount + '').includes(query) ||
+        order.orderDateString?.includes(query) // simple string match; could be improved
+      );
+
+      renderOrdersTable(filtered);
+    });
+
+    // Filter buttons for orders
+    filterButtonsOrders.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterButtonsOrders.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const filter = this.getAttribute('data-filter');
+            filterOrders(filter);
+        });
+    });
+
+    // Date filter for orders
+    orderDateFilter.addEventListener('change', function() {
+        filterOrders('date', this.value);
+    });
+}
+
 
 // Render orders table
 function renderOrdersTable(orders) {
@@ -281,8 +316,5 @@ function viewOrderDetails(orderId) {
 
 (async function(){
     console.log("Document is fully loaded.");
-    const _orders = await makeApiRequest('GET', 'orders', {});
-    console.log('orders', _orders);
-    orders = _orders;
-    initPOSOrders();
+    await initPOSOrders();
 })();
