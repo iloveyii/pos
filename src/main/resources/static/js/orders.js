@@ -88,7 +88,7 @@ const orderDateFilter = document.getElementById('orderDateFilter');
 // Initialize the POS
 function initPOSOrders() {
     console.log('initPOSOrders');
-    renderOrdersTable();
+    renderOrdersTable(orders);
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -97,14 +97,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 // Render orders table
-function renderOrdersTable() {
+function renderOrdersTable(orders) {
     console.log('renderOrdersTable');
     ordersTableBody.innerHTML = '';
 
     orders.forEach(order => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>#${order.id}</td>
+            <td>${order.id}</td>
             <td>${order.orderDateString}</td>
             <td>${order.orderProducts.reduce((sum, item) => sum + item.quantity, 0)}</td>
             <td>$${order.totalAmount.toFixed(2)}</td>
@@ -146,45 +146,21 @@ function filterOrders(filter, date = '') {
     let filteredOrders = [...orders];
 
     if (filter === 'pending') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'pending');
+        filteredOrders = filteredOrders.filter(o => o.status === 'PENDING');
     } else if (filter === 'processing') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'processing');
+        filteredOrders = filteredOrders.filter(o => o.status === 'PROCESSING');
     } else if (filter === 'completed') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'completed');
+        filteredOrders = filteredOrders.filter(o => o.status === 'COMPLETED');
     } else if (filter === 'cancelled') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'cancelled');
+        filteredOrders = filteredOrders.filter(o => o.status === 'CANCELLED');
     } else if (filter === 'date' && date) {
         filteredOrders = filteredOrders.filter(o => o.date === date);
     }
 
     // Re-render table with filtered orders
     ordersTableBody.innerHTML = '';
-
-    filteredOrders.forEach(order => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>#${order.id}</td>
-            <td>${order.date}</td>
-            <td>${order.customer}</td>
-            <td>${order.items.reduce((sum, item) => sum + item.quantity, 0)}</td>
-            <td>$${order.total.toFixed(2)}</td>
-            <td>
-                <span class="status-badge ${getStatusBadgeClass(order.status)}">
-                    ${formatStatus(order.status)}
-                </span>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-outline-primary action-btn view-order" data-id="${order.id}">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-secondary action-btn print-order" data-id="${order.id}">
-                    <i class="fas fa-print"></i>
-                </button>
-            </td>
-        `;
-        ordersTableBody.appendChild(row);
-    });
-
+    // Re-render orders table
+    renderOrdersTable(filteredOrders);
     // Reattach event listeners
     document.querySelectorAll('.view-order').forEach(btn => {
         btn.addEventListener('click', function() {

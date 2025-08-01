@@ -49,8 +49,12 @@ INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
 INSERT INTO ORDERS (status, discount, sub_total, total_amount) VALUES
 ('COMPLETED', 0.0, 1248.0, 1248.00),
 ('SHIPPED', 10.0, 2998.00, 2698.2),
-('PENDING', 50.0, 678.00, 339.0),
-('PROCESSING', 10.0, 599.00, 539.1);
+('PENDING', 20.0, 328.00, 319.0),
+('COMPLETED', 50.0, 678.00, 339.0),
+('PENDING', 30.0, 628.00, 539.0),
+('PROCESSING', 30.0, 628.00, 539.0),
+('CANCELLED', 10.0, 599.00, 539.1),
+('COMPLETED', 10.0, 599.00, 539.1);
 
 -- Insert order items (products in each order)
 INSERT INTO ORDERS_PRODUCTS (order_id, product_id, quantity, price_at_purchase) VALUES
@@ -68,5 +72,23 @@ INSERT INTO ORDERS_PRODUCTS (order_id, product_id, quantity, price_at_purchase) 
 (3, 5, 1, 429.00),  -- Watch at different price
 
 -- Order 4: Sarah's order (iPad)
-(4, 5, 1, 599.00);
+(4, 5, 1, 599.00),
+(4, 6, 2, 599.00),
+
+-- Order 5: Sarah's order (iPad)
+(5, 3, 1, 599.00),
+(5, 4, 2, 599.00),
+
+-- Order 6: Sarah's order (iPad)
+(6, 1, 1, 599.00),
+(6, 6, 2, 599.00),
+
+-- Order 7:
+(7, 1, 1, 599.00),
+(7, 6, 2, 599.00),
+
+-- Order 8:
+(8, 1, 1, 599.00),
+(8, 6, 2, 599.00);
+
 
