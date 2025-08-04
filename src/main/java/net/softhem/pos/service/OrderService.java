@@ -7,6 +7,9 @@ import net.softhem.pos.exception.ResourceNotFoundException;
 import net.softhem.pos.model.*;
 import net.softhem.pos.repository.OrderRepository;
 import net.softhem.pos.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +39,9 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderDTO> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
-        return orders.stream().map(this::convertToDTO).toList();
+        Pageable pageable = PageRequest.of(1, 30);
+        Page<Order> orders = orderRepository.findAll(pageable);
+        return orders.getContent().stream().map(this::convertToDTO).toList();
     }
 
     @Transactional(readOnly = true)
