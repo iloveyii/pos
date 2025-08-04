@@ -1,11 +1,9 @@
 package net.softhem.pos.controller;
 
-import net.softhem.pos.dto.CreateOrderRequest;
-import net.softhem.pos.dto.OrderDTO;
-import net.softhem.pos.dto.OrderItemRequest;
-import net.softhem.pos.dto.UpdateOrderRequest;
+import net.softhem.pos.dto.*;
 import net.softhem.pos.model.Order;
 import net.softhem.pos.model.OrderProduct;
+import net.softhem.pos.model.OrderSearchCriteria;
 import net.softhem.pos.model.Product;
 import net.softhem.pos.repository.OrderProductRepository;
 import net.softhem.pos.repository.OrderRepository;
@@ -21,10 +19,13 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.server.ResponseStatusException;
 
-
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+
 
 @RestController
 @RequestMapping("/api/orders")
@@ -54,6 +55,26 @@ public class OrderController {
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<PaginatedResponse<Order>> searchOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+//        OrderSearchCriteria criteria = OrderSearchCriteria.builder()
+//                .orderDate(LocalDateTime.now())
+//                .status("PENDING")
+//                .totalAmount(0.0f)
+//                .build();
+//
+//        PaginatedResponse<Order> response = orderService.searchOrders(criteria.getStatus(),
+//                criteria.getOrderDate(),
+//                criteria.getTotalAmount(),
+//                page,
+//                size);
+//        return ResponseEntity.ok(response);
+        return null;
     }
 
     @GetMapping("/{id}")

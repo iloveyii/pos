@@ -1,6 +1,7 @@
 package net.softhem.pos.service;
 
 
+import lombok.RequiredArgsConstructor;
 import net.softhem.pos.dto.*;
 import net.softhem.pos.exception.InsufficientStockException;
 import net.softhem.pos.exception.ResourceNotFoundException;
@@ -15,14 +16,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+
 @Service
 public class OrderService {
 
-    private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
-    private final ProductService productService;
-    private final OrderProductService orderProductService;
+    private OrderRepository orderRepository;
+    private ProductRepository productRepository;
+    private OrderProductService orderProductService;
     List<OrderProduct> orderProducts = new ArrayList<>();
+
+    public OrderService() {
+    }
 
     public OrderService(OrderRepository orderRepository,
                         ProductRepository productRepository,
@@ -30,7 +40,6 @@ public class OrderService {
                         OrderProductService orderProductService) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
-        this.productService = productService;
         this.orderProductService = orderProductService;
     }
 
@@ -39,6 +48,48 @@ public class OrderService {
         List<Order> orders = orderRepository.findAll();
         return orders.stream().map(this::convertToDTO).toList();
     }
+
+    public PaginatedResponse<Order> searchOrders(String status, int page, int size) {
+        // Create pageable with sorting
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Convert criteria to repository query
+        Page<Order> propertyPage = orderRepository.findByCriteria(
+                status,
+                pageable
+        );
+
+        return PaginatedResponse.<Order>builder()
+                .content(propertyPage.getContent())
+                .currentPage(propertyPage.getNumber())
+                .totalPages(propertyPage.getTotalPages())
+                .totalItems(propertyPage.getTotalElements())
+                .itemsPerPage(propertyPage.getSize())
+                .build();
+    }
+
+    private Sort createSort(String sortBy, String sortDirection) {
+        if (sortBy == null || sortBy.isEmpty()) {
+            return Sort.unsorted();
+        }
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sortDirection != null && sortDirection.equalsIgnoreCase("desc")) {
+            direction = Sort.Direction.DESC;
+        }
+
+        switch (sortBy.toLowerCase()) {
+            case "status":
+                return Sort.by(direction, "status");
+            case "order_date":
+                return Sort.by(direction, "order_date");
+            case "total_amount":
+                return Sort.by(direction, "total_amount");
+            default:
+                return Sort.by(direction, "order_date");
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public OrderDTO getOrderById(Long id) {
