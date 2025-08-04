@@ -23,3 +23,6 @@ FROM
     (SELECT SUM(quantity) AS total_order_quantity FROM ORDERS_PRODUCTS) op,
     (SELECT SUM(in_stock) AS total_in_stock FROM products) p;
 ```
+## Debug
+
+- <https://chat.deepseek.com/a/chat/s/0095ab7b-a28e-4263-b2d7-ff066d764506>

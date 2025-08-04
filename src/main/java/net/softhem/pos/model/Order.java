@@ -17,25 +17,25 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_date", nullable = false)
+    @Column(name = "order_date", nullable = true)
     private LocalDateTime orderDate = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String status = "PENDING";
 
-    @Column(name = "sub_total", nullable = false)
+    @Column(name = "sub_total", nullable = true)
     private Float subTotal;
 
-    @Column(name = "discount", nullable = false)
+    @Column(name = "discount", nullable = true)
     private Float discount;
 
-    @Column(name = "total_amount", nullable = false)
+    @Column(name = "total_amount", nullable = true)
     private Float totalAmount;
 
-    @Column(name = "payment_method", nullable = false)
+    @Column(name = "payment_method", nullable = true)
     private String paymentMethod;
 
-    @Column(name = "notes", nullable = false)
+    @Column(name = "notes", nullable = true)
     private String notes;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
