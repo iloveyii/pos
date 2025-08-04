@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -114,14 +115,21 @@ public class OrderController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
 
         if (!item.getOrder().getId().equals(orderId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item doesn't belong to this order");
+            // New Order and dont need to remove item
+            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item doesn't belong to this order");
         }
 
-        order.getOrderProducts().remove(item);
-        orderProductRepository.delete(item);
+        // find product in Order's orderProducts list by product id
+        for(OrderProduct orderProduct: order.getOrderProducts()){
+            if(Objects.equals(orderProduct.getProduct().getId(), itemId)) {
+                order.getOrderProducts().remove(orderProduct);
+                orderProductRepository.delete(orderProduct);
+                // Order savedOrder = orderRepository.save(order);
+                return ResponseEntity.ok(orderService.convertToDTO(order));
+            }
+        }
 
-        Order savedOrder = orderRepository.save(order);
-        return ResponseEntity.ok(orderService.convertToDTO(savedOrder));
+        return ResponseEntity.ok(orderService.convertToDTO(order));
     }
 
     // Get order details

@@ -262,7 +262,11 @@ function addToCart(productId, quantity = 1) {
 function removeFromCart(productId) {
     cart = cart.filter(item => item.productId !== productId);
     renderCart();
-    updateCartOnBackend();
+    let orderId = 0;
+    if(objOrder && objOrder.id){
+        orderId = objOrder.id;
+    }
+    makeApiRequest('DELETE', `orders/${orderId}/items/${productId}`);
     showNotification('Item removed from cart');
 }
 
@@ -275,11 +279,12 @@ function updateQuantity(productId, newQuantity) {
             removeFromCart(productId);
         } else {
             item.quantity = newQuantity;
+            addItemToOrderOnBackend(productId, item.quantity);
         }
     }
 
     renderCart();
-    updateCartOnBackend();
+    // updateCartOnBackend();
 }
 
 // Apply Discount
