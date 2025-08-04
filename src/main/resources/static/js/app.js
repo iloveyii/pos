@@ -252,7 +252,8 @@ function addToCart(productId, quantity = 1) {
     }
 
     renderCart();
-    updateCartOnBackend();
+    // updateCartOnBackend();
+    addItemToOrderOnBackend(productId, quantity);
     showNotification(`${quantity} ${quantity > 1 ? 'items' : 'item'} added to cart`);
 }
 
@@ -321,6 +322,14 @@ function updateCartOnBackend() {
         updateOrder(objOrder.id);
     else
         createOrder();
+}
+
+function addItemToOrderOnBackend(itemId, quantity) {
+    console.log('addItemToOrderOnBackend', {itemId, quantity});
+    makeApiRequest('POST', `orders/${objOrder.id}/items`, {
+        productId: itemId,
+        quantity: quantity
+    });
 }
 
 function createOrder() {

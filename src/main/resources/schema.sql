@@ -15,9 +15,9 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'PENDING',
-    sub_total FLOAT NOT NULL,
+    sub_total FLOAT DEFAULT 0.0,
     discount FLOAT DEFAULT 0.0,
-    total_amount FLOAT NOT NULL,
+    total_amount FLOAT DEFAULT 0.0,
     payment_method VARCHAR(50) DEFAULT 'CARD',
     notes VARCHAR(200)
 );

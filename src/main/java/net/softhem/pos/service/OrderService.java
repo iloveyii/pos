@@ -47,40 +47,46 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+
+    // create order
+    // add/update product to order
+    // remove order from order
+    //
+
     @Transactional
     public OrderDTO createOrder(CreateOrderRequest request) {
         Order order = new Order();
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus("PENDING");
-        order.setTotalAmount(0.0f);
+        // order.setOrderDate(LocalDateTime.now());
+        // order.setStatus("PENDING");
+        // order.setTotalAmount(0.0f);
 
-        List<OrderProduct> orderProducts = new ArrayList<>();
-        float totalAmount = 0.0f;
+//        List<OrderProduct> orderProducts = new ArrayList<>();
+//        float totalAmount = 0.0f;
+//
+//        for (OrderItemRequest item : request.getItems()) {
+//            Product product = productRepository.findById(item.getProductId())
+//                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + item.getProductId()));
+//
+//            if (product.getInStock() < item.getQuantity()) {
+//                throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
+//            }
+//
+//            OrderProduct orderProduct = new OrderProduct();
+//            orderProduct.setOrder(order);
+//            orderProduct.setProduct(product);
+//            orderProduct.setQuantity(item.getQuantity());
+//            orderProduct.setPriceAtPurchase(product.getPrice());
+//            orderProducts.add(orderProduct);
+//
+//            totalAmount += product.getPrice() * item.getQuantity();
+//
+//            // Update product stock
+//            product.setInStock(product.getInStock() - item.getQuantity());
+//            productRepository.save(product);
+//        }
 
-        for (OrderItemRequest item : request.getItems()) {
-            Product product = productRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + item.getProductId()));
-
-            if (product.getInStock() < item.getQuantity()) {
-                throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
-            }
-
-            OrderProduct orderProduct = new OrderProduct();
-            orderProduct.setOrder(order);
-            orderProduct.setProduct(product);
-            orderProduct.setQuantity(item.getQuantity());
-            orderProduct.setPriceAtPurchase(product.getPrice());
-            orderProducts.add(orderProduct);
-
-            totalAmount += product.getPrice() * item.getQuantity();
-
-            // Update product stock
-            product.setInStock(product.getInStock() - item.getQuantity());
-            productRepository.save(product);
-        }
-
-        order.setOrderProducts(orderProducts);
-        order.setTotalAmount(totalAmount);
+        // order.setOrderProducts(orderProducts);
+        // order.setTotalAmount(totalAmount);
         Order savedOrder = orderRepository.save(order);
         return convertToDTO(savedOrder);
     }
@@ -112,7 +118,7 @@ public class OrderService {
         orderRepository.delete(order);
     }
 
-    private OrderDTO convertToDTO(Order order) {
+    public OrderDTO convertToDTO(Order order) {
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
         dto.setOrderDate(order.getOrderDate());
