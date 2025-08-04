@@ -244,6 +244,7 @@ function addToCart(productId, quantity = 1) {
 
     if (existingItem) {
         existingItem.quantity += quantity;
+        quantity = existingItem.quantity;
     } else {
         cart.push({
             productId,
@@ -326,15 +327,25 @@ function updateCartOnBackend() {
 
 function addItemToOrderOnBackend(itemId, quantity) {
     console.log('addItemToOrderOnBackend', {itemId, quantity});
-    makeApiRequest('POST', `orders/${objOrder.id}/items`, {
-        productId: itemId,
-        quantity: quantity
-    });
+    // if order has been created
+    if(objOrder && objOrder.id) {
+        makeApiRequest('POST', `orders/${objOrder.id}/items`, {
+            productId: itemId,
+            quantity: quantity
+        });
+    } else { // order is new
+        createOrder().then(() => {
+            makeApiRequest('POST', `orders/${objOrder.id}/items`, {
+                productId: itemId,
+                quantity: quantity
+            });
+        });
+    }
 }
 
 function createOrder() {
     // Create the order request
-    fetch('/api/orders', {
+    return fetch('/api/orders', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -552,11 +563,15 @@ function sendCommandRequest(data) {
 }
 
 function sendCommandToShow(cmd) {
+    let id = 2;
+    if(objOrder && objOrder.id) {
+        id = objOrder.id;
+    }
     if(cmd == 'qr') {
-        sendCommandRequest({ id: 2, command: 'qr'});
+        sendCommandRequest({ id, command: 'qr'});
     }
     if(cmd == 'invoice') {
-        sendCommandRequest({ id: 2, command: 'list'});
+        sendCommandRequest({ id, command: 'list'});
     }
 }
 

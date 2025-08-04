@@ -87,17 +87,18 @@ public class OrderController {
 
         if (existingItem.isPresent()) {
             // Update quantity
-            existingItem.get().setQuantity(existingItem.get().getQuantity() + request.getQuantity());
+            existingItem.get().setQuantity(request.getQuantity());
+            orderProductRepository.save(existingItem.get());
         } else {
             // Add new item
             OrderProduct item = new OrderProduct();
             item.setOrder(order);
             item.setProduct(product);
             item.setQuantity(request.getQuantity());
-            order.getOrderProducts().add(item);
+            item.setPriceAtPurchase(product.getPrice());
+            orderProductRepository.save(item);
         }
-        Order savedOrder = orderRepository.save(order);
-        return ResponseEntity.ok(orderService.convertToDTO(savedOrder));
+        return ResponseEntity.ok(orderService.convertToDTO(order));
     }
 
     // Remove item from order

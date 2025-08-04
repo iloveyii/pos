@@ -40,4 +40,20 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts = new ArrayList<>();
+
+    public Float getDiscount() {
+        return discount != null ? discount : 0.0f;
+    }
+
+    public Float getSubTotal() {
+        float subTotal = 0.0f;
+        for(OrderProduct orderProduct: orderProducts) {
+            subTotal += orderProduct.getProduct().getPrice() * orderProduct.getQuantity();
+        }
+        return subTotal;
+    }
+
+    public Float getTotalAmount() {
+        return getSubTotal() + 0.08f * getSubTotal();
+    }
 }

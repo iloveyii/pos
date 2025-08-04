@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS ORDERS_PRODUCTS (
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INTEGER NOT NULL,
-    price_at_purchase FLOAT NOT NULL,
+    price_at_purchase FLOAT DEFAULT 0.0,
     -- PRIMARY KEY (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
