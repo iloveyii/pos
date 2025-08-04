@@ -39,7 +39,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderDTO> getAllOrders() {
-        Pageable pageable = PageRequest.of(1, 30);
+        Pageable pageable = PageRequest.of(0, 30);
         Page<Order> orders = orderRepository.findAll(pageable);
         return orders.getContent().stream().map(this::convertToDTO).toList();
     }
