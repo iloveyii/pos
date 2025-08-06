@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     discount FLOAT DEFAULT 0.0,
     total_amount FLOAT DEFAULT 0.0,
     payment_method VARCHAR(50) DEFAULT 'CARD',
-    notes VARCHAR(200)
+    notes VARCHAR(200) DEFAULT 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'
 );
 
 CREATE TABLE IF NOT EXISTS ORDERS_PRODUCTS (
@@ -46,15 +46,15 @@ INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
 ('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100);
 
 -- Insert sample orders
-INSERT INTO ORDERS (status, discount, sub_total, total_amount) VALUES
-('COMPLETED', 0.0, 1248.0, 1248.00),
-('SHIPPED', 10.0, 2998.00, 2698.2),
-('PENDING', 20.0, 328.00, 319.0),
-('COMPLETED', 50.0, 678.00, 339.0),
-('PENDING', 30.0, 628.00, 539.0),
-('PROCESSING', 30.0, 628.00, 539.0),
-('CANCELLED', 10.0, 599.00, 539.1),
-('COMPLETED', 10.0, 599.00, 539.1);
+INSERT INTO ORDERS (status, discount, sub_total, total_amount, notes) VALUES
+('COMPLETED', 0.0, 1248.0, 1248.00, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
+('SHIPPED', 10.0, 2998.00, 2698.2, 'https://softhem.net/invoice-sample.pdf'),
+('PENDING', 20.0, 328.00, 319.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
+('COMPLETED', 50.0, 678.00, 339.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
+('PENDING', 30.0, 628.00, 539.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
+('PROCESSING', 30.0, 628.00, 539.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
+('CANCELLED', 10.0, 599.00, 539.1, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
+('COMPLETED', 10.0, 599.00, 539.1, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf');
 
 -- Insert order items (products in each order)
 INSERT INTO ORDERS_PRODUCTS (order_id, product_id, quantity, price_at_purchase) VALUES

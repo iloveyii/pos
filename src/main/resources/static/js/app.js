@@ -1,5 +1,5 @@
 // Product Data with Unsplash images
-let products = [
+var products = [
     {
         id: 1,
         name: "Wireless Headphones",
@@ -100,11 +100,8 @@ const processPaymentBtn = document.getElementById('processPayment');
 const notificationToast = new bootstrap.Toast(document.getElementById('notificationToast'));
 const notificationMessage = document.getElementById('notificationMessage');
 
-        const productsTableBody = document.getElementById('productsTableBody');
-        const productModal = new bootstrap.Modal(document.getElementById('productModal'));
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        const pageContainers = document.querySelectorAll('.page-container');
-        const navLinks = document.querySelectorAll('.nav-link');
+const pageContainers = document.querySelectorAll('.page-container');
+const navLinks = document.querySelectorAll('.nav-link');
 
 
 // Initialize the POS

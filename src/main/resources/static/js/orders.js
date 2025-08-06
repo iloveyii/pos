@@ -313,6 +313,12 @@ function viewOrderDetails(orderId) {
     orderDetailsModal.show();
 }
 
+function printOrder(id) {
+    console.log('printing order: ' + id);
+    // Send order for printing to ws
+    sendCommandRequest({ id, command: 'print'});
+}
+
 
 (async function(){
     console.log("Document is fully loaded.");

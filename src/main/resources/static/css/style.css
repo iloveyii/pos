@@ -572,3 +572,7 @@ body {
             background-color: var(--pos-primary);
             color: white;
         }
+.thumb-img {
+    height: 30px;
+    object-fit: cover; /* Optional */
+}

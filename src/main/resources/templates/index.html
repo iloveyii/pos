@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css?214567}" rel="stylesheet">
 </head>
 <body>
 
@@ -182,17 +182,26 @@
                 </div>
             </div>
 
-            <ul class="nav nav-tabs mb-4">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" data-tab="all-products">All Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-tab="active-products">Active</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-tab="out-of-stock">Out of Stock</a>
-                </li>
-            </ul>
+            <!-- Products Filters -->
+            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-primary p-2">
+                <div class="me-3">
+                    <div class="input-group" style="width: 250px;">
+                        <input id="searchProducts" type="text" class="form-control" placeholder="Search products...">
+                        <button class="btn btn-outline-secondary bg-warning" type="button">
+                            <i id="btnProductsClear" class="fas fa-close me-3"></i>
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-toggle bg-success border-2" data-toggle="buttons">
+                    <button id="allProducts" class="btn filter-btn-products active" data-filter="allProducts">All</button>
+                    <button class="btn filter-btn-products" data-filter="activeProducts">Active</button>
+                    <button class="btn filter-btn-products" data-filter="outOfStockProducts">Out of stock</button>
+                </div>
+                <div class="ms-auto">
+                    <input type="date" class="form-control" id="productDateFilter">
+                </div>
+            </div>
 
             <div class="table-responsive">
                 <table class="table product-table table-hover">
@@ -200,7 +209,7 @@
                     <tr>
                         <th width="50px">#</th>
                         <th>Product</th>
-                        <th>Category</th>
+                        <th>Description</th>
                         <th>Price</th>
                         <th>Stock</th>
                         <th>Status</th>
@@ -237,7 +246,7 @@
             </div>
 
             <!-- Order Filters -->
-            <div class="d-flex rounded border-2 flex-wrap align-items-center mb-4 bg-primary p-2">
+            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-primary p-2">
                 <div class="me-3">
                     <div class="input-group" style="width: 250px;">
                         <input id="searchOrders" type="text" class="form-control" placeholder="Search orders...">
@@ -247,7 +256,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="btn-group btn-group-toggle bg-success" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle bg-success border-2" data-toggle="buttons">
                     <button class="btn filter-btn-orders active" data-filter="all">All</button>
                     <button class="btn filter-btn-orders" data-filter="pending">Pending</button>
                     <button class="btn filter-btn-orders" data-filter="processing">Processing</button>
@@ -434,7 +443,8 @@
 <!-- Bootstrap 5.4 JS Bundle with Popper -->
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/common.js?214go123}" defer></script>
-<script th:src="@{/js/orders.js?214go12ljlkj3}" defer></script>
+<script th:src="@{/js/orders.js?2hkjlkj3}" defer></script>
+<script th:src="@{/js/products.js?123fafda}" defer></script>
 <script th:src="@{/js/app.js?atibmano123reter}"></script>
 </body>
 </html>

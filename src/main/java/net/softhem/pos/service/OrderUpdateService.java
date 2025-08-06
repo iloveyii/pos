@@ -16,6 +16,9 @@ public class OrderUpdateService {
 
     public void sendOrderUpdate(OrderDTO orderDTO) {
         // Send to all subscribers of "/topic/orders"
+        if(orderDTO.getNotes() == null || orderDTO.getNotes().isEmpty()) {
+            orderDTO.setNotes("https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf");
+        }
         messagingTemplate.convertAndSend("/topic/orders", orderDTO);
 
         // To send to a specific user:
