@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     discount FLOAT DEFAULT 0.0,
     total_amount FLOAT DEFAULT 0.0,
     payment_method VARCHAR(50) DEFAULT 'CARD',
-    notes VARCHAR(200) DEFAULT 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'
+    notes VARCHAR(200) DEFAULT 'http://localhost:8080/pdf/invoice-sample2.pdf'
 );
 
 CREATE TABLE IF NOT EXISTS ORDERS_PRODUCTS (
@@ -47,14 +47,14 @@ INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
 
 -- Insert sample orders
 INSERT INTO ORDERS (status, discount, sub_total, total_amount, notes) VALUES
-('COMPLETED', 0.0, 1248.0, 1248.00, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
-('SHIPPED', 10.0, 2998.00, 2698.2, 'https://softhem.net/invoice-sample.pdf'),
-('PENDING', 20.0, 328.00, 319.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
-('COMPLETED', 50.0, 678.00, 339.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
-('PENDING', 30.0, 628.00, 539.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
-('PROCESSING', 30.0, 628.00, 539.0, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
-('CANCELLED', 10.0, 599.00, 539.1, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf'),
-('COMPLETED', 10.0, 599.00, 539.1, 'https://k.jojomobil.se/pdf_files/JM004426/JM004426.pdf');
+('COMPLETED', 0.0, 1248.0, 1248.00, 'http://localhost:8080/pdf/JM004426.pdf'),
+('SHIPPED', 10.0, 2998.00, 2698.2, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('PENDING', 20.0, 328.00, 319.0, 'http://localhost:8080/pdf/invoice-sample.pdf'),
+('COMPLETED', 50.0, 678.00, 339.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('PENDING', 30.0, 628.00, 539.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('PROCESSING', 30.0, 628.00, 539.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('CANCELLED', 10.0, 599.00, 539.1, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('COMPLETED', 10.0, 599.00, 539.1, 'http://localhost:8080/pdf/invoice-sample2.pdf');
 
 -- Insert order items (products in each order)
 INSERT INTO ORDERS_PRODUCTS (order_id, product_id, quantity, price_at_purchase) VALUES
