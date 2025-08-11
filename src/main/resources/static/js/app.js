@@ -521,6 +521,7 @@ function getStatusBadgeClass(status) {
 
 // Format status for display
 function formatStatus(status) {
+    status = status ? status : 'active';
     return status.charAt(0).toUpperCase() + status.slice(1);
 }
 

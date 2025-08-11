@@ -86,6 +86,7 @@ const orderDetailsModal = new bootstrap.Modal(document.getElementById('orderDeta
 const orderDateFilter = document.getElementById('orderDateFilter');
 const searchOrders = document.getElementById('searchOrders');
 const filterButtonsOrders = document.querySelectorAll('.filter-btn-orders');
+const printOrderBtn = document.querySelector('#printOrderBtn');
 
 
 // Initialize the POS
@@ -128,8 +129,31 @@ function addEventListenerForOrders() {
     orderDateFilter.addEventListener('change', function() {
         filterOrders('date', this.value);
     });
-}
 
+    // print order
+    printOrderBtn.addEventListener('click', function() {
+        const orderId = parseInt(this.getAttribute('data-id'));
+        console.log('printOrderBtn data id: ' + orderId);
+        printOrder(orderId);
+    });
+
+    // Add event listeners to action buttons
+    document.querySelectorAll('.view-order').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const orderId = parseInt(this.getAttribute('data-id'));
+            console.log('view order: ' + orderId);
+            viewOrderDetails(orderId);
+        });
+    });
+
+    document.querySelectorAll('.print-order').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const orderId = parseInt(this.getAttribute('data-id'));
+            printOrder(orderId);
+        });
+    });
+
+}
 
 // Render orders table
 function renderOrdersTable(orders) {
@@ -160,20 +184,7 @@ function renderOrdersTable(orders) {
         ordersTableBody.appendChild(row);
     });
 
-    // Add event listeners to action buttons
-    document.querySelectorAll('.view-order').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const orderId = parseInt(this.getAttribute('data-id'));
-            viewOrderDetails(orderId);
-        });
-    });
 
-    document.querySelectorAll('.print-order').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const orderId = parseInt(this.getAttribute('data-id'));
-            printOrder(orderId);
-        });
-    });
 }
 
 // Filter orders
@@ -310,6 +321,9 @@ function viewOrderDetails(orderId) {
 
     // Set content and show modal
     document.getElementById('orderDetailsContent').innerHTML = orderDetails;
+    // data-id for print button
+    console.log('setting dataset.id for printOrderBtn = ' + order.id);
+    printOrderBtn.dataset.id = order.id;
     orderDetailsModal.show();
 }
 

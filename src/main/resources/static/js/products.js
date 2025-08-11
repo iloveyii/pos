@@ -211,6 +211,7 @@ function filterProducts(filter, date = '') {
 function viewProductDetails(orderId) {
     const product = products.find(o => o.id === orderId);
     if (!product) return;
+    console.log('product', product);
 
     // Set product ID in header
     document.getElementById('orderIdHeader').textContent = product.id;
@@ -248,23 +249,6 @@ function viewProductDetails(orderId) {
                 <h6 class="fw-bold mb-3">product Items</h6>
     `;
 
-    // Add product items
-    product.orderProducts.forEach(item => {
-        orderDetails += `
-            <div class="product-product-item">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="mb-1">${item.productName}</h6>
-                        <small class="text-muted">$${item.priceAtPurchase.toFixed(2)} x ${item.quantity}</small>
-                    </div>
-                    <div class="text-end">
-                        <p class="mb-0 fw-bold">$${(item.priceAtPurchase * item.quantity).toFixed(2)}</p>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-
     // Add product summary
     orderDetails += `
             </div>
@@ -290,18 +274,6 @@ function viewProductDetails(orderId) {
             </div>
         </div>
     `;
-
-    // Add notes if available
-    if (product.notes) {
-        orderDetails += `
-            <div class="card mt-3 product-details-card">
-                <div class="card-body">
-                    <h6 class="fw-bold mb-2">product Notes</h6>
-                    <p class="mb-0">${product.notes}</p>
-                </div>
-            </div>
-        `;
-    }
 
     // Set content and show modal
     document.getElementById('orderDetailsContent').innerHTML = orderDetails;
