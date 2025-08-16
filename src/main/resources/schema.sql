@@ -1,14 +1,30 @@
-drop table if exists orders_products;
-drop table if exists products;
-drop table if exists orders;
+drop table if exists ORDERS_PRODUCTS;
+drop table if exists PRODUCTS;
+drop table if exists ORDERS;
+drop table if exists CATEGORIES;
+
+-- CATEGORIES table with basic fields
+CREATE TABLE IF NOT EXISTS CATEGORIES (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description VARCHAR(512),
+    status BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS PRODUCTS (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
+    status BOOLEAN DEFAULT TRUE,
     description VARCHAR(512),
     image VARCHAR(64),
     price FLOAT,
-    in_stock INTEGER
+    in_stock INTEGER DEFAULT 100,
+    category_id BIGINT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES CATEGORIES(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS ORDERS (
@@ -19,7 +35,9 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     discount FLOAT DEFAULT 0.0,
     total_amount FLOAT DEFAULT 0.0,
     payment_method VARCHAR(50) DEFAULT 'CARD',
-    notes VARCHAR(200) DEFAULT 'http://localhost:8080/pdf/invoice-sample2.pdf'
+    notes VARCHAR(200) DEFAULT 'http://localhost:8080/pdf/invoice-sample2.pdf',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS ORDERS_PRODUCTS (
@@ -28,22 +46,51 @@ CREATE TABLE IF NOT EXISTS ORDERS_PRODUCTS (
     product_id BIGINT NOT NULL,
     quantity INTEGER NOT NULL,
     price_at_purchase FLOAT DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     -- PRIMARY KEY (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
 );
 
--- Insert sample products
-INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
-('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.avif', 99.00, 100),
-('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.avif', 149.99, 50),
-('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-phones.avif', 59.99, 200),
-('USB-C Cable', 'Fast charging 3ft cable', 'ear-buds.avif', 12.99, 75),
+-- Insert sample categories
+INSERT INTO CATEGORIES (name, description, status) VALUES
+('Electronics', 'Electronic devices and accessories', TRUE),
+('Clothing', 'Apparel and fashion items', TRUE),
+('Groceries', 'Food and household essentials', TRUE),
+('Home & Garden', 'Home improvement and outdoor living', TRUE);
 
-('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.avif', 24.99, 60),
-('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.avif', 39.99, 30),
-('Power Bank', '10000mAh dual USB', 'power-bank.avif', 29.99, 50),
-('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100);
+-- Insert sample products
+--INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
+--('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.avif', 99.00, 100),
+--('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.avif', 149.99, 50),
+--('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-phones.avif', 59.99, 200),
+--('USB-C Cable', 'Fast charging 3ft cable', 'ear-buds.avif', 12.99, 75),
+--
+--('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.avif', 24.99, 60),
+--('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.avif', 39.99, 30),
+--('Power Bank', '10000mAh dual USB', 'power-bank.avif', 29.99, 50),
+--('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100);
+
+-- Insert sample products with random category assignments (1-4)
+INSERT INTO PRODUCTS (name, description, image, price, in_stock, category_id) VALUES
+-- Electronics (random category_id 1)
+('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.avif', 99.00, 100, 1),
+('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.avif', 149.99, 50, 1),
+('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-speaker.avif', 59.99, 200, FLOOR(1 + RAND() * 4)),
+('Ear buds', 'Fast charging 3ft cable', 'ear-buds.avif', 12.99, 75, FLOOR(1 + RAND() * 4)),
+
+-- Mixed categories
+('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.avif', 24.99, 60, FLOOR(1 + RAND() * 4)),
+('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.avif', 39.99, 30, 2), -- Clothing
+('Power Bank', '10000mAh dual USB', 'power-bank.avif', 29.99, 50, 1), -- Electronics
+('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100, 1), -- Electronics
+
+-- Additional random category products
+('Organic Coffee', 'Premium arabica beans', 'coffee.avif', 12.99, 50, 3), -- Groceries
+('Gardening Tools', '3-piece set with carrying case', 'garden-tools.avif', 34.99, 40, 4), -- Home & Garden
+('Running Shoes', 'Lightweight athletic shoes', 'running-shoes.avif', 79.99, 25, 2), -- Clothing
+('LED Desk Lamp', 'Adjustable brightness', 'desk-lamp.avif', 29.99, 35, FLOOR(1 + RAND() * 4));
 
 -- Insert sample orders
 INSERT INTO ORDERS (status, discount, sub_total, total_amount, notes) VALUES

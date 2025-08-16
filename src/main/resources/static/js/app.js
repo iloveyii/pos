@@ -503,13 +503,12 @@ function setupEventListeners() {
 // Initialize the POS when DOM is loaded
 document.addEventListener('DOMContentLoaded', initPOS);
 
-
-
-
-
-
 // Get status badge class
 function getStatusBadgeClass(status) {
+    if(status === true)
+        return 'status-completed';
+    if(status === false)
+        return 'status-processing';
     switch (status) {
         case 'pending': return 'status-pending';
         case 'processing': return 'status-processing';
@@ -519,11 +518,7 @@ function getStatusBadgeClass(status) {
     }
 }
 
-// Format status for display
-function formatStatus(status) {
-    status = status ? status : 'active';
-    return status.charAt(0).toUpperCase() + status.slice(1);
-}
+
 
 // Show specific page
 function showPage(page) {

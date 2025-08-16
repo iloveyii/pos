@@ -14,6 +14,8 @@
 
 ## SQL
 
+- Open browser: <http://localhost:8080/h2-console/>
+
 ```SQL
 SELECT 
     op.total_order_quantity, 

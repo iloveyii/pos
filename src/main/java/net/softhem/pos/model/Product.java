@@ -17,6 +17,9 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
+    private boolean status;
+
+    @Column(nullable = false)
     private Float price;
 
     @Column(nullable = true)
@@ -27,4 +30,8 @@ public class Product {
 
     @Column(name = "in_stock", nullable = false)
     private Integer inStock;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

@@ -176,7 +176,6 @@ function addEventListenerForProducts() {
         // Update views and close modal
         // renderProducts(); // for POS cards
         renderProductsTable(products);
-        addEventListenerForProductRowsActions();
         productModal.hide();
     });
 
@@ -196,9 +195,6 @@ function addEventListenerForProducts() {
             reader.readAsDataURL(file);
         }
     });
-
-
-    addEventListenerForProductRowsActions();
 }
 
 function saveProductOnBackend(productData) {
@@ -232,7 +228,6 @@ function addEventListenerForProductRowsActions() {
         // Update views and close modal
         // renderProducts();
         renderProductsTable(products);
-        addEventListenerForProductRowsActions();
         deleteModal.hide();
         showNotification('Product deleted successfully');
     });
@@ -252,8 +247,8 @@ function renderProductsTable(products) {
             <td>$${product.price.toFixed(2)}</td>
             <td>${product.inStock}</td>
             <td>
-                <span class="status-badge ${getStatusBadgeClass('active')}">
-                    ${formatStatus('active')}
+                <span class="status-badge ${getStatusBadgeClass(product.status)}">
+                    ${formatStatus(product.status)}
                 </span>
             </td>
             <td>
@@ -288,6 +283,8 @@ function renderProductsTable(products) {
             printOrder(orderId);
         });
     });
+
+    addEventListenerForProductRowsActions();
 }
 
 // Filter products
@@ -295,8 +292,11 @@ function filterProducts(filter, date = '') {
     let filteredProducts = [...products];
 
     if (filter === 'activeProducts') {
-        filteredProducts = filteredProducts.filter(p => p.name === 'ACTIVE');
-    } else if (filter === 'outOfStockProducts') {
+        filteredProducts = filteredProducts.filter(p => p.status === true);
+    } else if(filter === 'inActiveProducts') {
+        filteredProducts = filteredProducts.filter(p => p.status === false);
+    }
+    else if (filter === 'outOfStockProducts') {
         filteredProducts = filteredProducts.filter(p => p.inStock < 60);
     }
 
@@ -406,9 +406,9 @@ function editProduct(productId) {
     document.getElementById('productName').value = product.name;
     document.getElementById('productDescription').value = product.description;
     document.getElementById('productPrice').value = product.price;
-    document.getElementById('productCost').value = product.cost;
-    document.getElementById('productStock').value = product.stock;
-    document.getElementById('productCategory').value = product.category;
+    document.getElementById('productCost').value = product.price;
+    document.getElementById('productStock').value = product.inStock;
+    document.getElementById('productCategory').value = product.categoryId;
     document.getElementById('productStatus').checked = product.status;
     document.getElementById('productBarcode').value = product.barcode || '';
     document.getElementById('productWeight').value = product.weight || '';
@@ -431,6 +431,13 @@ function editProduct(productId) {
 function confirmDelete(productId) {
     document.getElementById('confirmDeleteBtn').setAttribute('data-id', productId);
     deleteModal.show();
+}
+
+// Format status for display
+function formatStatus(status) {
+    console.log('status:' + status);
+    status = status === true ? 'active' : 'inactive';
+    return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
 (async function(){
