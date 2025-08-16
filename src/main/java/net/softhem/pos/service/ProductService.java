@@ -48,6 +48,7 @@ public class ProductService {
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setInStock(productDTO.getInStock());
+        product.setDescription(productDTO.getDescription());
         Product updatedProduct = productRepository.save(product);
         return convertToDTO(updatedProduct);
     }

@@ -213,99 +213,13 @@
                         <th>Price</th>
                         <th>Stock</th>
                         <th>Status</th>
-                        <th width="120px">Actions</th>
+                        <th width="180px">Actions</th>
                     </tr>
                     </thead>
                     <tbody id="productsTableBody">
                     <!-- Products will be loaded here -->
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Orders Management Page -->
-<div class="container-fluid page-container" id="orders-page">
-    <div class="row">
-        <div class="col-12">
-            <div class="management-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="header mb-0">
-                        <i class="fas fa-clipboard-list me-2"></i>Order Management
-                    </h2>
-                    <div class="d-flex">
-                        <button class="btn btn-pos-outline me-2">
-                            <i class="fas fa-file-export me-1"></i> Export
-                        </button>
-                        <button class="btn btn-pos-primary">
-                            <i class="fas fa-plus me-1"></i> New Order
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Order Filters -->
-            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-primary p-2">
-                <div class="me-3">
-                    <div class="input-group" style="width: 250px;">
-                        <input id="searchOrders" type="text" class="form-control" placeholder="Search orders...">
-                        <button class="btn btn-outline-secondary bg-warning" type="button">
-                            <i class="fas fa-close me-3"></i>
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="btn-group btn-group-toggle bg-success border-2" data-toggle="buttons">
-                    <button class="btn filter-btn-orders active" data-filter="all">All</button>
-                    <button class="btn filter-btn-orders" data-filter="pending">Pending</button>
-                    <button class="btn filter-btn-orders" data-filter="processing">Processing</button>
-                    <button class="btn filter-btn-orders" data-filter="completed">Completed</button>
-                    <button class="btn filter-btn-orders" data-filter="cancelled">Cancelled</button>
-                </div>
-                <div class="ms-auto">
-                    <input type="date" class="form-control" id="orderDateFilter">
-                </div>
-            </div>
-
-            <!-- Orders Table -->
-            <div class="table-responsive">
-                <table class="table orders-table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Items</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody id="ordersTableBody">
-                    <!-- Orders will be loaded here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Order Details Modal -->
-            <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Order Details - #<span id="orderIdHeader"></span></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" id="orderDetailsContent">
-                            <!-- Order details will be loaded here -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-pos-primary" id="printOrderBtn">
-                                <i class="fas fa-print me-1"></i> Print
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -410,6 +324,92 @@
     </div>
 </div>
 
+<!-- Orders Management Page -->
+<div class="container-fluid page-container" id="orders-page">
+    <div class="row">
+        <div class="col-12">
+            <div class="management-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="header mb-0">
+                        <i class="fas fa-clipboard-list me-2"></i>Order Management
+                    </h2>
+                    <div class="d-flex">
+                        <button class="btn btn-pos-outline me-2">
+                            <i class="fas fa-file-export me-1"></i> Export
+                        </button>
+                        <button class="btn btn-pos-primary">
+                            <i class="fas fa-plus me-1"></i> New Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Filters -->
+            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-primary p-2">
+                <div class="me-3">
+                    <div class="input-group" style="width: 250px;">
+                        <input id="searchOrders" type="text" class="form-control" placeholder="Search orders...">
+                        <button class="btn btn-outline-secondary bg-warning" type="button">
+                            <i class="fas fa-close me-3"></i>
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-toggle bg-success border-2" data-toggle="buttons">
+                    <button class="btn filter-btn-orders active" data-filter="all">All</button>
+                    <button class="btn filter-btn-orders" data-filter="pending">Pending</button>
+                    <button class="btn filter-btn-orders" data-filter="processing">Processing</button>
+                    <button class="btn filter-btn-orders" data-filter="completed">Completed</button>
+                    <button class="btn filter-btn-orders" data-filter="cancelled">Cancelled</button>
+                </div>
+                <div class="ms-auto">
+                    <input type="date" class="form-control" id="orderDateFilter">
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="table-responsive">
+                <table class="table orders-table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                    <!-- Orders will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Order Details Modal -->
+            <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Order Details - #<span id="orderIdHeader"></span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="orderDetailsContent">
+                            <!-- Order details will be loaded here -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-pos-primary" id="printOrderBtn">
+                                <i class="fas fa-print me-1"></i> Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -444,7 +444,7 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/common.js?214go123}" defer></script>
 <script th:src="@{/js/orders.js?2hkjasdflkj3}" defer></script>
-<script th:src="@{/js/products.js?123kklhfhiafda}" defer></script>
-<script th:src="@{/js/app.js?atibmano12go3r214eter}"></script>
+<script th:src="@{/js/products.js?1i74a7fda}" defer></script>
+<script th:src="@{/js/app.js?atibmano12go3r25417674eter}"></script>
 </body>
 </html>

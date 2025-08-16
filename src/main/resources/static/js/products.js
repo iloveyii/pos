@@ -76,6 +76,8 @@ var products = [
 ];
 
 const productsTableBody = document.getElementById('productsTableBody');
+const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 // const productDetailsModal = new bootstrap.Modal(document.getElementById('productDetailsModal'));
 const productDateFilter = document.getElementById('productDateFilter');
 const searchProducts = document.getElementById('searchProducts');
@@ -128,8 +130,113 @@ function addEventListenerForProducts() {
         searchProducts.value = '';
         document.getElementById('allProducts').click();
     });
+
+    // Save product (add/edit)
+    document.getElementById('saveProductBtn').addEventListener('click', function() {
+        const productId = document.getElementById('productId').value;
+        const isEdit = !!productId;
+
+        const productData = {
+            name: document.getElementById('productName').value,
+            description: document.getElementById('productDescription').value,
+            price: parseFloat(document.getElementById('productPrice').value),
+            cost: parseFloat(document.getElementById('productCost').value) || 0,
+            inStock: parseInt(document.getElementById('productStock').value),
+            category: document.getElementById('productCategory').value,
+            status: document.getElementById('productStatus').checked,
+            barcode: document.getElementById('productBarcode').value,
+            weight: parseFloat(document.getElementById('productWeight').value) || 0,
+            dimensions: document.getElementById('productDimensions').value,
+            image: document.getElementById('imagePreview').src || 'https://via.placeholder.com/200'
+        };
+        console.log('saveProductBtn', productData);
+
+        if (isEdit) {
+            // Update existing product
+            const index = products.findIndex(p => p.id === parseInt(productId));
+            if (index !== -1) {
+                products[index] = {
+                    ...products[index],
+                    ...productData
+                };
+                saveProductOnBackend(products[index]);
+                showNotification('Product updated successfully');
+            }
+        } else {
+            // Add new product
+            const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+            products.unshift({
+                id: newId,
+                ...productData
+            });
+            saveProductOnBackend(productData);
+            showNotification('Product added successfully');
+        }
+
+        // Update views and close modal
+        // renderProducts(); // for POS cards
+        renderProductsTable(products);
+        addEventListenerForProductRowsActions();
+        productModal.hide();
+    });
+
+    // Image upload functionality
+    document.getElementById('imageUploadContainer').addEventListener('click', function() {
+        document.getElementById('productImage').click();
+    });
+    document.getElementById('productImage').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+
+    addEventListenerForProductRowsActions();
 }
 
+function saveProductOnBackend(productData) {
+    if(productData.id)
+        makeApiRequest('PUT', `products/${productData.id}`, productData);
+    else
+        makeApiRequest('POST', `products`, productData);
+}
+
+function addEventListenerForProductRowsActions() {
+    // Add event listeners to action buttons
+    document.querySelectorAll('.edit-product').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = parseInt(this.getAttribute('data-id'));
+            editProduct(productId);
+        });
+    });
+
+    document.querySelectorAll('.delete-product').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = parseInt(this.getAttribute('data-id'));
+            confirmDelete(productId);
+        });
+    });
+
+    // Delete product
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        const productId = parseInt(this.getAttribute('data-id'));
+        products = products.filter(p => p.id !== productId);
+
+        // Update views and close modal
+        // renderProducts();
+        renderProductsTable(products);
+        addEventListenerForProductRowsActions();
+        deleteModal.hide();
+        showNotification('Product deleted successfully');
+    });
+}
 
 // Render products table
 function renderProductsTable(products) {
@@ -155,6 +262,12 @@ function renderProductsTable(products) {
                 </button>
                 <button class="btn btn-sm btn-outline-secondary action-btn print-product" data-id="${product.id}">
                     <i class="fas fa-print"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-primary action-btn edit-product" data-id="${product.id}">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger action-btn delete-product" data-id="${product.id}">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
             </td>
         `;
@@ -280,6 +393,45 @@ function viewProductDetails(orderId) {
     // productDetailsModal.show();
 }
 
+// Edit product
+function editProduct(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    // Set modal title
+    document.getElementById('modalTitle').textContent = 'Edit Product';
+
+    // Fill form with product data
+    document.getElementById('productId').value = product.id;
+    document.getElementById('productName').value = product.name;
+    document.getElementById('productDescription').value = product.description;
+    document.getElementById('productPrice').value = product.price;
+    document.getElementById('productCost').value = product.cost;
+    document.getElementById('productStock').value = product.stock;
+    document.getElementById('productCategory').value = product.category;
+    document.getElementById('productStatus').checked = product.status;
+    document.getElementById('productBarcode').value = product.barcode || '';
+    document.getElementById('productWeight').value = product.weight || '';
+    document.getElementById('productDimensions').value = product.dimensions || '';
+
+    // Set image preview
+    const imagePreview = document.getElementById('imagePreview');
+    if (product.image) {
+        imagePreview.src = product.image;
+        imagePreview.style.display = 'block';
+    } else {
+        imagePreview.style.display = 'none';
+    }
+
+    // Show modal
+    productModal.show();
+}
+
+// Confirm product deletion
+function confirmDelete(productId) {
+    document.getElementById('confirmDeleteBtn').setAttribute('data-id', productId);
+    deleteModal.show();
+}
 
 (async function(){
     console.log("Document is fully loaded.");

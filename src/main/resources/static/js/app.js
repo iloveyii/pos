@@ -525,11 +525,6 @@ function formatStatus(status) {
     return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
-// Image upload functionality
-document.getElementById('imageUploadContainer').addEventListener('click', function() {
-    document.getElementById('productImage').click();
-});
-
 // Show specific page
 function showPage(page) {
     pageContainers.forEach(container => {
