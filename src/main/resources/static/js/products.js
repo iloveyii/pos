@@ -252,12 +252,6 @@ function renderProductsTable(products) {
                 </span>
             </td>
             <td>
-                <button class="btn btn-sm btn-outline-primary action-btn view-product" data-id="${product.id}">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-secondary action-btn print-product" data-id="${product.id}">
-                    <i class="fas fa-print"></i>
-                </button>
                 <button class="btn btn-sm btn-outline-primary action-btn edit-product" data-id="${product.id}">
                     <i class="fas fa-edit"></i>
                 </button>

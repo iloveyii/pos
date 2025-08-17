@@ -66,7 +66,7 @@ public class OrderController {
     public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest request) {
         OrderDTO order = orderService.createOrder(request);
         order.setCommand("list");
-        orderUpdateService.sendOrderUpdate(order);
+        // orderUpdateService.sendOrderUpdate(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
     // Add product to order
@@ -161,7 +161,7 @@ public class OrderController {
 
         logger.info("################### items new: " + request.getItems().size());
         OrderDTO order = orderService.updateOrder(id, request);
-        orderUpdateService.sendOrderUpdate(order);
+        // orderUpdateService.sendOrderUpdate(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
