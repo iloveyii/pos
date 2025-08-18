@@ -62,35 +62,35 @@ INSERT INTO CATEGORIES (name, description, status) VALUES
 
 -- Insert sample products
 --INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
---('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.avif', 99.00, 100),
---('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.avif', 149.99, 50),
---('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-phones.avif', 59.99, 200),
---('USB-C Cable', 'Fast charging 3ft cable', 'ear-buds.avif', 12.99, 75),
+--('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.jpg', 99.00, 100),
+--('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.jpg', 149.99, 50),
+--('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-phones.jpg', 59.99, 200),
+--('USB-C Cable', 'Fast charging 3ft cable', 'ear-buds.jpg', 12.99, 75),
 --
---('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.avif', 24.99, 60),
---('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.avif', 39.99, 30),
---('Power Bank', '10000mAh dual USB', 'power-bank.avif', 29.99, 50),
---('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100);
+--('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.jpg', 24.99, 60),
+--('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.jpg', 39.99, 30),
+--('Power Bank', '10000mAh dual USB', 'power-bank.jpg', 29.99, 50),
+--('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.jpg', 8.99, 100);
 
 -- Insert sample products with random category assignments (1-4)
 INSERT INTO PRODUCTS (name, description, image, price, in_stock, category_id) VALUES
 -- Electronics (random category_id 1)
-('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.avif', 99.00, 100, 1),
-('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.avif', 149.99, 50, 1),
-('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-speaker.avif', 59.99, 200, FLOOR(1 + RAND() * 4)),
-('Ear buds', 'Fast charging 3ft cable', 'ear-buds.avif', 12.99, 75, FLOOR(1 + RAND() * 4)),
+('Wireless Headphones', 'Noise cancelling Bluetooth', 'wireless-headphones.jpg', 99.00, 100, 1),
+('Smart Watch', 'Fitness tracker & notifications', 'smart-watch.jpg', 149.99, 50, 1),
+('Bluetooth Speaker', 'Portable waterproof speaker', 'bluetooth-speaker.jpg', 59.99, 200, FLOOR(1 + RAND() * 4)),
+('Ear buds', 'Fast charging 3ft cable', 'ear-buds.jpg', 12.99, 75, FLOOR(1 + RAND() * 4)),
 
 -- Mixed categories
-('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.avif', 24.99, 60, FLOOR(1 + RAND() * 4)),
-('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.avif', 39.99, 30, 2), -- Clothing
-('Power Bank', '10000mAh dual USB', 'power-bank.avif', 29.99, 50, 1), -- Electronics
-('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.avif', 8.99, 100, 1), -- Electronics
+('Wireless Mouse', 'Ergonomic design', 'wireless-mouse.jpg', 24.99, 60, FLOOR(1 + RAND() * 4)),
+('Laptop Backpack', 'Water resistant with USB port', 'laptop-bag.jpg', 39.99, 30, 2), -- Clothing
+('Power Bank', '10000mAh dual USB', 'power-bank.jpg', 29.99, 50, 1), -- Electronics
+('Screen Protector', 'Tempered glass for smartphones', 'screen-protector.jpg', 8.99, 100, 1), -- Electronics
 
 -- Additional random category products
-('Organic Coffee', 'Premium arabica beans', 'coffee.avif', 12.99, 50, 3), -- Groceries
-('Gardening Tools', '3-piece set with carrying case', 'garden-tools.avif', 34.99, 40, 4), -- Home & Garden
-('Running Shoes', 'Lightweight athletic shoes', 'running-shoes.avif', 79.99, 25, 2), -- Clothing
-('LED Desk Lamp', 'Adjustable brightness', 'desk-lamp.avif', 29.99, 35, FLOOR(1 + RAND() * 4));
+('Organic Coffee', 'Premium arabica beans', 'coffee.jpg', 12.99, 50, 3), -- Groceries
+('Gardening Tools', '3-piece set with carrying case', 'garden-tools.jpg', 34.99, 40, 4), -- Home & Garden
+('Running Shoes', 'Lightweight athletic shoes', 'running-shoes.jpg', 79.99, 25, 2), -- Clothing
+('LED Desk Lamp', 'Adjustable brightness', 'desk-lamp.jpg', 29.99, 35, FLOOR(1 + RAND() * 4));
 
 -- Insert sample orders
 INSERT INTO ORDERS (status, discount, sub_total, total_amount, notes) VALUES

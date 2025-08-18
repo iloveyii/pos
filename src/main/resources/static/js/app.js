@@ -189,7 +189,7 @@ function renderCart() {
         cartItem.className = 'cart-item';
         cartItem.innerHTML = `
             <div class="d-flex justify-content-between">
-                <div>
+                <div class="cart-item-name">
                     <h6 class="mb-1">${product.name}</h6>
                     <small class="text-muted">$${product.price.toFixed(2)} × ${item.quantity}</small>
                 </div>
