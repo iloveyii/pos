@@ -336,6 +336,10 @@ body {
     background-color: rgba(13, 110, 253, 0.1);
     color: #0d6efd;
 }
+.status-shipped {
+    background-color: rgba(25, 135, 84, 0.1); /* soft green background */
+    color: #198754; /* Bootstrap green */
+}
 
 /* Order details styles */
 .order-details-card {

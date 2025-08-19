@@ -427,6 +427,21 @@ function confirmDelete(productId) {
     deleteModal.show();
 }
 
+// Get status badge class
+function getStatusBadgeClass(status) {
+    if(status === true)
+        return 'status-completed';
+    if(status === false)
+        return 'status-processing';
+    switch (status) {
+        case 'pending': return 'status-pending';
+        case 'processing': return 'status-processing';
+        case 'completed': return 'status-completed';
+        case 'cancelled': return 'status-cancelled';
+        default: return 'status-pending';
+    }
+}
+
 // Format status for display
 function formatStatus(status) {
     console.log('status:' + status);

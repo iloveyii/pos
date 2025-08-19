@@ -168,8 +168,8 @@ function renderOrdersTable(orders) {
             <td>${order.orderProducts.reduce((sum, item) => sum + item.quantity, 0)}</td>
             <td>$${order.totalAmount.toFixed(2)}</td>
             <td>
-                <span class="status-badge ${getStatusBadgeClass(order.status)}">
-                    ${formatStatus(order.status)}
+                <span class="status-badge ${getStatusBadgeClassForOrders(order.status)}">
+                    ${formatStatusOrders(order.status)}
                 </span>
             </td>
             <td>
@@ -241,8 +241,8 @@ function viewOrderDetails(orderId) {
                         <small class="text-muted">Date: ${order.date}</small>
                     </div>
                     <div class="col-md-6 text-end">
-                        <span class="status-badge ${getStatusBadgeClass(order.status)}">
-                            ${formatStatus(order.status)}
+                        <span class="status-badge ${getStatusBadgeClassForOrders(order.status)}">
+                            ${formatStatusOrders(order.status)}
                         </span>
                     </div>
                 </div>
@@ -333,6 +333,22 @@ function printOrder(id) {
     sendCommandRequest({ id, command: 'print'});
 }
 
+// Get status badge class
+function getStatusBadgeClassForOrders(status) {
+    status = status.toLowerCase();
+    switch (status) {
+        case 'pending': return 'status-pending';
+        case 'processing': return 'status-processing';
+        case 'completed': return 'status-completed';
+        case 'cancelled': return 'status-cancelled';
+        case 'shipped': return 'status-shipped';
+        default: return 'status-pending';
+    }
+}
+// Format status for display
+function formatStatusOrders(status) {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+}
 
 (async function(){
     console.log("Document is fully loaded.");
