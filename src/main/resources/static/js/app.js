@@ -103,7 +103,8 @@ const notificationMessage = document.getElementById('notificationMessage');
 const pageContainers = document.querySelectorAll('.page-container');
 const navLinks = document.querySelectorAll('.nav-link');
 const searchProductsDashboard = document.querySelector('#searchProductsDashboard');
-
+const changeCustomerBtn = document.querySelector('#changeCustomerBtn');
+const saveCustomerBtn = document.getElementById('saveCustomerBtn');
 
 // Initialize the POS
 function initPOS() {
@@ -530,7 +531,61 @@ function setupEventListeners() {
         renderProducts(products);
     });
 
+    // Open modal when Change button is clicked
+    if (changeCustomerBtn) {
+        changeCustomerBtn.addEventListener('click', function() {
+            const customerModal = new bootstrap.Modal(document.getElementById('customerModal'));
+            customerModal.show();
+        });
+    }
+
+    if (saveCustomerBtn) {
+        saveCustomerBtn.addEventListener('click', function() {
+            getCustomerDetail();
+        });
+    }
 }
+
+// Customer modal functionality
+function getCustomerDetail() {
+    // Get references to elements
+    const customerNameField = document.getElementById('customerName');
+    const customerEmailField = document.getElementById('customerEmail');
+    const customerPhoneField = document.getElementById('customerPhone');
+    const customerDisplay = document.querySelector('#customerNameCart');
+
+    // Save customer information
+    const name = customerNameField.value.trim();
+    const email = customerEmailField.value.trim();
+    const phone = customerPhoneField.value.trim();
+
+    if (name) {
+        // Update the customer display
+        customerDisplay.textContent = name;
+
+        // You can store the customer data for later use
+        const customerData = {
+            name: name,
+            email: email,
+            phone: phone
+        };
+
+        // For demonstration, we'll just log it
+        console.log('Customer data saved:', customerData);
+
+        // Close the modal
+        customerModal.hide();
+
+        // Reset form
+        customerNameField.value = '';
+        customerEmailField.value = '';
+        customerPhoneField.value = '';
+    } else {
+        // Show error if name is not provided
+        alert('Please enter at least a customer name');
+    }
+}
+
 
 // Initialize the POS when DOM is loaded
 document.addEventListener('DOMContentLoaded', initPOS);
