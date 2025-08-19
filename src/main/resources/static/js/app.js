@@ -113,39 +113,39 @@ function initPOS() {
 }
 // Load Products
 function loadProducts() {
-// Make GET request to /api/products
-fetch('/api/products')
-  .then(response => {
-    // Check if response is successful (status code 200-299)
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json(); // Parse JSON response
-  })
-  .then(pros => {
-    // Success - log products to console
-    console.log('Products:', pros);
-    products = pros;
-    renderProducts();
+    // Make GET request to /api/products
+    fetch('/api/products')
+      .then(response => {
+        // Check if response is successful (status code 200-299)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json(); // Parse JSON response
+      })
+      .then(pros => {
+        // Success - log products to console
+        console.log('Products:', pros);
+        products = pros;
+        renderProducts(products);
 
-    // You can also display them on the page
-    // displayProducts(products);
-  })
-  .catch(error => {
-    // Error handling
-    console.error('Error fetching products:', error);
+        // You can also display them on the page
+        // displayProducts(products);
+      })
+      .catch(error => {
+        // Error handling
+        console.error('Error fetching products:', error);
 
-    // Show user-friendly message
-    const shouldRefresh = confirm('Failed to load products. Click OK to refresh the page.');
+        // Show user-friendly message
+        const shouldRefresh = confirm('Failed to load products. Click OK to refresh the page.');
 
-    if (shouldRefresh) {
-      window.location.reload(); // Refresh the page
-    }
-  });
+        if (shouldRefresh) {
+          window.location.reload(); // Refresh the page
+        }
+      });
 }
 
 // Render Products
-function renderProducts() {
+function renderProducts(products) {
     console.log('inside renderProducts');
     productsContainer.innerHTML = '';
 
@@ -497,7 +497,17 @@ function setupEventListeners() {
         });
     });
 
-
+    // Category filter
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          const category = this.getAttribute('data-category');
+          const filtered = category == "0"
+                ? products
+                : products.filter(p => p.categoryId == category);
+          renderProducts(filtered);
+        });
+    });
 }
 
 // Initialize the POS when DOM is loaded
