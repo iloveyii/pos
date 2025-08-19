@@ -523,6 +523,13 @@ function setupEventListeners() {
 
       renderProducts(filtered);
     });
+
+    document.getElementById("clearSearchBtn").addEventListener("click", function () {
+        searchProductsDashboard.value = "";
+        searchProductsDashboard.focus();
+        renderProducts(products);
+    });
+
 }
 
 // Initialize the POS when DOM is loaded
