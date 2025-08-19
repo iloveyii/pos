@@ -102,6 +102,7 @@ const notificationMessage = document.getElementById('notificationMessage');
 
 const pageContainers = document.querySelectorAll('.page-container');
 const navLinks = document.querySelectorAll('.nav-link');
+const searchProductsDashboard = document.querySelector('#searchProductsDashboard');
 
 
 // Initialize the POS
@@ -507,6 +508,20 @@ function setupEventListeners() {
                 : products.filter(p => p.categoryId == category);
           renderProducts(filtered);
         });
+    });
+
+    // Listen for input and filter products
+    searchProductsDashboard.addEventListener('input', () => {
+      const query = searchProductsDashboard.value.trim().toLowerCase();
+      console.log(query);
+
+      const filtered = products.filter(product =>
+        product.name?.toLowerCase().includes(query) ||
+        (product.price + '').includes(query) ||
+        product.description?.includes(query) // simple string match; could be improved
+      );
+
+      renderProducts(filtered);
     });
 }
 
