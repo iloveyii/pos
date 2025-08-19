@@ -171,19 +171,31 @@
 
                 <!-- Quick Payment Options -->
                 <div class="mt-3">
-                    <h6 class="text-muted mb-2 fw-bold"><i class="fas fa-bolt me-1"></i> Quick Payment</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-outline-success payment-btn flex-grow-1">
+                    <h6 class="text-muted mb-2 fw-bold">
+                        <i class="fas fa-bolt me-1"></i> Quick Payment
+                    </h6>
+                    <div class="btn-group d-flex flex-wrap gap-2" role="group" aria-label="Quick Payment Options">
+
+                        <!-- Cash -->
+                        <input type="radio" class="btn-check" name="paymentOption" id="paymentCash" autocomplete="off">
+                        <label class="btn btn-outline-success flex-grow-1" for="paymentCash">
                             <i class="fas fa-money-bill-wave me-1"></i> Cash
-                        </button>
-                        <button class="btn btn-outline-primary payment-btn flex-grow-1">
+                        </label>
+
+                        <!-- Card -->
+                        <input type="radio" class="btn-check" name="paymentOption" id="paymentCard" autocomplete="off">
+                        <label class="btn btn-outline-primary flex-grow-1" for="paymentCard">
                             <i class="fas fa-credit-card me-1"></i> Card
-                        </button>
-                        <button class="btn btn-outline-info payment-btn flex-grow-1">
+                        </label>
+
+                        <!-- Mobile -->
+                        <input type="radio" class="btn-check" name="paymentOption" id="paymentMobile" autocomplete="off">
+                        <label class="btn btn-outline-info flex-grow-1" for="paymentMobile">
                             <i class="fas fa-mobile-alt me-1"></i> Mobile
-                        </button>
+                        </label>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
