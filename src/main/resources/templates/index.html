@@ -146,11 +146,27 @@
                     <button class="btn btn-pos-primary btn-lg payment-btn" id="processPayment">
                         <i class="fas fa-credit-card me-2"></i> Process Payment
                     </button>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-secondary"><i class="fas fa-pause me-1"></i> Hold</button>
-                        <button class="btn btn-outline-secondary"><i class="fas fa-file-invoice me-1"></i> Quote</button>
-                        <button class="btn btn-outline-secondary"><i class="fas fa-receipt me-1"></i> Invoice</button>
+
+                    <div class="btn-group" role="group" aria-label="Options">
+                        <!-- Hold -->
+                        <input type="radio" class="btn-check" name="options" id="btnHold" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="btnHold">
+                            <i class="fas fa-pause me-1"></i> Hold
+                        </label>
+
+                        <!-- Quote -->
+                        <input type="radio" class="btn-check" name="options" id="btnQuote" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="btnQuote">
+                            <i class="fas fa-file-invoice me-1"></i> Quote
+                        </label>
+
+                        <!-- Invoice -->
+                        <input type="radio" class="btn-check" name="options" id="btnInvoice" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="btnInvoice">
+                            <i class="fas fa-receipt me-1"></i> Invoice
+                        </label>
                     </div>
+
                 </div>
 
                 <!-- Quick Payment Options -->
