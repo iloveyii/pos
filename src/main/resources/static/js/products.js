@@ -234,7 +234,7 @@ function addEventListenerForProductRowsActions() {
 }
 
 // Render products table
-function renderProductsTable(products) {
+function renderProductsTable2(products) {
     console.log('renderProductsTable');
     productsTableBody.innerHTML = '';
 
@@ -280,6 +280,186 @@ function renderProductsTable(products) {
 
     addEventListenerForProductRowsActions();
 }
+
+
+// Render products table with pagination
+function renderProductsTable(products, pageInfo = null) {
+    console.log('renderProductsTable');
+    productsTableBody.innerHTML = '';
+
+    products.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${product.id}</td>
+            <td> <img class="img-fluid border rounded p-1 shadow-sm thumb-img" src=${product.image} /> ${product.name}</td>
+            <td>${product.description.substring(0,20)}</td>
+            <td>$${product.price.toFixed(2)}</td>
+            <td>${product.inStock}</td>
+            <td>
+                <span class="status-badge ${getStatusBadgeClass(product.status)}">
+                    ${formatStatus(product.status)}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary action-btn edit-product" data-id="${product.id}">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger action-btn delete-product" data-id="${product.id}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+        `;
+        productsTableBody.appendChild(row);
+    });
+
+    // Render pagination controls
+    renderPaginationControls(pageInfo);
+}
+
+// Render pagination controls
+function renderPaginationControls(pageInfo = null) {
+    pageInfo = {
+        number: 0,        // Current page number
+        size: 3,            // Page size
+        totalElements: 3, // Total items
+        totalPages: 4, // Total pages
+        first: true,          // Is first page?
+        last: false             // Is last page?
+    };
+    // Remove existing pagination if it exists
+    const existingPagination = document.getElementById('productsPagination');
+    if (existingPagination) {
+        existingPagination.remove();
+    }
+
+    // Create pagination container
+    const paginationContainer = document.createElement('div');
+    paginationContainer.id = 'productsPagination';
+    paginationContainer.className = 'd-flex justify-content-between align-items-center mt-4';
+
+    // Add pagination info (showing X to Y of Z items)
+    const paginationInfo = document.createElement('div');
+    paginationInfo.className = 'text-muted';
+
+    const startItem = (pageInfo.number * pageInfo.size) + 1;
+    const endItem = Math.min((pageInfo.number + 1) * pageInfo.size, pageInfo.totalElements);
+
+    paginationInfo.innerHTML = `Showing ${startItem} to ${endItem} of ${pageInfo.totalElements} entries`;
+
+    // Create pagination navigation
+    const paginationNav = document.createElement('nav');
+    paginationNav.setAttribute('aria-label', 'Products pagination');
+
+    const paginationList = document.createElement('ul');
+    paginationList.className = 'pagination mb-0';
+
+    // Previous button
+    const prevLi = document.createElement('li');
+    prevLi.className = `page-item ${pageInfo.first ? 'disabled' : ''}`;
+    prevLi.innerHTML = `
+        <a class="page-link" href="#" data-page="${pageInfo.number - 1}">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+    `;
+    paginationList.appendChild(prevLi);
+
+    // Page numbers
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+
+    // Show limited page numbers with ellipsis for many pages
+    let startPage = Math.max(0, currentPage - 2);
+    let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+    // Adjust if we're near the start
+    if (currentPage < 3) {
+        endPage = Math.min(4, totalPages - 1);
+    }
+
+    // Adjust if we're near the end
+    if (currentPage > totalPages - 4) {
+        startPage = Math.max(0, totalPages - 5);
+    }
+
+    // First page and ellipsis if needed
+    if (startPage > 0) {
+        const firstLi = document.createElement('li');
+        firstLi.className = 'page-item';
+        firstLi.innerHTML = `<a class="page-link" href="#" data-page="0">1</a>`;
+        paginationList.appendChild(firstLi);
+
+        if (startPage > 1) {
+            const ellipsisLi = document.createElement('li');
+            ellipsisLi.className = 'page-item disabled';
+            ellipsisLi.innerHTML = `<span class="page-link">...</span>`;
+            paginationList.appendChild(ellipsisLi);
+        }
+    }
+
+    // Page number buttons
+    for (let i = startPage; i <= endPage; i++) {
+        const pageLi = document.createElement('li');
+        pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        pageLi.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i + 1}</a>`;
+        paginationList.appendChild(pageLi);
+    }
+
+    // Last page and ellipsis if needed
+    if (endPage < totalPages - 1) {
+        if (endPage < totalPages - 2) {
+            const ellipsisLi = document.createElement('li');
+            ellipsisLi.className = 'page-item disabled';
+            ellipsisLi.innerHTML = `<span class="page-link">...</span>`;
+            paginationList.appendChild(ellipsisLi);
+        }
+
+        const lastLi = document.createElement('li');
+        lastLi.className = 'page-item';
+        lastLi.innerHTML = `<a class="page-link" href="#" data-page="${totalPages - 1}">${totalPages}</a>`;
+        paginationList.appendChild(lastLi);
+    }
+
+    // Next button
+    const nextLi = document.createElement('li');
+    nextLi.className = `page-item ${pageInfo.last ? 'disabled' : ''}`;
+    nextLi.innerHTML = `
+        <a class="page-link" href="#" data-page="${pageInfo.number + 1}">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    `;
+    paginationList.appendChild(nextLi);
+
+    paginationNav.appendChild(paginationList);
+
+    // Assemble the pagination container
+    paginationContainer.appendChild(paginationInfo);
+    paginationContainer.appendChild(paginationNav);
+
+    // Add pagination after the table
+    const tableContainer = productsTableBody.closest('.table-responsive');
+    tableContainer.parentNode.insertBefore(paginationContainer, tableContainer.nextSibling);
+
+    // Add event listeners to pagination buttons
+    attachPaginationEventListeners();
+}
+
+// Attach event listeners to pagination buttons
+function attachPaginationEventListeners() {
+    const paginationLinks = document.querySelectorAll('#productsPagination .page-link:not(.disabled)');
+
+    paginationLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const page = parseInt(this.getAttribute('data-page'));
+            if (!isNaN(page)) {
+                // Call your function to fetch products for the selected page
+                fetchProducts(page, currentPageSize, currentSortBy, currentSortDir);
+            }
+        });
+    });
+}
+
 
 // Filter products
 function filterProducts(filter, date = '') {
