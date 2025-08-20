@@ -322,6 +322,11 @@ body {
     color: #ffc107;
 }
 
+.status-onhold {
+    background-color: rgba(111, 66, 193, 0.1); /* light purple background */
+    color: #6f42c1; /* rich purple text */
+}
+
 .status-completed {
     background-color: rgba(40, 167, 69, 0.1);
     color: #28a745;

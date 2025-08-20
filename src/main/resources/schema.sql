@@ -97,11 +97,11 @@ INSERT INTO ORDERS (status, discount, sub_total, total_amount, notes) VALUES
 ('COMPLETED', 0.0, 1248.0, 1248.00, 'http://localhost:8080/pdf/JM004426.pdf'),
 ('SHIPPED', 10.0, 2998.00, 2698.2, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
 ('PENDING', 20.0, 328.00, 319.0, 'http://localhost:8080/pdf/invoice-sample.pdf'),
-('COMPLETED', 50.0, 678.00, 339.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
-('PENDING', 30.0, 628.00, 539.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
-('PROCESSING', 30.0, 628.00, 539.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
-('CANCELLED', 10.0, 599.00, 539.1, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
-('COMPLETED', 10.0, 599.00, 539.1, 'http://localhost:8080/pdf/invoice-sample2.pdf');
+('ONHOLD', 50.0, 678.00, 339.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('PENDING', 15.0, 228.00, 539.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('PROCESSING', 30.0, 638.00, 539.0, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('CANCELLED', 20.0, 599.00, 219.1, 'http://localhost:8080/pdf/invoice-sample2.pdf'),
+('COMPLETED', 10.0, 119.00, 327.1, 'http://localhost:8080/pdf/invoice-sample2.pdf');
 
 -- Insert order items (products in each order)
 INSERT INTO ORDERS_PRODUCTS (order_id, product_id, quantity, price_at_purchase) VALUES
@@ -132,10 +132,10 @@ INSERT INTO ORDERS_PRODUCTS (order_id, product_id, quantity, price_at_purchase) 
 
 -- Order 7:
 (7, 1, 1, 599.00),
-(7, 6, 2, 599.00),
+(7, 6, 7, 599.00),
 
 -- Order 8:
 (8, 1, 1, 599.00),
-(8, 6, 2, 599.00);
+(8, 6, 3, 599.00);
 
 

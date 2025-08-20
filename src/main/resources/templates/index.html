@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link th:href="@{/css/style.css?gkhk898lfjlkjhkhkk567}" rel="stylesheet">
+    <link th:href="@{/css/style.css?gkhk8989968685558lfjlkjhkhkk567}" rel="stylesheet">
 </head>
 <body>
 
@@ -385,16 +385,18 @@
                     <div class="input-group" style="width: 250px;">
                         <input id="searchOrders" type="text" class="form-control" placeholder="Search orders...">
                         <button class="btn btn-outline-secondary bg-warning" type="button">
-                            <i class="fas fa-close me-3"></i>
+                            <i id="btnOrdersClear" class="fas fa-close me-3"></i>
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
                 <div class="btn-group btn-group-toggle bg-success border-2" data-toggle="buttons">
-                    <button class="btn filter-btn-orders active" data-filter="all">All</button>
+                    <button class="btn filter-btn-orders active" data-filter="all" id="allOrders">All</button>
                     <button class="btn filter-btn-orders" data-filter="pending">Pending</button>
+                    <button class="btn filter-btn-orders" data-filter="onhold">Onhold</button>
                     <button class="btn filter-btn-orders" data-filter="processing">Processing</button>
                     <button class="btn filter-btn-orders" data-filter="completed">Completed</button>
+                    <button class="btn filter-btn-orders" data-filter="shipped">Shipped</button>
                     <button class="btn filter-btn-orders" data-filter="cancelled">Cancelled</button>
                 </div>
                 <div class="ms-auto">
@@ -444,7 +446,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Customer Information Modal -->
 <div class="modal fade" id="customerModal" tabindex="-1" aria-hidden="true">
@@ -511,8 +512,8 @@
 <!-- Bootstrap 5.4 JS Bundle with Popper -->
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/common.js?214glkjlo123}" defer></script>
-<script th:src="@{/js/orders.js?2hkjasd799kkhkhkhlh79flkj3}" defer></script>
-<script th:src="@{/js/products.js?1ih97ppn,fda}" defer></script>
-<script th:src="@{/js/app.js?a674efadl8888hfhnfhsdd7878788kljljljluosfater}"></script>
+<script th:src="@{/js/orders.js?2hkjh34599lh577868679flkj3}" defer></script>
+<script th:src="@{/js/products.js?1ih97871234587ppnfda}" defer></script>
+<script th:src="@{/js/app.js?a674efaat3989er}" defer></script>
 </body>
 </html>

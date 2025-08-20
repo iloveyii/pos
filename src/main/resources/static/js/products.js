@@ -292,6 +292,8 @@ function filterProducts(filter, date = '') {
     }
     else if (filter === 'outOfStockProducts') {
         filteredProducts = filteredProducts.filter(p => p.inStock < 60);
+    } else if(filter === 'date' && date) {
+         filteredProducts = filteredProducts.filter(p => p.updatedAt?.substring(0,10) === date);
     }
 
     // Re-render table with filtered products

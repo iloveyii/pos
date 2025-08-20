@@ -109,7 +109,8 @@ function addEventListenerForOrders() {
       const filtered = orders.filter(order =>
         order.notes?.toLowerCase().includes(query) ||
         (order.totalAmount + '').includes(query) ||
-        order.orderDateString?.includes(query) // simple string match; could be improved
+        order.orderDateString?.includes(query) ||
+        (order.id + '').includes(query)
       );
 
       renderOrdersTable(filtered);
@@ -137,6 +138,15 @@ function addEventListenerForOrders() {
         printOrder(orderId);
     });
 
+    // Clear btn
+    document.getElementById('btnOrdersClear').addEventListener('click', function(){
+        searchOrders.value = '';
+        document.getElementById('allOrders').click();
+    });
+
+}
+
+function addEventListenerForOrderRowsActions(){
     // Add event listeners to action buttons
     document.querySelectorAll('.view-order').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -152,7 +162,6 @@ function addEventListenerForOrders() {
             printOrder(orderId);
         });
     });
-
 }
 
 // Render orders table
@@ -184,23 +193,19 @@ function renderOrdersTable(orders) {
         ordersTableBody.appendChild(row);
     });
 
-
+    addEventListenerForOrderRowsActions();
 }
 
 // Filter orders
 function filterOrders(filter, date = '') {
     let filteredOrders = [...orders];
 
-    if (filter === 'pending') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'PENDING');
-    } else if (filter === 'processing') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'PROCESSING');
-    } else if (filter === 'completed') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'COMPLETED');
-    } else if (filter === 'cancelled') {
-        filteredOrders = filteredOrders.filter(o => o.status === 'CANCELLED');
-    } else if (filter === 'date' && date) {
-        filteredOrders = filteredOrders.filter(o => o.date === date);
+   if (filter === 'date' && date) {
+        filteredOrders = filteredOrders.filter(o => o.orderDateString.substring(0,10) === date);
+    } else if(filter === 'all'){
+        filteredOrders = [...orders];
+    } else {
+        filteredOrders = filteredOrders.filter(o => o.status === filter.toUpperCase());
     }
 
     // Re-render table with filtered orders
@@ -336,14 +341,7 @@ function printOrder(id) {
 // Get status badge class
 function getStatusBadgeClassForOrders(status) {
     status = status.toLowerCase();
-    switch (status) {
-        case 'pending': return 'status-pending';
-        case 'processing': return 'status-processing';
-        case 'completed': return 'status-completed';
-        case 'cancelled': return 'status-cancelled';
-        case 'shipped': return 'status-shipped';
-        default: return 'status-pending';
-    }
+    return `status-${status}`;
 }
 // Format status for display
 function formatStatusOrders(status) {
