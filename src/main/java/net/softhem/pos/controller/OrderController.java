@@ -1,9 +1,7 @@
 package net.softhem.pos.controller;
 
-import net.softhem.pos.dto.CreateOrderRequest;
-import net.softhem.pos.dto.OrderDTO;
-import net.softhem.pos.dto.OrderItemRequest;
-import net.softhem.pos.dto.UpdateOrderRequest;
+import net.softhem.pos.dto.*;
+import net.softhem.pos.model.Helpers;
 import net.softhem.pos.model.Order;
 import net.softhem.pos.model.OrderProduct;
 import net.softhem.pos.model.Product;
@@ -12,16 +10,11 @@ import net.softhem.pos.repository.OrderRepository;
 import net.softhem.pos.repository.ProductRepository;
 import net.softhem.pos.service.OrderProductService;
 import net.softhem.pos.service.OrderService;
-import net.softhem.pos.service.OrderUpdateService;
-import net.softhem.pos.service.ProductService;
-import org.slf4j.Logger;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.server.ResponseStatusException;
-
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,19 +25,17 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderProductService orderProductService;
-    private final ProductService productService;
-    private final OrderUpdateService orderUpdateService;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-
-    public OrderController(OrderService orderService, OrderProductService orderProductService, ProductService productService, OrderUpdateService orderUpdateService, ProductRepository productRepository, OrderRepository orderRepository, OrderProductRepository orderProductRepository) {
+    public OrderController(OrderService orderService,
+                           OrderProductService orderProductService,
+                           ProductRepository productRepository,
+                           OrderRepository orderRepository,
+                           OrderProductRepository orderProductRepository) {
         this.orderService = orderService;
         this.orderProductService = orderProductService;
-        this.productService = productService;
-        this.orderUpdateService = orderUpdateService;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
@@ -54,6 +45,12 @@ public class OrderController {
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/{page}/{size}")
+    public ResponseEntity<Page<OrderDTO>> getAllOrders(@PathVariable int page,
+                                                         @PathVariable int size) {
+        return ResponseEntity.ok(orderService.getAllOrders(page,size));
     }
 
     @GetMapping("/{id}")
@@ -99,7 +96,7 @@ public class OrderController {
             item.setPriceAtPurchase(product.getPrice());
             orderProductRepository.save(item);
         }
-        return ResponseEntity.ok(orderService.convertToDTO(order));
+        return ResponseEntity.ok(Helpers.orderToDto(order));
     }
 
     // Remove item from order
@@ -125,11 +122,11 @@ public class OrderController {
                 order.getOrderProducts().remove(orderProduct);
                 orderProductRepository.delete(orderProduct);
                 // Order savedOrder = orderRepository.save(order);
-                return ResponseEntity.ok(orderService.convertToDTO(order));
+                return ResponseEntity.ok(Helpers.orderToDto(order));
             }
         }
 
-        return ResponseEntity.ok(orderService.convertToDTO(order));
+        return ResponseEntity.ok(Helpers.orderToDto(order));
     }
 
     // Get order details
@@ -141,27 +138,12 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-
-
-
-
-
-
     @PutMapping("/{id}")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderRequest request) {
         List<OrderProduct> orderProducts = orderProductService.getByOrderId(id);
-        logger.info("###################: " + orderProducts.size());
         orderProductService.restoreQuantities(orderProducts);
-        logger.info("################### restored: " + orderProducts.size());
-
         orderProductService.deleteByOrderId(id);
-        orderProducts = orderProductService.getByOrderId(id);
-        logger.info("################### after del: " + orderProducts.size());
-
-
-        logger.info("################### items new: " + request.getItems().size());
         OrderDTO order = orderService.updateOrder(id, request);
-        // orderUpdateService.sendOrderUpdate(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 

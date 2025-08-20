@@ -1,6 +1,5 @@
 package net.softhem.pos.service;
 
-
 import net.softhem.pos.dto.*;
 import net.softhem.pos.exception.InsufficientStockException;
 import net.softhem.pos.exception.ResourceNotFoundException;
@@ -12,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +20,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    private final ProductService productService;
     private final OrderProductService orderProductService;
     List<OrderProduct> orderProducts = new ArrayList<>();
 
@@ -33,7 +29,6 @@ public class OrderService {
                         OrderProductService orderProductService) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
-        this.productService = productService;
         this.orderProductService = orderProductService;
     }
 
@@ -41,58 +36,28 @@ public class OrderService {
     public List<OrderDTO> getAllOrders() {
         Pageable pageable = PageRequest.of(0, 30);
         Page<Order> orders = orderRepository.findAll(pageable);
-        return orders.getContent().stream().map(this::convertToDTO).toList();
+        return orders.getContent().stream().map(Helpers::orderToDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderDTO> getAllOrders(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+        return Helpers.pageOrderDTO(orderPage);
     }
 
     @Transactional(readOnly = true)
     public OrderDTO getOrderById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        return convertToDTO(order);
+        return Helpers.orderToDto(order);
     }
-
-
-    // create order
-    // add/update product to order
-    // remove order from order
-    //
 
     @Transactional
     public OrderDTO createOrder(CreateOrderRequest request) {
         Order order = new Order();
-        // order.setOrderDate(LocalDateTime.now());
-        // order.setStatus("PENDING");
-        // order.setTotalAmount(0.0f);
-
-//        List<OrderProduct> orderProducts = new ArrayList<>();
-//        float totalAmount = 0.0f;
-//
-//        for (OrderItemRequest item : request.getItems()) {
-//            Product product = productRepository.findById(item.getProductId())
-//                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + item.getProductId()));
-//
-//            if (product.getInStock() < item.getQuantity()) {
-//                throw new InsufficientStockException("Insufficient stock for product: " + product.getName());
-//            }
-//
-//            OrderProduct orderProduct = new OrderProduct();
-//            orderProduct.setOrder(order);
-//            orderProduct.setProduct(product);
-//            orderProduct.setQuantity(item.getQuantity());
-//            orderProduct.setPriceAtPurchase(product.getPrice());
-//            orderProducts.add(orderProduct);
-//
-//            totalAmount += product.getPrice() * item.getQuantity();
-//
-//            // Update product stock
-//            product.setInStock(product.getInStock() - item.getQuantity());
-//            productRepository.save(product);
-//        }
-
-        // order.setOrderProducts(orderProducts);
-        // order.setTotalAmount(totalAmount);
         Order savedOrder = orderRepository.save(order);
-        return convertToDTO(savedOrder);
+        return Helpers.orderToDto(savedOrder);
     }
 
     private void addOrderProduct(Order order, Product product, Integer quantity, boolean save) {
@@ -112,7 +77,7 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
         order.setStatus(status);
         Order updatedOrder = orderRepository.save(order);
-        return convertToDTO(updatedOrder);
+        return Helpers.orderToDto(updatedOrder);
     }
 
     @Transactional
@@ -120,34 +85,6 @@ public class OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
         orderRepository.delete(order);
-    }
-
-    public OrderDTO convertToDTO(Order order) {
-        OrderDTO dto = new OrderDTO();
-        dto.setId(order.getId());
-        dto.setOrderDate(order.getOrderDate());
-        dto.setStatus(order.getStatus());
-        dto.setDiscount(order.getDiscount());
-        dto.setSubTotal(order.getSubTotal());
-        dto.setTotalAmount(order.getTotalAmount());
-        dto.setPaymentMethod(order.getPaymentMethod());
-        dto.setNotes(order.getNotes());
-
-        List<OrderProductDTO> orderProductDTOs = order.getOrderProducts().stream()
-                .map(op -> {
-                    OrderProductDTO opDto = new OrderProductDTO();
-                    opDto.setId(op.getId());
-                    opDto.setOrderId(op.getOrder().getId());
-                    opDto.setProductId(op.getProduct().getId());
-                    opDto.setProductName(op.getProduct().getName());
-                    opDto.setQuantity(op.getQuantity());
-                    opDto.setPriceAtPurchase(op.getPriceAtPurchase());
-                    return opDto;
-                })
-                .toList();
-
-        dto.setOrderProducts(orderProductDTOs);
-        return dto;
     }
 
     private Optional<OrderProduct> getOldOrderProductById(Order oldOrder, Long id) {
@@ -169,8 +106,6 @@ public class OrderService {
     public OrderDTO updateOrder(Long id, UpdateOrderRequest request) {
         Order oldOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        // Remove previous orderProducts
-        // orderProductService.deleteByOrderId(id); // @todo release stock
 
         float totalAmount = 0.0f;
 
@@ -191,10 +126,8 @@ public class OrderService {
         }
         oldOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        //oldOrder.getOrderProducts().clear();
-        // oldOrder.setOrderProducts(orderProducts);
         oldOrder.setTotalAmount(totalAmount);
         Order savedOrder = orderRepository.save(oldOrder);
-        return convertToDTO(savedOrder);
+        return Helpers.orderToDto(savedOrder);
     }
 }
