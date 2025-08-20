@@ -3,9 +3,14 @@ package net.softhem.pos.service;
 import net.softhem.pos.dto.ProductDTO;
 import net.softhem.pos.exception.ResourceNotFoundException;
 import net.softhem.pos.model.Category;
+import net.softhem.pos.model.Helpers;
 import net.softhem.pos.model.Product;
 import net.softhem.pos.repository.CategoryRepository;
 import net.softhem.pos.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +28,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDTO> getAllProducts() {
-        return productRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public Page<ProductDTO> getAllProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return Helpers.pageProductDTO(productPage);
     }
 
     @Transactional(readOnly = true)
