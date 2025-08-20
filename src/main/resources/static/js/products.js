@@ -102,9 +102,7 @@ pageInfo = {
 async function initPOSProducts() {
     console.log('initPOSProducts');
     console.log("Document is fully loaded.");
-    const _products = await makeApiRequest('GET', 'products', {});
-    console.log('products', _products);
-    products = _products;
+    await fetchProducts(0, 10);
     renderProductsTable(products);
     addEventListenerForProducts();
 }
@@ -247,55 +245,6 @@ function addEventListenerForProductRowsActions() {
     });
 }
 
-// Render products table
-function renderProductsTable2(products) {
-    console.log('renderProductsTable');
-    productsTableBody.innerHTML = '';
-
-    products.forEach(product => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${product.id}</td>
-            <td> <img class="img-fluid border rounded p-1 shadow-sm thumb-img" src=${product.image} /> ${product.name}</td>
-            <td>${product.description.substring(0,20)}</td>
-            <td>$${product.price.toFixed(2)}</td>
-            <td>${product.inStock}</td>
-            <td>
-                <span class="status-badge ${getStatusBadgeClass(product.status)}">
-                    ${formatStatus(product.status)}
-                </span>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-outline-primary action-btn edit-product" data-id="${product.id}">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger action-btn delete-product" data-id="${product.id}">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </td>
-        `;
-        productsTableBody.appendChild(row);
-    });
-
-    // Add event listeners to action buttons
-    document.querySelectorAll('.view-product').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const orderId = parseInt(this.getAttribute('data-id'));
-            viewProductDetails(orderId);
-        });
-    });
-
-    document.querySelectorAll('.print-product').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const orderId = parseInt(this.getAttribute('data-id'));
-            printOrder(orderId);
-        });
-    });
-
-    addEventListenerForProductRowsActions();
-}
-
-
 // Render products table with pagination
 function renderProductsTable(products, pageInfo = null) {
     console.log('renderProductsTable');
@@ -328,6 +277,7 @@ function renderProductsTable(products, pageInfo = null) {
 
     // Render pagination controls
     renderPaginationControls(pageInfo);
+    addEventListenerForProductRowsActions();
 }
 
 // Render pagination controls
@@ -462,9 +412,22 @@ async function fetchProducts(page = 0, size = 15, sortBy = 'name', sortDir = 'as
         currentSortBy,
         currentSortDir
     });
-    products = await makeApiRequest('GET', 'products', {page: currentPage, size:5});
-    console.log('products', products);
-    renderProductsTable(products);
+    const pageProducts = await makeApiRequest('GET', 'products', {page: currentPage, size:5});
+    products = pageProducts.content;
+    console.log('products', pageProducts);
+    updatePageInfo(pageProducts);
+    renderProductsTable(pageProducts.content);
+}
+
+function updatePageInfo(pageProducts) {
+    pageInfo = {
+        number: pageProducts.pageable.pageNumber,        // Current page number
+        size: pageProducts.pageable.pageSize,            // Page size
+        totalElements: pageProducts.totalElements, // Total items
+        totalPages: pageProducts.totalPages, // Total pages
+        first: pageProducts.first,          // Is first page?
+        last: pageProducts.last             // Is last page?
+    };
 }
 
 // Attach event listeners to pagination buttons

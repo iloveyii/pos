@@ -2,6 +2,7 @@ package net.softhem.pos.controller;
 
 import net.softhem.pos.dto.ProductDTO;
 import net.softhem.pos.service.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,9 @@ public class ProductController {
     }
 
     @GetMapping("/{page}/{size}")
-    public ResponseEntity<List<ProductDTO>> getAllProducts(@PathVariable int page,
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(@PathVariable int page,
                                                            @PathVariable int size) {
-        List<ProductDTO> products = productService.getAllProducts(page,size).getContent();
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(productService.getAllProducts(page,size));
     }
 
     @GetMapping("/{id}")
