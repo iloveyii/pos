@@ -226,6 +226,9 @@ function addEventListenerForProductRowsActions() {
     });
 
     document.querySelectorAll('.delete-product').forEach(btn => {
+        btn.removeEventListener('click', ()=> console.log('removed'));
+    });
+    document.querySelectorAll('.delete-product').forEach(btn => {
         btn.addEventListener('click', function() {
             const productId = parseInt(this.getAttribute('data-id'));
             confirmDelete(productId);
@@ -235,11 +238,16 @@ function addEventListenerForProductRowsActions() {
     // Delete product
     document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
         const productId = parseInt(this.getAttribute('data-id'));
-        products = products.filter(p => p.id !== productId);
 
+        // Delete in backend
+        if(products.some(p=>p.id === productId)) {
+            makeApiRequest('DELETE', `products/${productId}`, {});
+            console.log('Delete in backend ' + productId);
+            products = products.filter(p => p.id !== productId);
+            renderProductsTable(products);
+        }
         // Update views and close modal
         // renderProducts();
-        renderProductsTable(products);
         deleteModal.hide();
         showNotification('Product deleted successfully');
     });

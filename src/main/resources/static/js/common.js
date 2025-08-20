@@ -16,7 +16,15 @@ async function makeApiRequest(httpMethod, endPoint, data) {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json(); // Parse JSON response
+
+        if(response) {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json"))
+                return response.json(); // Parse JSON response
+            return {};
+        }
+        else
+            return {};
     })
     .then(items => {
         // Success - log products to console

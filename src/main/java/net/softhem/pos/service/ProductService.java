@@ -76,9 +76,10 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Product not found with id: " + id);
+            // throw new ResourceNotFoundException("Product not found with id: " + id);
+        } else {
+            productRepository.deleteById(id);
         }
-        productRepository.deleteById(id);
     }
 
     private ProductDTO convertToDTO(Product product) {
