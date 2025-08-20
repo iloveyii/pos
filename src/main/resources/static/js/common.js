@@ -48,3 +48,142 @@ function loadOrders() {
     script.src = '/js/orders.js?samgo';
     document.body.appendChild(script);
 }
+
+
+// Render pagination controls
+function renderPaginationControlsInCommon(pageInfo, tableBody, containerId, fetchItems) {
+    console.log('renderPaginationControlsInCommon pageinfo', pageInfo);
+    // Remove existing pagination if it exists
+    const existingPagination = document.getElementById(containerId);
+    if (existingPagination) {
+        existingPagination.remove();
+    }
+
+    // Create pagination container
+    const paginationContainer = document.createElement('div');
+    paginationContainer.id = containerId;
+    paginationContainer.className = 'd-flex justify-content-between align-items-center mt-4';
+
+    // Add pagination info (showing X to Y of Z items)
+    const paginationInfo = document.createElement('div');
+    paginationInfo.className = 'text-muted';
+
+    const startItem = (pageInfo.number * pageInfo.size) + 1;
+    const endItem = Math.min((pageInfo.number + 1) * pageInfo.size, pageInfo.totalElements);
+
+    paginationInfo.innerHTML = `Showing ${startItem} to ${endItem} of ${pageInfo.totalElements} entries`;
+
+    // Create pagination navigation
+    const paginationNav = document.createElement('nav');
+    paginationNav.setAttribute('aria-label', 'Products pagination');
+
+    const paginationList = document.createElement('ul');
+    paginationList.className = 'pagination mb-0';
+
+    // Previous button
+    const prevLi = document.createElement('li');
+    prevLi.className = `page-item ${pageInfo.first ? 'disabled' : ''}`;
+    prevLi.innerHTML = `
+        <a class="page-link" href="#" data-page="${pageInfo.number - 1}">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+    `;
+    paginationList.appendChild(prevLi);
+
+    // Page numbers
+    const totalPages = pageInfo.totalPages;
+    const currentPage = pageInfo.number;
+
+    // Show limited page numbers with ellipsis for many pages
+    let startPage = Math.max(0, currentPage - 2);
+    let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+    // Adjust if we're near the start
+    if (currentPage < 3) {
+        endPage = Math.min(4, totalPages - 1);
+    }
+
+    // Adjust if we're near the end
+    if (currentPage > totalPages - 4) {
+        startPage = Math.max(0, totalPages - 5);
+    }
+
+    // First page and ellipsis if needed
+    if (startPage > 0) {
+        const firstLi = document.createElement('li');
+        firstLi.className = 'page-item';
+        firstLi.innerHTML = `<a class="page-link" href="#" data-page="0">1</a>`;
+        paginationList.appendChild(firstLi);
+
+        if (startPage > 1) {
+            const ellipsisLi = document.createElement('li');
+            ellipsisLi.className = 'page-item disabled';
+            ellipsisLi.innerHTML = `<span class="page-link">...</span>`;
+            paginationList.appendChild(ellipsisLi);
+        }
+    }
+
+    // Page number buttons
+    for (let i = startPage; i <= endPage; i++) {
+        const pageLi = document.createElement('li');
+        pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        pageLi.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i + 1}</a>`;
+        paginationList.appendChild(pageLi);
+    }
+
+    // Last page and ellipsis if needed
+    if (endPage < totalPages - 1) {
+        if (endPage < totalPages - 2) {
+            const ellipsisLi = document.createElement('li');
+            ellipsisLi.className = 'page-item disabled';
+            ellipsisLi.innerHTML = `<span class="page-link">...</span>`;
+            paginationList.appendChild(ellipsisLi);
+        }
+
+        const lastLi = document.createElement('li');
+        lastLi.className = 'page-item';
+        lastLi.innerHTML = `<a class="page-link" href="#" data-page="${totalPages - 1}">${totalPages}</a>`;
+        paginationList.appendChild(lastLi);
+    }
+
+    // Next button
+    const nextLi = document.createElement('li');
+    nextLi.className = `page-item ${pageInfo.last ? 'disabled' : ''}`;
+    nextLi.innerHTML = `
+        <a class="page-link" href="#" data-page="${pageInfo.number + 1}">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    `;
+    paginationList.appendChild(nextLi);
+
+    paginationNav.appendChild(paginationList);
+
+    // Assemble the pagination container
+    paginationContainer.appendChild(paginationInfo);
+    paginationContainer.appendChild(paginationNav);
+
+    // Add pagination after the table
+    const tableContainer = tableBody.closest('.table-responsive');
+    tableContainer.parentNode.insertBefore(paginationContainer, tableContainer.nextSibling);
+
+    // Add event listeners to pagination buttons
+    attachPaginationEventListenersInCommon(pageInfo, containerId, fetchItems);
+}
+
+// Attach event listeners to pagination buttons
+function attachPaginationEventListenersInCommon(pageInfo, containerId, fetchItems) {
+    const paginationLinks = document.querySelectorAll(`#${containerId} .page-link:not(.disabled)`);
+
+    paginationLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const page = parseInt(this.getAttribute('data-page'));
+            if (!isNaN(page)) {
+                // Call your function to fetch products for the selected page
+                pageInfo.number = page;
+                fetchItems(page, currentPageSize, currentSortBy, currentSortDir);
+            }
+        });
+    });
+}

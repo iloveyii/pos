@@ -88,14 +88,55 @@ const searchOrders = document.getElementById('searchOrders');
 const filterButtonsOrders = document.querySelectorAll('.filter-btn-orders');
 const printOrderBtn = document.querySelector('#printOrderBtn');
 
+// Global variables to track current pagination state
+let currentPageOrders = 0;
+let currentPageSizeOrders = 10;
+let currentSortByOrders = 'name';
+let currentSortDirOrders = 'asc';
+
+let pageInfoOrders = {
+    number: 0,        // Current page number
+    size: 3,            // Page size
+    totalElements: 3, // Total items
+    totalPages: 4, // Total pages
+    first: true,          // Is first page?
+    last: false             // Is last page?
+};
+
+function updatePageInfoOrders(pageProducts) {
+    pageInfoOrders = {
+        number: pageProducts.pageable.pageNumber,        // Current page number
+        size: pageProducts.pageable.pageSize,            // Page size
+        totalElements: pageProducts.totalElements, // Total items
+        totalPages: pageProducts.totalPages, // Total pages
+        first: pageProducts.first,          // Is first page?
+        last: pageProducts.last             // Is last page?
+    };
+}
+
+async function fetchOrders(page = 0, size = 15, sortBy = 'name', sortDir = 'asc') {
+    // Update global variables
+    currentPageOrders = page;
+    currentPageSizeOrders = size;
+    currentSortByOrders = sortBy;
+    currentSortDirOrders = sortDir;
+    console.log( 'pagination:', {
+        currentPageOrders,
+        currentPageSizeOrders,
+        currentSortByOrders,
+        currentSortDirOrders
+    });
+    const pageOrders = await makeApiRequest('GET', 'orders', {page: currentPageOrders, size:5});
+    orders = pageOrders.content;
+    console.log('orders', pageOrders);
+    updatePageInfoOrders(pageOrders);
+    renderOrdersTable(pageOrders.content);
+}
 
 // Initialize the POS
 async function initPOSOrders() {
     console.log('initPOSOrders');
-    console.log("Document is fully loaded.");
-    const _orders = await makeApiRequest('GET', 'orders', {});
-    console.log('orders', _orders);
-    orders = _orders;
+    await fetchOrders();
     renderOrdersTable(orders);
     addEventListenerForOrders();
 }
@@ -193,6 +234,7 @@ function renderOrdersTable(orders) {
         ordersTableBody.appendChild(row);
     });
 
+    renderPaginationControlsInCommon(pageInfoOrders, ordersTableBody, 'ordersPagination', (page, currentPageSize, currentSortBy, currentSortDir)=>fetchOrders(page, currentPageSize, currentSortBy, currentSortDir));
     addEventListenerForOrderRowsActions();
 }
 

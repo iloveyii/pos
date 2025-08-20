@@ -89,10 +89,10 @@ let currentPageSize = 10;
 let currentSortBy = 'name';
 let currentSortDir = 'asc';
 
-pageInfo = {
+var pageInfo = {
     number: 0,        // Current page number
     size: 3,            // Page size
-    totalElements: 3, // Total items
+    totalElements: 12, // Total items
     totalPages: 4, // Total pages
     first: true,          // Is first page?
     last: false             // Is last page?
@@ -254,7 +254,7 @@ function addEventListenerForProductRowsActions() {
 }
 
 // Render products table with pagination
-function renderProductsTable(products, pageInfo = null) {
+function renderProductsTable(products) {
     console.log('renderProductsTable');
     productsTableBody.innerHTML = '';
 
@@ -284,12 +284,12 @@ function renderProductsTable(products, pageInfo = null) {
     });
 
     // Render pagination controls
-    renderPaginationControls(pageInfo);
+    renderPaginationControlsInCommon(pageInfo, productsTableBody, 'productsPagination', (page, currentPageSize, currentSortBy, currentSortDir)=>fetchProducts(page, currentPageSize, currentSortBy, currentSortDir));
     addEventListenerForProductRowsActions();
 }
 
 // Render pagination controls
-function renderPaginationControls(_pageInfo = null) {
+function renderPaginationControls() {
 
     // Remove existing pagination if it exists
     const existingPagination = document.getElementById('productsPagination');
