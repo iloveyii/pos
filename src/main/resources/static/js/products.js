@@ -83,6 +83,20 @@ const productDateFilter = document.getElementById('productDateFilter');
 const searchProducts = document.getElementById('searchProducts');
 const filterButtonsProducts = document.querySelectorAll('.filter-btn-products');
 
+// Global variables to track current pagination state
+let currentPage = 0;
+let currentPageSize = 10;
+let currentSortBy = 'name';
+let currentSortDir = 'asc';
+
+pageInfo = {
+    number: 0,        // Current page number
+    size: 3,            // Page size
+    totalElements: 3, // Total items
+    totalPages: 4, // Total pages
+    first: true,          // Is first page?
+    last: false             // Is last page?
+};
 
 // Initialize the POS
 async function initPOSProducts() {
@@ -317,15 +331,8 @@ function renderProductsTable(products, pageInfo = null) {
 }
 
 // Render pagination controls
-function renderPaginationControls(pageInfo = null) {
-    pageInfo = {
-        number: 0,        // Current page number
-        size: 3,            // Page size
-        totalElements: 3, // Total items
-        totalPages: 4, // Total pages
-        first: true,          // Is first page?
-        last: false             // Is last page?
-    };
+function renderPaginationControls(_pageInfo = null) {
+
     // Remove existing pagination if it exists
     const existingPagination = document.getElementById('productsPagination');
     if (existingPagination) {
@@ -443,12 +450,21 @@ function renderPaginationControls(pageInfo = null) {
     attachPaginationEventListeners();
 }
 
-function fetchProducts(page = 0, size = 10, sortBy = 'name', sortDir = 'asc') {
+async function fetchProducts(page = 0, size = 15, sortBy = 'name', sortDir = 'asc') {
     // Update global variables
     currentPage = page;
     currentPageSize = size;
     currentSortBy = sortBy;
     currentSortDir = sortDir;
+    console.log( 'pagination:', {
+        currentPage,
+        currentPageSize,
+        currentSortBy,
+        currentSortDir
+    });
+    products = await makeApiRequest('GET', 'products', {page: currentPage, size:5});
+    console.log('products', products);
+    renderProductsTable(products);
 }
 
 // Attach event listeners to pagination buttons
@@ -462,6 +478,7 @@ function attachPaginationEventListeners() {
             const page = parseInt(this.getAttribute('data-page'));
             if (!isNaN(page)) {
                 // Call your function to fetch products for the selected page
+                pageInfo.number = page;
                 fetchProducts(page, currentPageSize, currentSortBy, currentSortDir);
             }
         });

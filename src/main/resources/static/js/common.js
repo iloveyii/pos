@@ -1,6 +1,9 @@
 // API request
 async function makeApiRequest(httpMethod, endPoint, data) {
     // Make the request to /api/endpoint
+    if(httpMethod === 'GET' && Object.keys(data).length > 0) {
+        Object.keys(data).map( k => endPoint = endPoint + `/${data[k]}`)
+    }
     return await fetch('/api/' + endPoint, {
         method: httpMethod,
         headers: {
