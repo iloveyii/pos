@@ -28,3 +28,7 @@ FROM
 ## Debug
 
 - <https://chat.deepseek.com/a/chat/s/0095ab7b-a28e-4263-b2d7-ff066d764506>
+
+## Pagination
+
+- <http://localhost:8080/products?page=0&size=3>

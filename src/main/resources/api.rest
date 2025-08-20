@@ -22,9 +22,17 @@ Content-Type: application/json
   "inStock": 200
 }
 ##################
-## Get request
+## Get all request
 GET http://localhost:8080/api/products
 
+###################
+## Get request
+GET http://localhost:8080/api/products/5
+
+
+###################
+## Get paginated request
+GET http://localhost:8080/api/products/1/3
 
 
 ###################
