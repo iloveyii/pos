@@ -9,6 +9,7 @@ import net.softhem.pos.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,7 @@ public class ProductService {
         } else {
             product.setCategory(null);
         }
+        product.setUpdatedAt(LocalDateTime.now());
         Product updatedProduct = productRepository.save(product);
         return convertToDTO(updatedProduct);
     }
@@ -83,6 +85,7 @@ public class ProductService {
         dto.setPrice(product.getPrice());
         dto.setInStock(product.getInStock());
         dto.setStatus(product.isStatus());
+        dto.setUpdatedAt(product.getUpdatedAt());
         dto.setCategoryId(product.getCategory().getId());
         return dto;
     }
