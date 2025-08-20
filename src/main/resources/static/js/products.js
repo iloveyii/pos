@@ -443,6 +443,14 @@ function renderPaginationControls(pageInfo = null) {
     attachPaginationEventListeners();
 }
 
+function fetchProducts(page = 0, size = 10, sortBy = 'name', sortDir = 'asc') {
+    // Update global variables
+    currentPage = page;
+    currentPageSize = size;
+    currentSortBy = sortBy;
+    currentSortDir = sortDir;
+}
+
 // Attach event listeners to pagination buttons
 function attachPaginationEventListeners() {
     const paginationLinks = document.querySelectorAll('#productsPagination .page-link:not(.disabled)');
