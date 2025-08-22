@@ -46,6 +46,7 @@ public class ProductService {
     public ProductDTO createProduct(ProductDTO productDTO) throws IOException {
         Product product = new Product();
         product.setName(productDTO.getName());
+        product.setStatus(productDTO.isStatus());
         product.setPrice(productDTO.getPrice());
         product.setInStock(productDTO.getInStock());
         product.setDescription(productDTO.getDescription());
@@ -80,11 +81,16 @@ public class ProductService {
                     .ifPresent(product::setCategory);
         }
         // Handle base64 image
-        if (productDTO.getImage() != null && !productDTO.getImage().isEmpty()) {
-            String filename = fileStorageService.storeBase64Image(productDTO.getImage());
-            product.setImage(filename);
+        // Check for either protocol - no need to update url
+        if (productDTO.getImage().contains("http://") || productDTO.getImage().contains("https://")) {
+            System.out.println("Contains HTTP or HTTPS protocol");
+        } else {
+            if (productDTO.getImage() != null && !productDTO.getImage().isEmpty()) {
+                String filename = fileStorageService.storeBase64Image(productDTO.getImage());
+                product.setImage(filename);
+            }
         }
-        product.setUpdatedAt(LocalDateTime.now());
+
         Product updatedProduct = productRepository.save(product);
         return convertToDTO(updatedProduct);
     }

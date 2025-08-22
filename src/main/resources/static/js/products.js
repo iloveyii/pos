@@ -171,6 +171,7 @@ function addEventListenerForProducts() {
                     ...products[index],
                     ...productData
                 };
+
                 saveProductOnBackend(products[index]);
                 showNotification('Product updated successfully');
             }
@@ -181,8 +182,13 @@ function addEventListenerForProducts() {
                 id: newId,
                 ...productData
             });
-            saveProductOnBackend(productData);
-            showNotification('Product added successfully');
+            if(productData.image.includes('data:image/')) {
+                saveProductOnBackend(productData);
+                showNotification('Product added successfully');
+            } else {
+                showNotification('Please add image for the product', 'danger');
+            }
+
         }
 
         // Update views and close modal
@@ -209,7 +215,25 @@ function addEventListenerForProducts() {
     });
 
     // add new product
-    document.querySelector('#addProductBtn').addEventListener('click', ()=> productModal.show());
+    document.querySelector('#addProductBtn').addEventListener('click', ()=> {
+        productModal.show();
+        document.getElementById('productId').value = '';
+        // Fill form with product data
+        document.getElementById('productId').value = '';
+        document.getElementById('productName').value = '';
+        document.getElementById('productDescription').value = '';
+        document.getElementById('productPrice').value = '';
+        document.getElementById('productCost').value = '';
+        document.getElementById('productStock').value = '';
+        document.getElementById('productCategory').value = '';
+        document.getElementById('productStatus').checked = '';
+        document.getElementById('productBarcode').value = '';
+        document.getElementById('productWeight').value = '';
+        document.getElementById('productDimensions').value = '';
+        const imagePreview = document.getElementById('imagePreview');
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+    });
 }
 
 function saveProductOnBackend(productData) {
@@ -354,79 +378,6 @@ function filterProducts(filter, date = '') {
             printOrder(orderId);
         });
     });
-}
-
-// View product details
-function viewProductDetails2(orderId) {
-    const product = products.find(o => o.id === orderId);
-    if (!product) return;
-    console.log('product', product);
-
-    // Set product ID in header
-    document.getElementById('orderIdHeader').textContent = product.id;
-
-    // Build product details content
-    let orderDetails = `
-        <div class="product-details-card">
-            <div class="product-details-header">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="fw-bold mb-1">product #${product.id}</h6>
-                        <small class="text-muted">Date: ${product.date}</small>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <span class="status-badge ${getStatusBadgeClass(product.status)}">
-                            ${formatStatus(product.status)}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-3">
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3">Customer Information</h6>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p class="mb-1"><strong>Name:</strong> ${product.customer}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="mb-1"><strong>Payment Method:</strong> ${product.paymentMethod || 'N/A'}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h6 class="fw-bold mb-3">product Items</h6>
-    `;
-
-    // Add product summary
-    orderDetails += `
-            </div>
-
-            <div class="product-summary">
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Subtotal:</span>
-                    <span>$${product.totalAmount.toFixed(2)}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Tax (8%):</span>
-                    <span>$${product.totalAmount.toFixed(2)}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Discount:</span>
-                    <span>-$${product.discount.toFixed(2)}</span>
-                </div>
-                <hr>
-                <div class="d-flex justify-content-between fw-bold">
-                    <span>Total:</span>
-                    <span>$${product.totalAmount.toFixed(2)}</span>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Set content and show modal
-    document.getElementById('orderDetailsContent').innerHTML = orderDetails;
-    // productDetailsModal.show();
 }
 
 // Edit product

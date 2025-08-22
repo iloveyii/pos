@@ -413,26 +413,6 @@ function updateOrder(id) {
     });
 }
 
-// Show Notification
-function showNotification(message, type = 'success') {
-    notificationMessage.textContent = message;
-    const toast = document.getElementById('notificationToast');
-
-    // Change color based on type
-    if (type === 'success') {
-        toast.className = 'toast align-items-center text-white bg-success border-0 floating-notification';
-    } else if (type === 'danger') {
-        toast.className = 'toast align-items-center text-white bg-danger border-0 floating-notification';
-    }
-
-    notificationToast.show();
-
-    // Hide after 3 seconds
-    setTimeout(() => {
-        notificationToast.hide();
-    }, 3000);
-}
-
 // Setup Event Listeners
 function setupEventListeners() {
     // Product click
