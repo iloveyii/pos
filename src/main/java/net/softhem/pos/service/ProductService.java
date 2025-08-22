@@ -65,7 +65,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) throws IOException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         product.setName(productDTO.getName());
@@ -73,13 +73,16 @@ public class ProductService {
         product.setPrice(productDTO.getPrice());
         product.setInStock(productDTO.getInStock());
         product.setDescription(productDTO.getDescription());
+        product.setUpdatedAt(LocalDateTime.now());
         // Handle category
         if (productDTO.getCategoryId() != null) {
-            Category category = categoryRepository.findById(productDTO.getCategoryId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + productDTO.getCategoryId()));
-            product.setCategory(category);
-        } else {
-            product.setCategory(null);
+            categoryRepository.findById(productDTO.getCategoryId())
+                    .ifPresent(product::setCategory);
+        }
+        // Handle base64 image
+        if (productDTO.getImage() != null && !productDTO.getImage().isEmpty()) {
+            String filename = fileStorageService.storeBase64Image(productDTO.getImage());
+            product.setImage(filename);
         }
         product.setUpdatedAt(LocalDateTime.now());
         Product updatedProduct = productRepository.save(product);

@@ -1,7 +1,8 @@
 package net.softhem.pos.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,14 +13,21 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    private final Path rootLocation = Paths.get("uploads");
+    private final Path imagesLocation;
+    private final Path targetImagesLocation;
 
-    public FileStorageService() {
-        try {
-            Files.createDirectories(rootLocation);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize storage directory", e);
-        }
+    public FileStorageService() throws IOException {
+        // Development: save to target/classes/static/images/products
+        this.targetImagesLocation = Paths.get("target/classes/static/images/products")
+                .toAbsolutePath().normalize();
+
+        // Create path to resources/static/images/products
+        this.imagesLocation = Paths.get("src/main/resources/static/images/products")
+                .toAbsolutePath().normalize();
+
+        // Create both directories
+        Files.createDirectories(targetImagesLocation);
+        Files.createDirectories(imagesLocation);
     }
 
     public String storeBase64Image(String base64Data) throws IOException {
@@ -27,23 +35,67 @@ public class FileStorageService {
             return null;
         }
 
-        // Extract the base64 part from the data URL
-        String[] parts = base64Data.split(",");
-        String base64String = parts.length > 1 ? parts[1] : parts[0];
+        try {
+            // Extract the base64 part from the data URL
+            String[] parts = base64Data.split(",");
+            String base64String = parts.length > 1 ? parts[1] : parts[0];
 
-        // Extract file extension from MIME type
-        String mimeType = parts[0].split(";")[0].split(":")[1];
-        String extension = getExtensionFromMimeType(mimeType);
+            // Extract file extension from MIME type
+            String mimeType = parts[0].split(";")[0].split(":")[1];
+            String extension = getExtensionFromMimeType(mimeType);
 
-        // Generate unique filename
-        String filename = UUID.randomUUID().toString() + "." + extension;
-        Path destinationFile = rootLocation.resolve(Paths.get(filename)).normalize().toAbsolutePath();
+            // Generate unique filename
+            String filename = "product_" + UUID.randomUUID().toString() + "." + extension;
+            // Save to both locations for development and production
+            saveToFileLocation(imagesLocation, filename, base64String);
+            saveToFileLocation(targetImagesLocation, filename, base64String);
+            return filename;
+        } catch (IllegalArgumentException e) {
+            throw new IOException("Invalid base64 data", e);
+        }
+    }
+
+    private void saveToFileLocation(Path filLocationToSave, String filename, String base64String) throws IOException {
+        Path destinationFile = filLocationToSave.resolve(filename).normalize();
+
+        // Security check
+        if (!destinationFile.getParent().equals(filLocationToSave)) {
+            throw new IOException("Cannot store file outside current directory");
+        }
 
         // Decode and save the file
         byte[] imageBytes = Base64.getDecoder().decode(base64String);
         Files.write(destinationFile, imageBytes);
+    }
 
-        return filename;
+    public Resource loadImageAsResource(String filename) throws IOException {
+        try {
+            Path filePath = imagesLocation.resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new IOException("File not found or not readable: " + filename);
+            }
+        } catch (Exception e) {
+            throw new IOException("Could not load file: " + filename, e);
+        }
+    }
+
+    public boolean deleteImage(String filename) throws IOException {
+        if (filename == null || filename.isEmpty()) {
+            return false;
+        }
+
+        Path filePath = imagesLocation.resolve(filename).normalize();
+
+        // Security check
+        if (!filePath.getParent().equals(imagesLocation)) {
+            throw new IOException("Cannot delete file outside current directory");
+        }
+
+        return Files.deleteIfExists(filePath);
     }
 
     private String getExtensionFromMimeType(String mimeType) {
@@ -52,7 +104,12 @@ public class FileStorageService {
             case "image/png": return "png";
             case "image/gif": return "gif";
             case "image/webp": return "webp";
-            default: return "bin";
+            case "image/svg+xml": return "svg";
+            default: return "png"; // default to png
         }
+    }
+
+    public Path getImagesLocation() {
+        return imagesLocation;
     }
 }
