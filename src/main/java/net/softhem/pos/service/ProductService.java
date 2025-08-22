@@ -8,23 +8,24 @@ import net.softhem.pos.model.Product;
 import net.softhem.pos.repository.CategoryRepository;
 import net.softhem.pos.repository.ProductRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    private final FileStorageService fileStorageService;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, FileStorageService fileStorageService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional(readOnly = true)
@@ -42,11 +43,23 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO createProduct(ProductDTO productDTO) {
+    public ProductDTO createProduct(ProductDTO productDTO) throws IOException {
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setInStock(productDTO.getInStock());
+        product.setDescription(productDTO.getDescription());
+        product.setUpdatedAt(LocalDateTime.now());
+        // Handle category
+        if (productDTO.getCategoryId() != null) {
+            categoryRepository.findById(productDTO.getCategoryId())
+                    .ifPresent(product::setCategory);
+        }
+        // Handle base64 image
+        if (productDTO.getImage() != null && !productDTO.getImage().isEmpty()) {
+            String filename = fileStorageService.storeBase64Image(productDTO.getImage());
+            product.setImage(filename);
+        }
         Product savedProduct = productRepository.save(product);
         return convertToDTO(savedProduct);
     }

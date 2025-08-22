@@ -154,7 +154,7 @@ function addEventListenerForProducts() {
             price: parseFloat(document.getElementById('productPrice').value),
             cost: parseFloat(document.getElementById('productCost').value) || 0,
             inStock: parseInt(document.getElementById('productStock').value),
-            category: document.getElementById('productCategory').value,
+            categoryId: document.getElementById('productCategory').value,
             status: document.getElementById('productStatus').checked,
             barcode: document.getElementById('productBarcode').value,
             weight: parseFloat(document.getElementById('productWeight').value) || 0,
@@ -207,6 +207,9 @@ function addEventListenerForProducts() {
             reader.readAsDataURL(file);
         }
     });
+
+    // add new product
+    document.querySelector('#addProductBtn').addEventListener('click', ()=> productModal.show());
 }
 
 function saveProductOnBackend(productData) {
@@ -354,7 +357,7 @@ function filterProducts(filter, date = '') {
 }
 
 // View product details
-function viewProductDetails(orderId) {
+function viewProductDetails2(orderId) {
     const product = products.find(o => o.id === orderId);
     if (!product) return;
     console.log('product', product);

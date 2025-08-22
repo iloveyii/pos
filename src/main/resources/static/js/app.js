@@ -590,10 +590,6 @@ function getCustomerDetail() {
 // Initialize the POS when DOM is loaded
 document.addEventListener('DOMContentLoaded', initPOS);
 
-
-
-
-
 // Show specific page
 function showPage(page) {
     pageContainers.forEach(container => {
