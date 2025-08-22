@@ -58,7 +58,8 @@ INSERT INTO CATEGORIES (name, description, status) VALUES
 ('Electronics', 'Electronic devices and accessories', TRUE),
 ('Clothing', 'Apparel and fashion items', TRUE),
 ('Groceries', 'Food and household essentials', TRUE),
-('Home & Garden', 'Home improvement and outdoor living', TRUE);
+('Home & Garden', 'Home improvement and outdoor living', TRUE),
+('Other', 'Other items', TRUE);
 
 -- Insert sample products
 --INSERT INTO PRODUCTS (name, description, image, price, in_stock) VALUES
