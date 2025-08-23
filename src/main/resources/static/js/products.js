@@ -1,6 +1,6 @@
 
 // Product Data with Unsplash images
-var products = [
+let products = [
     {
         id: 1,
         name: "Wireless Headphones",

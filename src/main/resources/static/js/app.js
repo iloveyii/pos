@@ -1,5 +1,5 @@
 // Product Data with Unsplash images
-var products = [
+let dash_products = [
     {
         id: 1,
         name: "Wireless Headphones",
@@ -113,7 +113,7 @@ function initPOS() {
     renderCart();
     setupEventListeners();
 }
-// Load Products
+// Load dash_products
 function loadProducts() {
     // Make GET request to /api/products
     fetch('/api/products')
@@ -126,19 +126,19 @@ function loadProducts() {
       })
       .then(pros => {
         // Success - log products to console
-        console.log('Products:', pros);
-        products = pros;
-        renderProducts(products);
+        console.log('dash_products:', pros);
+        dash_products = pros;
+        renderProducts(dash_products);
 
         // You can also display them on the page
-        // displayProducts(products);
+        // displayProducts(dash_products);
       })
       .catch(error => {
         // Error handling
-        console.error('Error fetching products:', error);
+        console.error('Error fetching dash_products:', error);
 
         // Show user-friendly message
-        const shouldRefresh = confirm('Failed to load products. Click OK to refresh the page.');
+        const shouldRefresh = confirm('Failed to load dash_products. Click OK to refresh the page.');
 
         if (shouldRefresh) {
           window.location.reload(); // Refresh the page
@@ -146,12 +146,12 @@ function loadProducts() {
       });
 }
 
-// Render Products
-function renderProducts(products) {
+// Render dash_products
+function renderProducts(dash_products) {
     console.log('inside renderProducts');
     productsContainer.innerHTML = '';
 
-    products.forEach(product => {
+    dash_products.forEach(product => {
         const productCard = document.createElement('div');
         productCard.className = 'col';
         productCard.innerHTML = `
@@ -186,7 +186,7 @@ function renderCart() {
     cartItemsContainer.innerHTML = '';
 
     cart.forEach(item => {
-        const product = products.find(p => p.id === item.productId);
+        const product = dash_products.find(p => p.id === item.productId);
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
         cartItem.innerHTML = `
@@ -217,7 +217,7 @@ function renderCart() {
 // Update Totals
 function updateTotals() {
     const subtotal = cart.reduce((sum, item) => {
-        const product = products.find(p => p.id === item.productId);
+        const product = dash_products.find(p => p.id === item.productId);
         return sum + (product.price * item.quantity);
     }, 0);
 
@@ -485,8 +485,8 @@ function setupEventListeners() {
           e.preventDefault();
           const category = this.getAttribute('data-category');
           const filtered = category == "0"
-                ? products
-                : products.filter(p => p.categoryId == category);
+                ? dash_products
+                : dash_products.filter(p => p.categoryId == category);
           renderProducts(filtered);
         });
     });
@@ -496,7 +496,7 @@ function setupEventListeners() {
       const query = searchProductsDashboard.value.trim().toLowerCase();
       console.log(query);
 
-      const filtered = products.filter(product =>
+      const filtered = dash_products.filter(product =>
         product.name?.toLowerCase().includes(query) ||
         (product.price + '').includes(query) ||
         product.description?.includes(query) // simple string match; could be improved
@@ -508,7 +508,7 @@ function setupEventListeners() {
     document.getElementById("clearSearchBtn").addEventListener("click", function () {
         searchProductsDashboard.value = "";
         searchProductsDashboard.focus();
-        renderProducts(products);
+        renderProducts(dash_products);
     });
 
     // Open modal when Change button is clicked
