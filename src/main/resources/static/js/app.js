@@ -303,6 +303,7 @@ function applyDiscount() {
 // Clear Cart
 function clearCart() {
     cart = [];
+    objOrder.id = null;
     discount = {
         amount: 0,
         type: 'fixed'
