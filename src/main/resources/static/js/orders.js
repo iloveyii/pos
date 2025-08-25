@@ -189,11 +189,18 @@ function addEventListenerForOrders() {
 
 function addEventListenerForOrderRowsActions(){
     // Add event listeners to action buttons
-    document.querySelectorAll('.view-order').forEach(btn => {
+    document.querySelectorAll('.edit-order').forEach(btn => {
         btn.addEventListener('click', function() {
             const orderId = parseInt(this.getAttribute('data-id'));
-            console.log('view order: ' + orderId);
-            viewOrderDetails(orderId);
+            console.log('view cart for order: ' + orderId);
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            console.log('Order found:: ', order);
+            objOrder.id = order.id;
+            cart = order.orderProducts.map(o => ({productId: o.productId, quantity: o.quantity}));
+            console.log('Show cart::', cart);
+            showPage('pos');
+            renderCart();
         });
     });
 
@@ -201,6 +208,14 @@ function addEventListenerForOrderRowsActions(){
         btn.addEventListener('click', function() {
             const orderId = parseInt(this.getAttribute('data-id'));
             printOrder(orderId);
+        });
+    });
+
+    document.querySelectorAll('.view-order').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const orderId = parseInt(this.getAttribute('data-id'));
+            console.log('view order: ' + orderId);
+            viewOrderDetails(orderId);
         });
     });
 }
@@ -223,6 +238,9 @@ function renderOrdersTable(orders) {
                 </span>
             </td>
             <td>
+                <button class="btn btn-sm btn-outline-primary action-btn edit-order" data-id="${order.id}">
+                    <i class="fas fa-edit"></i>
+                </button>
                 <button class="btn btn-sm btn-outline-primary action-btn view-order" data-id="${order.id}">
                     <i class="fas fa-eye"></i>
                 </button>
@@ -255,19 +273,7 @@ function filterOrders(filter, date = '') {
     // Re-render orders table
     renderOrdersTable(filteredOrders);
     // Reattach event listeners
-    document.querySelectorAll('.view-order').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const orderId = parseInt(this.getAttribute('data-id'));
-            viewOrderDetails(orderId);
-        });
-    });
-
-    document.querySelectorAll('.print-order').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const orderId = parseInt(this.getAttribute('data-id'));
-            printOrder(orderId);
-        });
-    });
+    addEventListenerForOrderRowsActions();
 }
 
 // View order details

@@ -88,6 +88,13 @@ let currentPage = 0;
 let currentPageSize = 10;
 let currentSortBy = 'name';
 let currentSortDir = 'asc';
+const categories = {
+    '1': 'Electronics',
+    '2': 'Clothing',
+    '3': 'Groceries',
+    '4': 'Home & Garden',
+    '5': 'Other'
+};
 
 var pageInfo = {
     number: 0,        // Current page number
@@ -290,6 +297,7 @@ function renderProductsTable(products) {
         row.innerHTML = `
             <td>${product.id}</td>
             <td> <img class="img-fluid border rounded p-1 shadow-sm thumb-img" src=${product.image} /> ${product.name}</td>
+            <td>${categories[product.categoryId]}</td>
             <td>${product.description.substring(0,20)}</td>
             <td>$${product.price.toFixed(2)}</td>
             <td>${product.inStock}</td>
