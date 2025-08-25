@@ -53,6 +53,7 @@ public class Helpers {
         dto.setId(order.getId());
         dto.setOrderDate(order.getOrderDate());
         dto.setStatus(order.getStatus());
+        dto.setType(order.getType());
         dto.setDiscount(order.getDiscount());
         dto.setSubTotal(order.getSubTotal());
         dto.setTotalAmount(order.getTotalAmount());

@@ -21,7 +21,10 @@ public class Order {
     private LocalDateTime orderDate = LocalDateTime.now();
 
     @Column(nullable = true)
-    private String status = "PENDING";
+    private String status = "PENDING"; // PROCESSING, ONHOLD, COMPLETED, SHIPPED, CANCELLED
+
+    @Column(nullable = true)
+    private String type = "INVOICE"; // QUOTE
 
     @Column(name = "sub_total", nullable = true)
     private Float subTotal;

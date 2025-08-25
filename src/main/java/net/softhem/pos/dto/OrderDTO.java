@@ -12,6 +12,7 @@ public class OrderDTO {
     private LocalDateTime orderDate;
     private String orderDateString;
     private String status;
+    private String type;
     private Float subTotal;
     private Float discount;
     private Float totalAmount;

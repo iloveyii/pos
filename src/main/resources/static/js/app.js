@@ -525,6 +525,55 @@ function setupEventListeners() {
             getCustomerDetail();
         });
     }
+
+    // Show QR to customer
+    document.getElementById('btn-qr').addEventListener('click', function() {
+      sendCommandToShow('qr');
+    });
+    // Show invoice to customer
+    document.getElementById('btn-invoice').addEventListener('click', function() {
+      sendCommandToShow('invoice');
+    });
+
+    // Change status to onhold
+    document.getElementById('btnHold').addEventListener('click', function() {
+        console.log('btnHold', this.checked)
+        const status = this.checked === true ? 'ONHOLD': '';
+        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: status, type: ''});
+    });
+
+    // Change type to QUOTE
+    document.getElementById('btnQuote').addEventListener('click', function() {
+        console.log('btnQuote', this.checked)
+        const type = this.checked === true ? 'QUOTE': '';
+        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: '', type: type});
+    });
+
+    // Change type to QUOTE
+    document.getElementById('btnInvoice').addEventListener('click', function() {
+        console.log('btnInvoice', this.checked)
+        const type = this.checked === true ? 'INVOICE': '';
+        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: '', type: type});
+    });
+
+    // Change paymentMethod to CASH
+    document.getElementById('btnPaymentCash').addEventListener('click', function() {
+        console.log('btnPaymentCash', this.checked)
+        const paymentMethod = this.checked === true ? 'CASH': '';
+        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
+    });
+    // Change paymentMethod to CARD
+    document.getElementById('btnPaymentCard').addEventListener('click', function() {
+        console.log('btnPaymentCard', this.checked)
+        const paymentMethod = this.checked === true ? 'CARD': '';
+        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
+    });
+    // Change paymentMethod to MOBILE
+    document.getElementById('btnPaymentMobile').addEventListener('click', function() {
+        console.log('btnPaymentMobile', this.checked)
+        const paymentMethod = this.checked === true ? 'MOBILE': '';
+        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
+    });
 }
 
 // Customer modal functionality
@@ -568,8 +617,6 @@ function getCustomerDetail() {
 }
 
 
-// Initialize the POS when DOM is loaded
-document.addEventListener('DOMContentLoaded', initPOS);
 
 // Show specific page
 function showPage(page) {
@@ -619,18 +666,8 @@ function sendCommandToShow(cmd) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  // Your code here
-  console.log("Document is fully loaded.");
+// Initialize the POS when DOM is loaded
+document.addEventListener('DOMContentLoaded', initPOS);
 
-  // Show QR to customer
-  document.getElementById('btn-qr').addEventListener('click', function() {
-      sendCommandToShow('qr');
-  });
-  // Show invoice to customer
-  document.getElementById('btn-invoice').addEventListener('click', function() {
-      sendCommandToShow('invoice');
-  });
-});
 
 

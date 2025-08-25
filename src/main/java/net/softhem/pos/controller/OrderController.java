@@ -66,6 +66,25 @@ public class OrderController {
         // orderUpdateService.sendOrderUpdate(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
+
+    // Change order's status and/or type
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<OrderDTO> changeStatusAndType(
+            @PathVariable Long orderId,
+            @RequestBody OrderStatusAndTypeRequest request) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+        if(request.getStatus() != null && !request.getStatus().isEmpty())
+            order.setStatus(request.getStatus());
+        if(request.getType() != null && !request.getType().isEmpty())
+            order.setType(request.getType());
+        if(request.getPaymentMethod() != null && !request.getPaymentMethod().isEmpty())
+            order.setPaymentMethod(request.getPaymentMethod());
+        orderRepository.save(order);
+        return ResponseEntity.ok(Helpers.orderToDto(order));
+    }
+
     // Add product to order
     @PostMapping("/{orderId}/items")
     public ResponseEntity<OrderDTO> addItem(
