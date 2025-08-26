@@ -212,6 +212,44 @@ function renderCart() {
     });
 
     updateTotals();
+    updateCartButtons();
+}
+
+function  updateCartButtons(){
+    let order = null;
+    if(objOrder && objOrder.id) {
+        order = orders.find(o => o.id === objOrder.id);
+    }
+    if(!order) return;
+    // Change status to onhold
+    order.status === 'ONHOLD'
+        ? document.getElementById('btnHold').checked = true
+        : document.getElementById('btnHold').checked = false;
+
+    // Change type to QUOTE
+    order.type.includes('QUOTE')
+            ? document.getElementById('btnQuote').checked = true
+            : document.getElementById('btnQuote').checked = false;
+
+    // Change type to INVOICE
+    order.type.includes('INVOICE')
+                ? document.getElementById('btnInvoice').checked = true
+                : document.getElementById('btnInvoice').checked = false;
+
+    // Change paymentMethod to CASH
+    order.paymentMethod.includes('CASH')
+                ? document.getElementById('btnPaymentCash').checked = true
+                : document.getElementById('btnPaymentCash').checked = false;
+
+    // Change paymentMethod to CARD
+    order.paymentMethod.includes('CARD')
+                ? document.getElementById('btnPaymentCard').checked = true
+                : document.getElementById('btnPaymentCard').checked = false;
+
+    // Change paymentMethod to MOBILE
+    order.paymentMethod.includes('MOBILE')
+                ? document.getElementById('btnPaymentMobile').checked = true
+                : document.getElementById('btnPaymentMobile').checked = false;
 }
 
 // Update Totals
@@ -538,41 +576,47 @@ function setupEventListeners() {
     // Change status to onhold
     document.getElementById('btnHold').addEventListener('click', function() {
         console.log('btnHold', this.checked)
-        const status = this.checked === true ? 'ONHOLD': '';
-        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: status, type: ''});
+        const status = this.checked === true ? 'ONHOLD': 'PENDING';
+        if(objOrder && objOrder.id)
+            makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: status, type: ''});
     });
 
     // Change type to QUOTE
     document.getElementById('btnQuote').addEventListener('click', function() {
         console.log('btnQuote', this.checked)
-        const type = this.checked === true ? 'QUOTE': '';
-        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: '', type: type});
+        const type = this.checked === true ? 'QUOTE': '-QUOTE';
+        if(objOrder && objOrder.id)
+            makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: '', type: type});
     });
 
     // Change type to QUOTE
     document.getElementById('btnInvoice').addEventListener('click', function() {
         console.log('btnInvoice', this.checked)
-        const type = this.checked === true ? 'INVOICE': '';
-        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: '', type: type});
+        const type = this.checked === true ? 'INVOICE': '-INVOICE';
+        if(objOrder && objOrder.id)
+            makeApiRequest('PUT', `orders/${objOrder.id}/status`, {status: '', type: type});
     });
 
     // Change paymentMethod to CASH
     document.getElementById('btnPaymentCash').addEventListener('click', function() {
         console.log('btnPaymentCash', this.checked)
-        const paymentMethod = this.checked === true ? 'CASH': '';
-        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
+        const paymentMethod = this.checked === true ? 'CASH': '-CASH';
+        if(objOrder && objOrder.id)
+            makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
     });
     // Change paymentMethod to CARD
     document.getElementById('btnPaymentCard').addEventListener('click', function() {
         console.log('btnPaymentCard', this.checked)
-        const paymentMethod = this.checked === true ? 'CARD': '';
-        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
+        const paymentMethod = this.checked === true ? 'CARD': '-CARD';
+        if(objOrder && objOrder.id)
+            makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
     });
     // Change paymentMethod to MOBILE
     document.getElementById('btnPaymentMobile').addEventListener('click', function() {
         console.log('btnPaymentMobile', this.checked)
-        const paymentMethod = this.checked === true ? 'MOBILE': '';
-        const pageProducts = makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
+        const paymentMethod = this.checked === true ? 'MOBILE': '-MOBILE';
+        if(objOrder && objOrder.id)
+            makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
     });
 }
 

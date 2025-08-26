@@ -7,8 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Helpers {
 
@@ -75,5 +77,52 @@ public class Helpers {
 
         dto.setOrderProducts(orderProductDTOs);
         return dto;
+    }
+
+    public static String addWordToCsvStream(String csvString, String newWord) {
+        if (csvString == null || csvString.isEmpty()) {
+            return newWord;
+        }
+
+        if (newWord == null || newWord.trim().isEmpty()) {
+            return csvString;
+        }
+
+        String trimmedNewWord = newWord.trim();
+
+        // Check if word exists
+        boolean wordExists = Arrays.stream(csvString.split(","))
+                .map(String::trim)
+                .anyMatch(word -> word.equals(trimmedNewWord));
+
+        if (wordExists) {
+            return csvString;
+        }
+
+        // Add new word
+        return Stream.concat(
+                Arrays.stream(csvString.split(",")).map(String::trim),
+                Stream.of(trimmedNewWord)
+        ).collect(Collectors.joining(","));
+    }
+
+    public static String removeWordFromCsvString(String csvString, String wordToRemove) {
+        String[] parts = (csvString + "").split("\\s*,\\s*"); // split by comma and optional spaces
+        return Arrays.stream(parts)
+                .filter(word -> !word.equals(wordToRemove)) // remove target word
+                .collect(Collectors.joining(","));
+    }
+
+    public static String addWordToCsvString(String csvString, String wordToAdd) {
+        return Helpers.removeWordFromCsvString(csvString, wordToAdd) + "," + wordToAdd;
+    }
+
+    public static String addOrRemoveFromCsvString(String csvString, String word) {
+        if(word.startsWith("-")) {
+            String wordWithoutDash = word.replace("-", "");
+            return Helpers.removeWordFromCsvString(csvString, wordWithoutDash);
+        } else {
+            return Helpers.addWordToCsvString(csvString, word);
+        }
     }
 }

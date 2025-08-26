@@ -78,9 +78,10 @@ public class OrderController {
         if(request.getStatus() != null && !request.getStatus().isEmpty())
             order.setStatus(request.getStatus());
         if(request.getType() != null && !request.getType().isEmpty())
-            order.setType(request.getType());
+            order.setType(Helpers.addOrRemoveFromCsvString(order.getType(), request.getType()));
         if(request.getPaymentMethod() != null && !request.getPaymentMethod().isEmpty())
-            order.setPaymentMethod(request.getPaymentMethod());
+            order.setPaymentMethod(Helpers.addOrRemoveFromCsvString(order.getPaymentMethod(), request.getPaymentMethod()));
+
         orderRepository.save(order);
         return ResponseEntity.ok(Helpers.orderToDto(order));
     }
