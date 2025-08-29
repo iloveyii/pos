@@ -272,11 +272,11 @@
     <div class="order-info">
         <div>
             <span>Order #:</span>
-            <span>5</span>
+            <span id="qr-id">5</span>
         </div>
         <div>
             <span>Date:</span>
-            <span>07/07/2025 5:20 PM</span>
+            <span id="qr-date"> QR date: 07/07/2025 5:20 PM</span>
         </div>
         <div>
             <span>Amount Due:</span>
@@ -286,7 +286,7 @@
 
     <div class="qr-container">
         <div class="qr-code">
-            <img style="height:222px;" th:src="@{/images/pay/swish.webp}" alt="Swish">
+            <img style="height:222px;" th:src="@{/images/pay/swish.jpeg}" alt="Swish">
         </div>
         <div class="payment-instructions">
             <p>Scan this QR code with your mobile payment app</p>
@@ -419,6 +419,8 @@
       document.getElementById('total').textContent = formatCurrency(total);
 
       // Set payment QR amount
+      document.getElementById('qr-id').textContent = orderData.id;
+      document.getElementById('qr-date').textContent = formatDate(orderData.orderDate);
       document.getElementById('qr-amount').textContent = formatCurrency(total);
       document.querySelectorAll('.payment-amount').forEach(el => {
           el.textContent = formatCurrency(total);
@@ -439,6 +441,7 @@
             openTab('receipt');
         }
         else if(order && order.command && order.command == 'qr') {
+            loadOrderData();
             openTab('payment');
         }
         if(order && !order.command) {
@@ -484,8 +487,6 @@
         }
     }
 
-
-
     function attemptReconnect() {
         if (reconnectAttempts < maxReconnectAttempts) {
             reconnectAttempts++;
@@ -515,8 +516,6 @@
             disconnect();
         });
     });
-
-
 
 </script>
 </body>

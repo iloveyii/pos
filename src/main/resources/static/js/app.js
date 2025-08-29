@@ -698,15 +698,15 @@ function sendCommandRequest(data) {
 }
 
 function sendCommandToShow(cmd) {
-    let id = 2;
+    let id = 3;
     if(objOrder && objOrder.id) {
         id = objOrder.id;
     }
     if(cmd == 'qr') {
-        sendCommandRequest({ id, command: 'qr'});
+        sendCommandRequest({ id: id, command: 'qr'});
     }
     if(cmd == 'invoice') {
-        sendCommandRequest({ id, command: 'list'});
+        sendCommandRequest({ id: id, command: 'list'});
     }
 }
 
