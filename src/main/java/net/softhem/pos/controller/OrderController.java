@@ -121,6 +121,10 @@ public class OrderController {
             item.setPriceAtPurchase(product.getPrice());
             orderProductRepository.save(item);
         }
+        // Get order with new item added/saved
+        order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
         OrderDTO orderDto = Helpers.orderToDto(order);
         orderUpdateService.sendOrderUpdate(orderDto);
         return ResponseEntity.ok(orderDto);
