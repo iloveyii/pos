@@ -111,6 +111,8 @@ public class OrderController {
         if (existingItem.isPresent()) {
             // Update quantity
             existingItem.get().setQuantity(request.getQuantity());
+            // Update inStock
+            existingItem.get().getProduct().setInStock(existingItem.get().getProduct().getInStock() - 1);
             orderProductRepository.save(existingItem.get());
         } else {
             // Add new item
@@ -118,6 +120,7 @@ public class OrderController {
             item.setOrder(order);
             item.setProduct(product);
             item.setQuantity(request.getQuantity());
+            item.getProduct().setInStock(item.getProduct().getInStock() - 1);
             item.setPriceAtPurchase(product.getPrice());
             orderProductRepository.save(item);
         }

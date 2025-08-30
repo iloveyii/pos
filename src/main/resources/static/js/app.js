@@ -275,6 +275,16 @@ function updateTotals() {
     totalElement.textContent = `$${total.toFixed(2)}`;
 }
 
+function updateInStock(productId, quantity) {
+    console.log('Inside updateInStock', productId, quantity);
+    const index = dash_products.findIndex( p => p.id == productId);
+    if(index > -1) {
+        console.log('found index: ', index);
+        dash_products[index].inStock = dash_products[index].inStock + quantity;
+        renderProducts(dash_products);
+    }
+}
+
 // Add to Cart
 function addToCart(productId, quantity = 1) {
     const existingItem = cart.find(item => item.productId === productId);
@@ -288,6 +298,7 @@ function addToCart(productId, quantity = 1) {
             quantity
         });
     }
+    updateInStock(productId, -1);
 
     renderCart();
     // updateCartOnBackend();
