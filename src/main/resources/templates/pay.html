@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Receipt - Retail Pro</title>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon" sizes="any">
     <style>
         body {
             font-family: 'Courier New', monospace;
@@ -456,7 +457,7 @@
     let stompClient = null;
 
     function connectWebSocket() {
-        const socket = new SockJS('http://localhost:8080/ws');
+        const socket = new SockJS('https://pos.softhem.net/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({},
             (frame)=> {
