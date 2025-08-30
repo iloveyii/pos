@@ -10,6 +10,7 @@ import net.softhem.pos.repository.OrderRepository;
 import net.softhem.pos.repository.ProductRepository;
 import net.softhem.pos.service.OrderProductService;
 import net.softhem.pos.service.OrderService;
+import net.softhem.pos.service.OrderUpdateService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +29,20 @@ public class OrderController {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
+    private final OrderUpdateService orderUpdateService;
 
     public OrderController(OrderService orderService,
                            OrderProductService orderProductService,
                            ProductRepository productRepository,
                            OrderRepository orderRepository,
-                           OrderProductRepository orderProductRepository) {
+                           OrderProductRepository orderProductRepository,
+                           OrderUpdateService orderUpdateService) {
         this.orderService = orderService;
         this.orderProductService = orderProductService;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
+        this.orderUpdateService = orderUpdateService;
     }
 
     @GetMapping
@@ -63,7 +67,7 @@ public class OrderController {
     public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest request) {
         OrderDTO order = orderService.createOrder(request);
         order.setCommand("list");
-        // orderUpdateService.sendOrderUpdate(order);
+        orderUpdateService.sendOrderUpdate(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
@@ -83,6 +87,7 @@ public class OrderController {
             order.setPaymentMethod(Helpers.addOrRemoveFromCsvString(order.getPaymentMethod(), request.getPaymentMethod()));
 
         orderRepository.save(order);
+        orderUpdateService.sendOrderUpdate(Helpers.orderToDto(order));
         return ResponseEntity.ok(Helpers.orderToDto(order));
     }
 
@@ -116,7 +121,9 @@ public class OrderController {
             item.setPriceAtPurchase(product.getPrice());
             orderProductRepository.save(item);
         }
-        return ResponseEntity.ok(Helpers.orderToDto(order));
+        OrderDTO orderDto = Helpers.orderToDto(order);
+        orderUpdateService.sendOrderUpdate(orderDto);
+        return ResponseEntity.ok(orderDto);
     }
 
     // Remove item from order
@@ -146,7 +153,9 @@ public class OrderController {
             }
         }
 
-        return ResponseEntity.ok(Helpers.orderToDto(order));
+        OrderDTO orderDto = Helpers.orderToDto(order);
+        orderUpdateService.sendOrderUpdate(orderDto);
+        return ResponseEntity.ok(orderDto);
     }
 
     // Get order details
@@ -164,6 +173,7 @@ public class OrderController {
         orderProductService.restoreQuantities(orderProducts);
         orderProductService.deleteByOrderId(id);
         OrderDTO order = orderService.updateOrder(id, request);
+        orderUpdateService.sendOrderUpdate(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
