@@ -286,7 +286,7 @@ function updateInStock(productId, quantity) {
 }
 
 // Add to Cart
-function addToCart(productId, quantity = 1) {
+async function addToCart(productId, quantity = 1) {
     const existingItem = cart.find(item => item.productId === productId);
 
     if (existingItem) {
@@ -301,7 +301,7 @@ function addToCart(productId, quantity = 1) {
     updateInStock(productId, -1);
     renderCart();
     // updateCartOnBackend();
-    addItemToOrderOnBackend(productId, quantity);
+    await addItemToOrderOnBackend(productId, quantity);
     showNotification(`${quantity} ${quantity > 1 ? 'items' : 'item'} added to cart`);
 }
 
@@ -379,7 +379,7 @@ function updateCartOnBackend() {
         createOrder();
 }
 
-function addItemToOrderOnBackend(itemId, quantity) {
+async function addItemToOrderOnBackend(itemId, quantity) {
     console.log('addItemToOrderOnBackend', {itemId, quantity});
     // if order has been created
     if(objOrder && objOrder.id) {
@@ -388,16 +388,15 @@ function addItemToOrderOnBackend(itemId, quantity) {
             quantity: quantity
         });
     } else { // order is new
-        createOrder().then(() => {
-            makeApiRequest('POST', `orders/${objOrder.id}/items`, {
-                productId: itemId,
-                quantity: quantity
-            });
+        await createOrder();
+        await makeApiRequest('POST', `orders/${objOrder.id}/items`, {
+           productId: itemId,
+           quantity: quantity
         });
     }
 }
 
-function createOrder() {
+async function createOrder() {
     // Create the order request
     return fetch('/api/orders', {
         method: 'POST',
@@ -466,17 +465,17 @@ function updateOrder(id) {
 // Setup Event Listeners
 function setupEventListeners() {
     // Product click
-    productsContainer.addEventListener('click', (e) => {
+    productsContainer.addEventListener('click', async(e) => {
         const productCard = e.target.closest('.product-card');
         if (productCard) {
             const productId = parseInt(productCard.dataset.id);
-            addToCart(productId);
+            await addToCart(productId);
 
             // Add animation
             productCard.classList.add('animated-add');
             setTimeout(() => {
                 productCard.classList.remove('animated-add');
-            }, 500);
+            }, 2500);
         }
     });
 
