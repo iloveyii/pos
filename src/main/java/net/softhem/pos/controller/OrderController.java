@@ -64,10 +64,11 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest request) throws InterruptedException {
         OrderDTO order = orderService.createOrder(request);
         order.setCommand("list");
         orderUpdateService.sendOrderUpdate(order);
+        Thread.sleep(500);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 

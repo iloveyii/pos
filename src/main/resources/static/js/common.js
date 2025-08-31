@@ -207,3 +207,19 @@ function showNotification(message, type = 'success') {
         notificationToast.hide();
     }, 3000);
 }
+
+function showWaiting() {
+    const showWaitingBtn = document.getElementById('showWaitingBtn');
+    const waitingModal = document.getElementById('waitingModal');
+
+    // Show the modal
+    const modal = new bootstrap.Modal(waitingModal);
+    modal.show();
+    // Hide after 3 seconds
+    setTimeout(function() {
+        modal.hide();
+        if(modal._isShown)
+            alert('Please refresh the page and try again');
+    }, 15000);
+    return modal;
+}

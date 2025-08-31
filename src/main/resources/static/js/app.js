@@ -383,7 +383,7 @@ async function addItemToOrderOnBackend(itemId, quantity) {
     console.log('addItemToOrderOnBackend', {itemId, quantity});
     // if order has been created
     if(objOrder && objOrder.id) {
-        makeApiRequest('POST', `orders/${objOrder.id}/items`, {
+        await makeApiRequest('POST', `orders/${objOrder.id}/items`, {
             productId: itemId,
             quantity: quantity
         });
@@ -398,6 +398,7 @@ async function addItemToOrderOnBackend(itemId, quantity) {
 
 async function createOrder() {
     // Create the order request
+    var modal = showWaiting();
     return fetch('/api/orders', {
         method: 'POST',
         headers: {
@@ -419,6 +420,7 @@ async function createOrder() {
         console.log('Order created successfully:', order);
         showNotification('Order created successfully', 'success');
         objOrder.id = order.id;
+        modal.hide();
         // clearCart();
         // You can redirect or update UI here
         // window.location.href = `/order-confirmation/${order.id}`;
@@ -470,7 +472,6 @@ function setupEventListeners() {
         if (productCard) {
             const productId = parseInt(productCard.dataset.id);
             await addToCart(productId);
-
             // Add animation
             productCard.classList.add('animated-add');
             setTimeout(() => {
