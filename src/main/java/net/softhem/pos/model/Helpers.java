@@ -125,4 +125,8 @@ public class Helpers {
             return Helpers.addWordToCsvString(csvString, word);
         }
     }
+
+    public static int getUpdatedInStock(int existing, int requested) {
+        return existing - requested;
+    }
 }

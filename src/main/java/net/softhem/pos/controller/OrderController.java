@@ -109,10 +109,16 @@ public class OrderController {
                 .findFirst();
 
         if (existingItem.isPresent()) {
+            // Update inStock
+            existingItem.get().getProduct().setInStock(
+                    existingItem.get().getProduct().getInStock() +
+                    Helpers.getUpdatedInStock(
+                        existingItem.get().getQuantity(),
+                        request.getQuantity()
+                    )
+            );
             // Update quantity
             existingItem.get().setQuantity(request.getQuantity());
-            // Update inStock
-            existingItem.get().getProduct().setInStock(existingItem.get().getProduct().getInStock() - 1);
             orderProductRepository.save(existingItem.get());
         } else {
             // Add new item
@@ -153,6 +159,9 @@ public class OrderController {
         // find product in Order's orderProducts list by product id
         for(OrderProduct orderProduct: order.getOrderProducts()){
             if(Objects.equals(orderProduct.getProduct().getId(), itemId)) {
+                // Return inStock
+                orderProduct.getProduct().setInStock(orderProduct.getProduct().getInStock() + orderProduct.getQuantity());
+                productRepository.save(orderProduct.getProduct());
                 order.getOrderProducts().remove(orderProduct);
                 orderProductRepository.delete(orderProduct);
                 // Order savedOrder = orderRepository.save(order);
