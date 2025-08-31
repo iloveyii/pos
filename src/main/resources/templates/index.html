@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link th:href="@{/css/style.css?gkhk8kjh958lfjliyikjhkhkk567}" rel="stylesheet">
+    <link th:href="@{/css/style.css?gkhk8dfakk567}" rel="stylesheet">
 </head>
 <body>
 
@@ -29,16 +29,15 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="header mb-0 text-dark">Product Catalog</h2>
                 <div class="d-flex align-items-center">
+
                     <div class="input-group me-3" style="width: 300px;">
-                        <input id="searchProductsDashboard" type="text" class="form-control search-box" placeholder="Search products...">
-                        <!-- Clear button -->
-                        <button id="clearSearchBtn" class="btn btn-outline-secondary" type="button" style="border-radius: 0;">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <button class="btn btn-pos-primary" type="button" style="border-radius: 0 50px 50px 0;">
+                        <input id="searchProductsDashboard" type="text" class="form-control bg-light" placeholder="Search products...">
+                        <button class="btn btn-search" type="button">
+                            <i id="clearSearchBtn" class="fas fa-close me-3"></i>
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
+
                     <div class="btn-group">
                         <button class="btn btn-pos-outline dropdown-toggle category-btn" type="button" data-bs-toggle="dropdown">
                             <i class="fas fa-tags me-2"></i>Categories
@@ -217,17 +216,17 @@
             </div>
 
             <!-- Products Filters -->
-            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-primary p-2">
+            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-filter bg-gradient p-2">
                 <div class="me-3">
                     <div class="input-group" style="width: 250px;">
-                        <input id="searchProducts" type="text" class="form-control" placeholder="Search products...">
-                        <button class="btn btn-outline-secondary bg-warning" type="button">
+                        <input id="searchProducts" type="text" class="form-control bg-light" placeholder="Search products...">
+                        <button class="btn btn-search" type="button">
                             <i id="btnProductsClear" class="fas fa-close me-3"></i>
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
-                <div class="btn-group btn-group-toggle bg-success border-2" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle border-2" data-toggle="buttons">
                     <button id="allProducts" class="btn filter-btn-products active" data-filter="allProducts">All</button>
                     <button class="btn filter-btn-products" data-filter="activeProducts">Active</button>
                     <button class="btn filter-btn-products" data-filter="inActiveProducts">In Active</button>
@@ -381,17 +380,17 @@
             </div>
 
             <!-- Order Filters -->
-            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-primary p-2">
+            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-filter bg-gradient p-2">
                 <div class="me-3 mb-1 mb-md-0">
                     <div class="input-group" style="width: 250px;">
-                        <input id="searchOrders" type="text" class="form-control" placeholder="Search orders...">
-                        <button class="btn btn-outline-secondary bg-warning" type="button">
+                        <input id="searchOrders" type="text" class="form-control bg-light" placeholder="Search orders...">
+                        <button class="btn btn-search" type="button">
                             <i id="btnOrdersClear" class="fas fa-close me-3"></i>
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
-                <div class="btn-group btn-group-toggle flex-wrap bg-success border-2 mb-1 mb-md-0" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle flex-wrap border-2 mb-1 mb-md-0" data-toggle="buttons">
                     <button class="btn filter-btn-orders active" data-filter="all" id="allOrders">All</button>
                     <button class="btn filter-btn-orders" data-filter="pending">Pending</button>
                     <button class="btn filter-btn-orders" data-filter="processing">Processing</button>
@@ -410,7 +409,7 @@
                 <table class="table orders-table table-hover">
                     <thead>
                     <tr>
-                        <th>Order ID</th>
+                        <th style="width:80px;">Order ID</th>
                         <th>Date</th>
                         <th>Items</th>
                         <th>Total</th>

@@ -506,3 +506,13 @@ body {
     font-weight: 600;
     color: #3a4f6c;
 }
+
+.bg-filter {
+    background-color: #ced4da !important;
+}
+.btn-search {
+    background-color: #e9ecef !important;
+}
+.bg-light {
+    background-color: #ced4da !important;
+}
