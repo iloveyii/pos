@@ -516,3 +516,13 @@ body {
 .bg-light {
     background-color: #ced4da !important;
 }
+
+.fs-sm-6 { font-size: 1.05rem !important; }   /* ~12px */
+@media (min-width: 768px) {
+  .fs-md-5 { font-size: 1.25rem !important; }    /* ~16px */
+}
+@media (min-width: 992px) {
+  .fs-lg-4 { font-size: 1.5rem !important; } /* ~20px */
+  .fs-lg-5 { font-size: 1.25rem !important; } /* ~20px */
+  .fs-lg-6 { font-size: 1.15rem !important; } /* ~20px */
+}

@@ -158,9 +158,9 @@ function renderProducts(dash_products) {
             <div class="card product-card h-100" data-id="${product.id}">
                 <img src="${product.image}" class="card-img-top product-img" alt="${product.name}">
                 <div class="card-body">
-                    <h5 class="card-title">${product.name}</h5>
+                    <h5 class="card-title fs-6 fs-sm-6 fs-md-5 fs-lg-5">${product.name}</h5>
                     <p class="card-text text-muted small">${product.description}</p>
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-lg-row flex-column justify-content-between align-items-center">
                         <span class="product-price">$${product.price.toFixed(2)}</span>
                         <span class="badge bg-success badge-stock">${product.inStock} in stock</span>
                     </div>

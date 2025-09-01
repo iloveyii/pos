@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link th:href="@{/css/style.css?gkhk8dfakk567}" rel="stylesheet">
+    <link th:href="@{/css/style.css?gkhkfasdf8dfakk567}" rel="stylesheet">
 </head>
 <body>
 
@@ -26,31 +26,35 @@
     <div class="row g-0">
         <!-- Products Section -->
         <div class="col-md-8 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="header mb-0 text-dark">Product Catalog</h2>
-                <div class="d-flex align-items-center">
-                    <div class="input-group me-3" style="width: 300px;">
-                        <input id="searchProductsDashboard" type="text" class="form-control search-box" placeholder="Search products...">
-                        <!-- Clear button -->
-                        <button id="clearSearchBtn" class="btn btn-search" type="button" style="border-radius: 0;">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <button class="btn btn-pos-primary" type="button" style="border-radius: 0 50px 50px 0;">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-pos-outline dropdown-toggle category-btn" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-tags me-2"></i>Categories
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" data-category="0" href="#"><i class="fas fa-list-ul me-2"></i>All Categories</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" data-category="1" href="#"><i class="fas fa-laptop me-2"></i>Electronics</a></li>
-                            <li><a class="dropdown-item" data-category="2" href="#"><i class="fas fa-tshirt me-2"></i>Clothing</a></li>
-                            <li><a class="dropdown-item" data-category="3" href="#"><i class="fas fa-shopping-basket me-2"></i>Groceries</a></li>
-                            <li><a class="dropdown-item" data-category="4" href="#"><i class="fas fa-home me-2"></i>Home & Garden</a></li>
-                        </ul>
+            <div class="row mb-4">
+                <div class="col-lg-5 mb-3">
+                    <h2 class="header fs-6 fs-sm-6 fs-md-5 fs-lg-4 mb-0 text-dark">Product Catalog</h2>
+                </div>
+                <div class="col-lg-7">
+                    <div class="d-flex align-items-center">
+                        <div class="input-group me-3" style="width: 300px;">
+                            <input id="searchProductsDashboard" type="text" class="form-control search-box" placeholder="Search products...">
+                            <!-- Clear button -->
+                            <button id="clearSearchBtn" class="btn btn-search" type="button" style="border-radius: 0;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="btn btn-pos-primary" type="button" style="border-radius: 0 50px 50px 0;">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-pos-outline dropdown-toggle category-btn" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-tags me-2"></i>Categories
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" data-category="0" href="#"><i class="fas fa-list-ul me-2"></i>All Categories</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" data-category="1" href="#"><i class="fas fa-laptop me-2"></i>Electronics</a></li>
+                                <li><a class="dropdown-item" data-category="2" href="#"><i class="fas fa-tshirt me-2"></i>Clothing</a></li>
+                                <li><a class="dropdown-item" data-category="3" href="#"><i class="fas fa-shopping-basket me-2"></i>Groceries</a></li>
+                                <li><a class="dropdown-item" data-category="4" href="#"><i class="fas fa-home me-2"></i>Home & Garden</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -365,17 +369,21 @@
     <div class="row">
         <div class="col-12">
             <div class="management-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="header mb-0">
-                        <i class="fas fa-clipboard-list me-2"></i>Order Management
-                    </h2>
-                    <div class="d-flex">
-                        <button class="btn btn-pos-outline me-2">
-                            <i class="fas fa-file-export me-1"></i> Export
-                        </button>
-                        <button class="btn btn-pos-primary">
-                            <i class="fas fa-plus me-1"></i> New Order
-                        </button>
+                <div class="row">
+                    <div class="col-lg-5">
+                        <h2 class="header mb-0">
+                            <i class="fas fa-clipboard-list me-2"></i>Order Management
+                        </h2>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="d-flex">
+                            <button class="btn btn-pos-outline me-2">
+                                <i class="fas fa-file-export me-1"></i> Export
+                            </button>
+                            <button class="btn btn-pos-primary">
+                                <i class="fas fa-plus me-1"></i> New Order
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -535,6 +543,6 @@
 <script th:src="@{/js/common.js?21aaffsfdfasdfkk23}" defer></script>
 <script th:src="@{/js/orders.js?2hkjhdff9flkj3}" defer></script>
 <script th:src="@{/js/products.js?33hadkj8fdfadf1f}" defer></script>
-<script th:src="@{/js/app.js?a9iouoikllkhkfasdfer}" defer></script>
+<script th:src="@{/js/app.js?a9iouoifasdffasdkjljkllkhkfasdfer}" defer></script>
 </body>
 </html>
