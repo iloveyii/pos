@@ -111,3 +111,19 @@ Content-Type: application/json
   "command": "list"
 }
     
+
+
+{
+    "userVerification": "preferred",
+    "challenge": "KnXdT2HqJZ_leWd3lYfpXPTk4rs-_HoVxaNucbc7gq4",
+    "rpId": "pos.softhem.net",
+    "allowCredentials": [
+        {
+            "transports": [
+                "internal"
+            ],
+            "type": "public-key",
+            "id": "oNR6EsGOjCwnPBdtCfebfIjzp00"
+        }
+    ]
+}
