@@ -75,6 +75,6 @@ app.post("/login-complete", (req, res) => {
   res.send("Login success ✅ (signature verification skipped in demo)");
 });
 
-app.listen(3000, () =>
-  console.log("Server running on https://biometric.softhem.net:3000")
+app.listen(3050, () =>
+  console.log("Server running on https://biometric.softhem.net:3050")
 );
