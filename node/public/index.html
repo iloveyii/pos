@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Biometric Login Demo</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { padding: 2rem; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        input, button { margin: 0.5rem 0; padding: 0.5rem; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>🔐 Login with Passkey</h2>
+    <input id="username" placeholder="Enter username" />
+    <button onclick="registerPasskey()">Register Passkey</button>
+    <button onclick="loginPasskey()">Login with Passkey</button>
+    <p id="status"></p>
+</div>
+
+<script>
+    async function registerPasskey() {
+      const username = document.getElementById("username").value;
+      const options = await fetch("/register-challenge", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      }).then(res => res.json());
+
+      options.challenge = new Uint8Array(options.challenge.data);
+      options.user.id = new Uint8Array(options.user.id.data);
+
+      const cred = await navigator.credentials.create({ publicKey: options });
+
+      await fetch("/register-complete", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, credential: { id: cred.id } })
+      });
+
+      document.getElementById("status").innerText = "✅ Passkey registered!";
+    }
+
+    async function loginPasskey() {
+      const username = document.getElementById("username").value;
+      const options = await fetch("/login-challenge", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      }).then(res => res.json());
+
+      options.challenge = new Uint8Array(options.challenge.data);
+      options.allowCredentials = options.allowCredentials.map(c => ({
+        ...c, id: new Uint8Array(c.id.data)
+      }));
+
+      const assertion = await navigator.credentials.get({ publicKey: options });
+
+      await fetch("/login-complete", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      });
+
+      document.getElementById("status").innerText = "🎉 Logged in successfully!";
+    }
+</script>
+</body>
+</html>
