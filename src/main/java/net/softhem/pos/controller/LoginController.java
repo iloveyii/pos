@@ -50,7 +50,7 @@ public class LoginController {
 
         Map<String, Object> options = new HashMap<>();
         options.put("challenge", user.challenge);
-        options.put("rp", Map.of("name", "My Demo App", "id", "yourdomain.com"));
+        options.put("rp", Map.of("name", "My Demo App", "id", "pos.softhem.net"));
         options.put("user", Map.of(
                 "id", user.id,
                 "name", username,
@@ -87,7 +87,7 @@ public class LoginController {
 
         Map<String, Object> options = new HashMap<>();
         options.put("challenge", user.challenge);
-        options.put("rpId", "yourdomain.com");
+        options.put("rpId", "pos.softhem.net");
         options.put("allowCredentials", List.of(Map.of(
                 "id", user.credentialId,
                 "type", "public-key"
