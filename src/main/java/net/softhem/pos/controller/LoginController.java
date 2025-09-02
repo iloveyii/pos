@@ -90,7 +90,8 @@ public class LoginController {
         options.put("rpId", "pos.softhem.net");
         options.put("allowCredentials", List.of(Map.of(
                 "id", user.credentialId,
-                "type", "public-key"
+                "type", "public-key",
+                "transports", List.of("internal") // 👈 forces local biometrics
         )));
         options.put("userVerification", "preferred");
 
