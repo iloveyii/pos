@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System - Secure Login with Biometric Auth</title>
+    <!-- Bootstrap 5.4 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pos-primary: #4361ee;
+            --pos-secondary: #3f37c9;
+            --pos-success: #4cc9f0;
+            --pos-warning: #f9c74f;
+            --pos-danger: #f94144;
+            --pos-light: #f8f9fa;
+            --pos-dark: #212529;
+            --pos-bg: #f8fafc;
+            --pos-text: #333;
+            --pos-card-bg: #fff;
+            --pos-border: #dee2e6;
+        }
+
+        [data-theme="dark"] {
+            --pos-bg: #121212;
+            --pos-text: #e0e0e0;
+            --pos-card-bg: #1e1e1e;
+            --pos-border: #444;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--pos-bg);
+            color: var(--pos-text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .login-container {
+            background: var(--pos-card-bg);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1100px;
+            transition: all 0.3s ease;
+        }
+
+        .login-left {
+            background: linear-gradient(135deg, var(--pos-primary) 0%, var(--pos-secondary) 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .login-right {
+            padding: 40px;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--pos-primary);
+        }
+
+        .welcome-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .feature-list i {
+            background: rgba(255, 255, 255, 0.2);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .form-control {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--pos-border);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            background: var(--pos-card-bg);
+            color: var(--pos-text);
+        }
+
+        .form-control:focus {
+            border-color: var(--pos-primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .input-group-text {
+            background: var(--pos-card-bg);
+            border-radius: 8px 0 0 8px;
+            border: 1px solid var(--pos-border);
+            border-right: none;
+            color: var(--pos-text);
+        }
+
+        .btn-login {
+            background: var(--pos-primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: var(--pos-secondary);
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--pos-border);
+        }
+
+        .divider span {
+            padding: 0 15px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--pos-border);
+            background: var(--pos-card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            background: var(--pos-bg);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.google i {
+            color: #DB4437;
+        }
+
+        .social-btn.facebook i {
+            color: #4267B2;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+        }
+
+        .login-footer a {
+            color: var(--pos-primary);
+            text-decoration: none;
+        }
+
+        /* Additional Features */
+        .theme-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: #28a745;
+            font-size: 14px;
+        }
+
+        .security-badge i {
+            margin-right: 8px;
+        }
+
+        .login-methods {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .login-method {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid var(--pos-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-method.active {
+            border-color: var(--pos-primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .login-method i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .biometric-option {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .biometric-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--pos-light);
+            border: 1px solid var(--pos-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .biometric-btn:hover {
+            background: var(--pos-primary);
+            color: white;
+        }
+
+        .status-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-online {
+            background: #28a745;
+        }
+
+        .status-offline {
+            background: #dc3545;
+        }
+
+        .biometric-feedback {
+            margin-top: 10px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .biometric-success {
+            color: #28a745;
+        }
+
+        .biometric-error {
+            color: #dc3545;
+        }
+
+        .biometric-setup {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(76, 201, 240, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .biometric-setup a {
+            cursor: pointer;
+            color: var(--pos-primary);
+        }
+
+        @media (max-width: 768px) {
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                padding: 30px 20px;
+            }
+        }
+
+        .explanation-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--pos-card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .explanation-container h2 {
+            color: var(--pos-primary);
+            margin-bottom: 20px;
+        }
+
+        .step {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 4px solid var(--pos-primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--pos-primary);
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="row g-0">
+        <div class="col-md-6 login-left">
+            <div class="theme-switcher" id="themeSwitcher">
+                <i class="fas fa-moon"></i>
+            </div>
+
+            <div class="language-selector">
+                <select class="form-select form-select-sm" id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
+
+            <h1 class="welcome-text">Premium POS System</h1>
+            <p>Streamline your business operations with our powerful point-of-sale solution.</p>
+
+            <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Inventory Management</li>
+                <li><i class="fas fa-check"></i> Sales Analytics & Reporting</li>
+                <li><i class="fas fa-check"></i> Customer Management</li>
+                <li><i class="fas fa-check"></i> Multi-store Support</li>
+                <li><i class="fas fa-check"></i> Secure Payment Processing</li>
+            </ul>
+
+            <div class="testimonial">
+                <p class="fst-italic">"This POS system has transformed how we manage our business. Sales are up 25% since implementation."</p>
+                <p class="fw-bold">- Sarah Johnson, Retail Store Owner</p>
+            </div>
+
+            <div class="status-indicators">
+                <div class="status-item">
+                    <span class="status-dot status-online"></span>
+                    System Online
+                </div>
+                <div class="status-item">
+                    <span class="status-dot status-online"></span>
+                    99.9% Uptime
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 login-right">
+            <div class="brand-logo">
+                <i class="fas fa-cash-register me-2"></i>PremiumPOS
+            </div>
+
+            <h2 class="mb-3">Secure Sign In</h2>
+            <p class="text-muted mb-4">Enter your credentials to access your dashboard</p>
+
+            <div class="login-methods">
+                <div class="login-method active" data-method="password">
+                    <i class="fas fa-key"></i>
+                    <div>Password</div>
+                </div>
+                <div class="login-method" data-method="pin">
+                    <i class="fas fa-lock"></i>
+                    <div>PIN</div>
+                </div>
+                <div class="login-method" data-method="otp">
+                    <i class="fas fa-mobile-alt"></i>
+                    <div>OTP</div>
+                </div>
+            </div>
+
+            <form id="loginForm">
+                <div class="mb-3" id="usernameField">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+
+                <div class="mb-3" id="passwordField">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <div class="mb-3 d-none" id="pinField">
+                    <label for="pin" class="form-label">PIN Code</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="pin" placeholder="Enter your 6-digit PIN" maxlength="6">
+                    </div>
+                </div>
+
+                <div class="mb-3 d-none" id="otpField">
+                    <label for="otp" class="form-label">One-Time Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-sms"></i></span>
+                        <input type="text" class="form-control" id="otp" placeholder="Enter 6-digit code" maxlength="6">
+                        <button class="btn btn-outline-secondary" type="button" id="sendOtpBtn">Send OTP</button>
+                    </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                    <a href="#" class="float-end">Forgot credentials?</a>
+                </div>
+
+                <button type="submit" class="btn btn-login mb-4">
+                    <i class="fas fa-sign-in-alt me-2"></i> Sign In
+                </button>
+            </form>
+
+            <div class="biometric-option">
+                <p class="text-muted mb-2">Or use biometric authentication</p>
+                <div class="biometric-btn" id="biometricBtn">
+                    <i class="fas fa-fingerprint"></i>
+                </div>
+                <div class="biometric-feedback" id="biometricFeedback"></div>
+
+                <div class="biometric-setup mt-3" id="biometricSetup">
+                    <span>Don't have biometrics set up? </span>
+                    <a id="setupBiometric">Register your device</a>
+                </div>
+            </div>
+
+            <div class="divider">
+                <span>Or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn google">
+                    <i class="fab fa-google me-2"></i> Google
+                </button>
+                <button class="social-btn facebook">
+                    <i class="fab fa-facebook-f me-2"></i> Facebook
+                </button>
+            </div>
+
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>256-bit SSL Encryption • Two-Factor Authentication</span>
+            </div>
+
+            <div class="login-footer">
+                <p>Don't have an account? <a href="#">Contact administrator</a></p>
+                <p class="small">© 2023 PremiumPOS. All rights reserved. v2.4.1</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="explanation-container">
+    <h2>Biometric Authentication Implementation Process</h2>
+
+    <div class="step">
+        <h4><span class="step-number">1</span>WebAuthn Support Detection</h4>
+        <p>The system first checks if the browser supports the Web Authentication API, which is required for biometric authentication.</p>
+    </div>
+
+    <div class="step">
+        <h4><span class="step-number">2</span>Registration Process</h4>
+        <p>Users can register their device for biometric authentication. The registration status is stored in localStorage (in a real application, this would be handled server-side).</p>
+    </div>
+
+    <div class="step">
+        <h4><span class="step-number">3</span>Authentication Process</h4>
+        <p>When users click the biometric button, the system checks if they've registered. It then simulates the biometric verification process with visual feedback.</p>
+    </div>
+
+    <div class="step">
+        <h4><span class="step-number">4</span>User Experience Enhancements</h4>
+        <p>The implementation includes visual feedback with color-coded messages, loading spinners, and realistic success/failure simulation.</p>
+    </div>
+
+    <div class="step">
+        <h4><span class="step-number">5</span>Security Considerations</h4>
+        <p>In a real implementation, credentials would be verified with a server. This simulation uses localStorage for demonstration purposes only.</p>
+    </div>
+</div>
+
+<script>
+    // Theme switcher functionality
+    const themeSwitcher = document.getElementById('themeSwitcher');
+    themeSwitcher.addEventListener('click', function() {
+        if (document.body.getAttribute('data-theme') === 'dark') {
+            document.body.removeAttribute('data-theme');
+            themeSwitcher.innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            themeSwitcher.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    });
+
+    // Login method switcher
+    const loginMethods = document.querySelectorAll('.login-method');
+    loginMethods.forEach(method => {
+        method.addEventListener('click', function() {
+            loginMethods.forEach(m => m.classList.remove('active'));
+            this.classList.add('active');
+
+            const methodType = this.getAttribute('data-method');
+
+            document.getElementById('usernameField').classList.remove('d-none');
+            document.getElementById('passwordField').classList.add('d-none');
+            document.getElementById('pinField').classList.add('d-none');
+            document.getElementById('otpField').classList.add('d-none');
+
+            if (methodType === 'password') {
+                document.getElementById('passwordField').classList.remove('d-none');
+            } else if (methodType === 'pin') {
+                document.getElementById('pinField').classList.remove('d-none');
+            } else if (methodType === 'otp') {
+                document.getElementById('otpField').classList.remove('d-none');
+                document.getElementById('usernameField').classList.add('d-none');
+            }
+        });
+    });
+
+    // OTP sending functionality
+    document.getElementById('sendOtpBtn').addEventListener('click', function() {
+        this.disabled = true;
+        this.textContent = 'Sending...';
+
+        // Simulate OTP sending
+        setTimeout(() => {
+            this.textContent = 'Sent!';
+            this.classList.add('btn-success');
+
+            // Re-enable after 30 seconds
+            setTimeout(() => {
+                this.disabled = false;
+                this.textContent = 'Send OTP';
+                this.classList.remove('btn-success');
+            }, 30000);
+        }, 1500);
+    });
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const activeMethod = document.querySelector('.login-method.active').getAttribute('data-method');
+        let isValid = false;
+
+        if (activeMethod === 'password') {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            isValid = username && password;
+        } else if (activeMethod === 'pin') {
+            const pin = document.getElementById('pin').value;
+            isValid = pin && pin.length === 6;
+        } else if (activeMethod === 'otp') {
+            const otp = document.getElementById('otp').value;
+            isValid = otp && otp.length === 6;
+        }
+
+        if (isValid) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Authenticating...';
+
+            // Simulate authentication process
+            setTimeout(() => {
+                alert('Login successful! Redirecting to dashboard...');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+
+                // In a real application, you would redirect to the dashboard
+                // window.location.href = 'pos-dashboard.html';
+            }, 2000);
+        } else {
+            alert('Please provide valid credentials');
+        }
+    });
+
+    // Add some interactive effects
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+
+        input.addEventListener('blur', function() {
+            if (this.value === "") {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+    });
+
+    // Biometric authentication functions
+    const biometricBtn = document.getElementById('biometricBtn');
+    const biometricFeedback = document.getElementById('biometricFeedback');
+    const setupBiometric = document.getElementById('setupBiometric');
+
+    // Check if WebAuthn is supported
+    const isWebAuthnSupported = () => {
+        return !!window.PublicKeyCredential;
+    };
+
+    // Check if biometrics are registered
+    const checkBiometricRegistration = () => {
+        return localStorage.getItem('biometricRegistered') === 'true';
+    };
+
+    // Initialize biometric authentication
+    const initBiometricAuth = () => {
+        if (isWebAuthnSupported()) {
+            if (checkBiometricRegistration()) {
+                // User has biometrics registered
+                document.getElementById('biometricSetup').classList.add('d-none');
+            } else {
+                // User hasn't registered biometrics yet
+                biometricFeedback.textContent = 'Register your device to use biometric authentication';
+                biometricFeedback.className = 'biometric-feedback';
+            }
+
+            // Register new biometric credential
+            setupBiometric.addEventListener('click', function() {
+                biometricFeedback.textContent = 'Setting up biometric authentication...';
+                biometricFeedback.className = 'biometric-feedback';
+
+                // Simulate registration process
+                setTimeout(() => {
+                    localStorage.setItem('biometricRegistered', 'true');
+                    biometricFeedback.textContent = 'Biometric registration successful!';
+                    biometricFeedback.className = 'biometric-feedback biometric-success';
+                    document.getElementById('biometricSetup').classList.add('d-none');
+                }, 1500);
+            });
+
+            // Authenticate with biometrics
+            biometricBtn.addEventListener('click', function() {
+                if (!checkBiometricRegistration()) {
+                    biometricFeedback.textContent = 'Please register your device first';
+                    biometricFeedback.className = 'biometric-feedback biometric-error';
+                    return;
+                }
+
+                biometricBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                biometricFeedback.textContent = 'Waiting for biometric verification...';
+                biometricFeedback.className = 'biometric-feedback';
+
+                // Simulate biometric authentication
+                setTimeout(() => {
+                    // 80% chance of success, 20% chance of failure for simulation
+                    const isSuccess = Math.random() > 0.2;
+
+                    if (isSuccess) {
+                        biometricBtn.innerHTML = '<i class="fas fa-fingerprint"></i>';
+                        biometricFeedback.textContent = 'Biometric authentication successful!';
+                        biometricFeedback.className = 'biometric-feedback biometric-success';
+
+                        // Simulate redirect after successful authentication
+                        setTimeout(() => {
+                            alert('Biometric login successful! Redirecting to dashboard...');
+                            // window.location.href = 'pos-dashboard.html';
+                        }, 1000);
+                    } else {
+                        biometricBtn.innerHTML = '<i class="fas fa-fingerprint"></i>';
+                        biometricFeedback.textContent = 'Authentication failed. Please try again.';
+                        biometricFeedback.className = 'biometric-feedback biometric-error';
+                    }
+                }, 2000);
+            });
+        } else {
+            // WebAuthn not supported
+            biometricBtn.style.opacity = '0.5';
+            biometricBtn.style.cursor = 'not-allowed';
+            biometricFeedback.textContent = 'Biometric authentication not supported in your browser';
+            biometricFeedback.className = 'biometric-feedback biometric-error';
+            setupBiometric.style.display = 'none';
+        }
+    };
+
+    // Initialize biometric authentication when page loads
+    document.addEventListener('DOMContentLoaded', initBiometricAuth);
+</script>
+</body>
+</html>
