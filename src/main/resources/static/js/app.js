@@ -633,6 +633,14 @@ function setupEventListeners() {
         if(objOrder && objOrder.id)
             makeApiRequest('PUT', `orders/${objOrder.id}/status`, {paymentMethod: paymentMethod});
     });
+
+    // Logout
+    document.getElementById('btnLogout').addEventListener('click', function() {
+        localStorage.removeItem('jwt');
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>  Logout';
+        setTimeout(() => window.location.href = "/auth/login", 3000);
+    })
 }
 
 // Customer modal functionality
