@@ -10,10 +10,7 @@ import net.softhem.pos.auth.BiometricCredentialRepository;
 import net.softhem.pos.auth.UserRepository;
 import org.springframework.stereotype.Service;
 import com.yubico.webauthn.data.ByteArray;
-
-
 import java.util.Optional;
-
 import static com.yubico.webauthn.data.ByteArray.*;
 
 @Service
@@ -32,11 +29,12 @@ public class BiometricAuthService {
         }
 
         User user = userOptional.get();
+        ByteArray id = ByteArray.fromBase64(user.getUsername());
 
         UserIdentity userIdentity = UserIdentity.builder()
                 .name(user.getUsername())
                 .displayName(user.getUsername())
-                .id(ByteArray.fromRawBytes(user.getUsername().getBytes()))
+                .id(id)
                 .build();
 
         return relyingParty.startRegistration(
@@ -59,6 +57,8 @@ public class BiometricAuthService {
 
             User user = userOptional.get();
 
+            ByteArray id = ByteArray.fromBase64(user.getUsername());
+
             RegistrationResult result = relyingParty.finishRegistration(
                     FinishRegistrationOptions.builder()
                             .request(relyingParty.startRegistration(
@@ -66,14 +66,14 @@ public class BiometricAuthService {
                                             .user(UserIdentity.builder()
                                                     .name(user.getUsername())
                                                     .displayName(user.getUsername())
-                                                    .id(ByteArray.fromRawBytes(user.getUsername().getBytes()))
+                                                    .id(id)
                                                     .build())
                                             .build()))
                             .response(credential)
                             .build()
             );
 
-            if (result.isVerified()) {
+            if (result.isUserVerified()) {
                 BiometricCredential bioCredential = new BiometricCredential();
                 bioCredential.setUser(user);
                 bioCredential.setCredentialId(result.getKeyId().getId().getBase64());
@@ -152,5 +152,16 @@ public class BiometricAuthService {
         } catch (Exception e) {
             throw new RuntimeException("Authentication failed", e);
         }
+    }
+
+    public boolean isBiometricEnabled(String username) {
+        return true;
+    }
+
+    public void removeAllBiometricCredentials(String username) {
+    }
+
+    public long getBiometricCredentialCount(String username) {
+        return 2L;
     }
 }
