@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POS System - Secure Login with Biometric Auth</title>
+  <!-- Basic favicon (ICO format - works everywhere) -->
+  <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon" sizes="any">
+  <!-- Recommended for modern browsers (PNG/SVG) -->
+  <link rel="icon" th:href="@{/images/favicon.ico}" type="image/svg+xml">
+  <title>POS System - Secure Login</title>
   <!-- Bootstrap 5.4 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome for icons -->
@@ -110,7 +114,6 @@
         padding: 12px 20px;
         border-radius: 8px;
         border: 1px solid var(--pos-border);
-        margin-bottom: 20px;
         transition: all 0.3s;
         background: var(--pos-card-bg);
         color: var(--pos-text);
@@ -317,33 +320,6 @@
         background: #dc3545;
     }
 
-    .biometric-feedback {
-        margin-top: 10px;
-        font-size: 14px;
-        min-height: 20px;
-    }
-
-    .biometric-success {
-        color: #28a745;
-    }
-
-    .biometric-error {
-        color: #dc3545;
-    }
-
-    .biometric-setup {
-        margin-top: 15px;
-        padding: 10px;
-        background-color: rgba(76, 201, 240, 0.1);
-        border-radius: 8px;
-        font-size: 14px;
-    }
-
-    .biometric-setup a {
-        cursor: pointer;
-        color: var(--pos-primary);
-    }
-
     @media (max-width: 768px) {
         .login-left {
             display: none;
@@ -352,39 +328,6 @@
         .login-right {
             padding: 30px 20px;
         }
-    }
-
-    .explanation-container {
-        max-width: 1100px;
-        margin: 40px auto;
-        padding: 20px;
-        background: var(--pos-card-bg);
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .explanation-container h2 {
-        color: var(--pos-primary);
-        margin-bottom: 20px;
-    }
-
-    .step {
-        margin-bottom: 25px;
-        padding: 15px;
-        border-left: 4px solid var(--pos-primary);
-        background-color: rgba(67, 97, 238, 0.05);
-    }
-
-    .step-number {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        background: var(--pos-primary);
-        color: white;
-        text-align: center;
-        line-height: 30px;
-        border-radius: 50%;
-        margin-right: 10px;
     }
   </style>
 </head>
@@ -503,15 +446,10 @@
 
       <div class="biometric-option">
         <p class="text-muted mb-2">Or use biometric authentication</p>
-        <div class="biometric-btn" id="biometricBtn">
+        <div class="biometric-btn">
           <i class="fas fa-fingerprint"></i>
         </div>
-        <div class="biometric-feedback" id="biometricFeedback"></div>
-
-        <div class="biometric-setup mt-3" id="biometricSetup">
-          <span>Don't have biometrics set up? </span>
-          <a id="setupBiometric">Register your device</a>
-        </div>
+        <p id="status"></p>
       </div>
 
       <div class="divider">
@@ -539,36 +477,10 @@
     </div>
   </div>
 </div>
-
-<div class="explanation-container">
-  <h2>Biometric Authentication Implementation Process</h2>
-
-  <div class="step">
-    <h4><span class="step-number">1</span>WebAuthn Support Detection</h4>
-    <p>The system first checks if the browser supports the Web Authentication API, which is required for biometric authentication.</p>
-  </div>
-
-  <div class="step">
-    <h4><span class="step-number">2</span>Registration Process</h4>
-    <p>Users can register their device for biometric authentication. The registration status is stored in localStorage (in a real application, this would be handled server-side).</p>
-  </div>
-
-  <div class="step">
-    <h4><span class="step-number">3</span>Authentication Process</h4>
-    <p>When users click the biometric button, the system checks if they've registered. It then simulates the biometric verification process with visual feedback.</p>
-  </div>
-
-  <div class="step">
-    <h4><span class="step-number">4</span>User Experience Enhancements</h4>
-    <p>The implementation includes visual feedback with color-coded messages, loading spinners, and realistic success/failure simulation.</p>
-  </div>
-
-  <div class="step">
-    <h4><span class="step-number">5</span>Security Considerations</h4>
-    <p>In a real implementation, credentials would be verified with a server. This simulation uses localStorage for demonstration purposes only.</p>
-  </div>
-</div>
-
+<!-- Bootstrap 5.4 JS Bundle with Popper -->
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/common.js?21aafffassfdfasdfkk23}" defer></script>
+<script th:src="@{/js/login.js?21aafabfsfafasdcdfasdfkk23}" defer></script>
 <script>
   // Theme switcher functionality
   const themeSwitcher = document.getElementById('themeSwitcher');
@@ -680,93 +592,33 @@
       });
   });
 
-  // Biometric authentication functions
-  const biometricBtn = document.getElementById('biometricBtn');
-  const biometricFeedback = document.getElementById('biometricFeedback');
-  const setupBiometric = document.getElementById('setupBiometric');
+  // Biometric authentication simulation
+  document.querySelector('.biometric-btn').addEventListener('click', async function() {
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      const username = document.getElementById("username").value;
+      const savedUsername = localStorage.getItem(username);
+      let returnValue = false;
 
-  // Check if WebAuthn is supported
-  const isWebAuthnSupported = () => {
-      return !!window.PublicKeyCredential;
-  };
-
-  // Check if biometrics are registered
-  const checkBiometricRegistration = () => {
-      return localStorage.getItem('biometricRegistered') === 'true';
-  };
-
-  // Initialize biometric authentication
-  const initBiometricAuth = () => {
-      if (isWebAuthnSupported()) {
-          if (checkBiometricRegistration()) {
-              // User has biometrics registered
-              document.getElementById('biometricSetup').classList.add('d-none');
-          } else {
-              // User hasn't registered biometrics yet
-              biometricFeedback.textContent = 'Register your device to use biometric authentication';
-              biometricFeedback.className = 'biometric-feedback';
-          }
-
-          // Register new biometric credential
-          setupBiometric.addEventListener('click', function() {
-              biometricFeedback.textContent = 'Setting up biometric authentication...';
-              biometricFeedback.className = 'biometric-feedback';
-
-              // Simulate registration process
-              setTimeout(() => {
-                  localStorage.setItem('biometricRegistered', 'true');
-                  biometricFeedback.textContent = 'Biometric registration successful!';
-                  biometricFeedback.className = 'biometric-feedback biometric-success';
-                  document.getElementById('biometricSetup').classList.add('d-none');
-              }, 1500);
-          });
-
-          // Authenticate with biometrics
-          biometricBtn.addEventListener('click', function() {
-              if (!checkBiometricRegistration()) {
-                  biometricFeedback.textContent = 'Please register your device first';
-                  biometricFeedback.className = 'biometric-feedback biometric-error';
-                  return;
-              }
-
-              biometricBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-              biometricFeedback.textContent = 'Waiting for biometric verification...';
-              biometricFeedback.className = 'biometric-feedback';
-
-              // Simulate biometric authentication
-              setTimeout(() => {
-                  // 80% chance of success, 20% chance of failure for simulation
-                  const isSuccess = Math.random() > 0.2;
-
-                  if (isSuccess) {
-                      biometricBtn.innerHTML = '<i class="fas fa-fingerprint"></i>';
-                      biometricFeedback.textContent = 'Biometric authentication successful!';
-                      biometricFeedback.className = 'biometric-feedback biometric-success';
-
-                      // Simulate redirect after successful authentication
-                      setTimeout(() => {
-                          alert('Biometric login successful! Redirecting to dashboard...');
-                          // window.location.href = 'pos-dashboard.html';
-                      }, 1000);
-                  } else {
-                      biometricBtn.innerHTML = '<i class="fas fa-fingerprint"></i>';
-                      biometricFeedback.textContent = 'Authentication failed. Please try again.';
-                      biometricFeedback.className = 'biometric-feedback biometric-error';
-                  }
-              }, 2000);
-          });
-      } else {
-          // WebAuthn not supported
-          biometricBtn.style.opacity = '0.5';
-          biometricBtn.style.cursor = 'not-allowed';
-          biometricFeedback.textContent = 'Biometric authentication not supported in your browser';
-          biometricFeedback.className = 'biometric-feedback biometric-error';
-          setupBiometric.style.display = 'none';
+      try {
+        if(savedUsername)
+          returnValue = await loginPasskey()
+        else
+          await registerPasskey();
       }
-  };
+      catch(error) {
+        console.log(error);
+        await registerPasskey();
+        returnValue = false;
+      }
 
-  // Initialize biometric authentication when page loads
-  document.addEventListener('DOMContentLoaded', initBiometricAuth);
+
+      this.innerHTML = '<i class="fas fa-fingerprint"></i>';
+      if(returnValue)
+        setTimeout(() => {
+          // ✅ Redirect to index page after success
+          window.location.href = "/";
+        }, 1500);
+  });
 </script>
 </body>
 </html>

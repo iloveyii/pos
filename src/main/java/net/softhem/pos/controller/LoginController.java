@@ -109,6 +109,6 @@ public class LoginController {
     @GetMapping("/login")
     public String index(Model model) {
         model.addAttribute("message", "Hello Thymeleaf!");
-        return "biom";
+        return "login";
     }
 }
