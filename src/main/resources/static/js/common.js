@@ -36,9 +36,10 @@ async function makeApiRequest(httpMethod, endPoint, data) {
         // Error handling
         console.error('Error fetching products:', error);
         // Show user-friendly message
-        const shouldRefresh = confirm('Failed to load products. Click OK to refresh the page.');
+        const shouldRefresh = confirm('Failed to load products. Click OK to login');
         if (shouldRefresh) {
-          window.location.reload(); // Refresh the page
+            window.location.href = "/auth/login";
+            // window.location.reload(); // Refresh the page
         }
     });
 }
