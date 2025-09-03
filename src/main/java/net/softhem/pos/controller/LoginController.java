@@ -1,14 +1,11 @@
 package net.softhem.pos.controller;
 
-import net.softhem.pos.dto.ProductDTO;
-import net.softhem.pos.model.Helpers;
-import net.softhem.pos.service.ProductService;
-import org.springframework.data.domain.Page;
+import net.softhem.pos.model.JwtUtil;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
@@ -101,8 +98,21 @@ public class LoginController {
     // 📌 Complete login (⚠️ signature verification skipped for demo)
     @ResponseBody
     @PostMapping("/login-complete")
-    public String loginComplete(@RequestBody Map<String, Object> body) {
-        return "Login success ✅ (signature verification skipped in demo)";
+    public ResponseEntity<Map<String, Object>> loginComplete(@RequestBody Map<String, Object> body) {
+        String username = body.get("username").toString();
+
+        // Load user roles (from DB or repo)
+        Set<String> roles = Set.of("USER"); // Example
+
+        // Generate JWT
+        String jwt = JwtUtil.generateToken(username, roles);
+
+        return ResponseEntity.ok(Map.of(
+                "token", jwt,
+                "username", username,
+                "roles", roles
+        ));
+        // return "Login success ✅ (signature verification skipped in demo)";
     }
 
     // 🔹 Serve login page with Thymeleaf

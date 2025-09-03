@@ -7,7 +7,8 @@ async function makeApiRequest(httpMethod, endPoint, data) {
     return await fetch('/api/' + endPoint, {
         method: httpMethod,
         headers: {
-             'Content-Type': 'application/json'
+             'Content-Type': 'application/json',
+             "Authorization": "Bearer " + localStorage.getItem("jwt")
         },
         body: httpMethod === 'GET'? null : JSON.stringify(data)
     })

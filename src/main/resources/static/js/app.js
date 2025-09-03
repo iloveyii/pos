@@ -116,7 +116,9 @@ function initPOS() {
 // Load dash_products
 function loadProducts() {
     // Make GET request to /api/products
-    fetch('/api/products')
+    fetch('/api/products', {
+          headers: { "Authorization": "Bearer " + localStorage.getItem("jwt") }
+      })
       .then(response => {
         // Check if response is successful (status code 200-299)
         if (!response.ok) {
@@ -403,8 +405,7 @@ async function createOrder() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            // Add authorization header if needed
-            // 'Authorization': 'Bearer your-token-here'
+            "Authorization": "Bearer " + localStorage.getItem("jwt")
         },
         body: JSON.stringify({
             items: cart  // Assuming your backend expects an "items" property
@@ -437,8 +438,7 @@ function updateOrder(id) {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            // Add authorization header if needed
-            // 'Authorization': 'Bearer your-token-here'
+            "Authorization": "Bearer " + localStorage.getItem("jwt")
         },
         body: JSON.stringify({
             items: cart  // Assuming your backend expects an "items" property
@@ -693,6 +693,7 @@ function sendCommandRequest(data) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            "Authorization": "Bearer " + localStorage.getItem("jwt")
         },
         body: JSON.stringify(data)
     })

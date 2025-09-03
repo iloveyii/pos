@@ -14,6 +14,7 @@ import net.softhem.pos.service.OrderUpdateService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
@@ -46,24 +47,28 @@ public class OrderController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{page}/{size}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Page<OrderDTO>> getAllOrders(@PathVariable int page,
                                                          @PathVariable int size) {
         return ResponseEntity.ok(orderService.getAllOrders(page,size));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
         OrderDTO order = orderService.getOrderById(id);
         return ResponseEntity.ok(order);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest request) throws InterruptedException {
         OrderDTO order = orderService.createOrder(request);
         order.setCommand("list");
@@ -74,6 +79,7 @@ public class OrderController {
 
     // Change order's status and/or type
     @PutMapping("/{orderId}/status")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> changeStatusAndType(
             @PathVariable Long orderId,
             @RequestBody OrderStatusAndTypeRequest request) {
@@ -94,6 +100,7 @@ public class OrderController {
 
     // Add product to order
     @PostMapping("/{orderId}/items")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> addItem(
             @PathVariable Long orderId,
             @RequestBody OrderItemRequest request) {
@@ -142,6 +149,7 @@ public class OrderController {
 
     // Remove item from order
     @DeleteMapping("/{orderId}/items/{itemId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> removeItem(
             @PathVariable Long orderId,
             @PathVariable Long itemId) {
@@ -177,6 +185,7 @@ public class OrderController {
 
     // Get order details
     @GetMapping("/{orderId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Order> getOrder(@PathVariable Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
@@ -185,6 +194,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderRequest request) {
         List<OrderProduct> orderProducts = orderProductService.getByOrderId(id);
         orderProductService.restoreQuantities(orderProducts);
@@ -195,12 +205,14 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
         OrderDTO order = orderService.updateOrderStatus(id, status);
         return ResponseEntity.ok(order);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();

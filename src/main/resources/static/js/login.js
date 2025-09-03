@@ -38,11 +38,13 @@ async function loginPasskey() {
 
     const assertion = await navigator.credentials.get({ publicKey: options });
 
-    await fetch("/auth/login-complete", {
+    const res = await fetch("/auth/login-complete", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username })
     });
-
+    const { token } = await res.json();
+    // Store in localStorage (or HttpOnly cookie)
+    localStorage.setItem("jwt", token);
     document.getElementById("status").innerText = "🎉 Logged in successfully!";
     return true;
 }
