@@ -92,6 +92,10 @@ Content-Type: application/json
 ###################
 ## Get request
 GET http://localhost:8080/api/order-products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc1NjkyNzMxNSwiZXhwIjoxNzU2OTMwOTE1fQ.Ixm6p9LWjgwT0Rrm5Hht92dP06c3dI5auq2cpoNw3Qo
+
+
 ##################
 ## Send DELETE
 DELETE http://localhost:8080/api/order-products/order/3
@@ -127,3 +131,5 @@ Content-Type: application/json
         }
     ]
 }
+
+
