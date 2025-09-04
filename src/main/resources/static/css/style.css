@@ -526,3 +526,8 @@ body {
   .fs-lg-5 { font-size: 1.25rem !important; } /* ~20px */
   .fs-lg-6 { font-size: 1.15rem !important; } /* ~20px */
 }
+
+.filter-btn-products.active, .filter-btn-orders.active {
+    border: 1px solid #eee;
+
+}

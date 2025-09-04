@@ -20,7 +20,7 @@ public class SecurityConfig {
                         // ✅ allow static files
                         .requestMatchers("/js/**", "/css/**", "/images/**", "/webjars/**").permitAll()
                         // ✅ allow login + auth endpoints & other public pages
-                        .requestMatchers("/auth/**", "/", "/pos").permitAll()
+                        .requestMatchers("/auth/**", "/", "/pos", "/ws", "/ws/info").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
