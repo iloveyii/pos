@@ -385,17 +385,17 @@
       <p class="text-muted mb-4">Enter your credentials to access your dashboard</p>
 
       <div class="login-methods">
-        <div class="login-method active" data-method="password">
+        <div class="login-method active" data-method="biometric">
+          <i class="fas fa-fingerprint"></i>
+          <div>Biometric</div>
+        </div>
+        <div class="login-method" data-method="password">
           <i class="fas fa-key"></i>
           <div>Password</div>
         </div>
         <div class="login-method" data-method="pin">
           <i class="fas fa-lock"></i>
           <div>PIN</div>
-        </div>
-        <div class="login-method" data-method="otp">
-          <i class="fas fa-mobile-alt"></i>
-          <div>OTP</div>
         </div>
       </div>
 
@@ -408,11 +408,21 @@
           </div>
         </div>
 
-        <div class="mb-3" id="passwordField">
+        <div class="mb-3" id="biometricOption">
+          <div class="biometric-option">
+            <p class="text-muted mb-2">Use biometric authentication</p>
+            <div class="biometric-btn">
+              <i class="fas fa-fingerprint"></i>
+            </div>
+            <p id="status"></p>
+          </div>
+        </div>
+
+        <div class="mb-3 d-none" id="passwordField">
           <label for="password" class="form-label">Password</label>
           <div class="input-group">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password">
           </div>
         </div>
 
@@ -421,15 +431,6 @@
           <div class="input-group">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
             <input type="password" class="form-control" id="pin" placeholder="Enter your 6-digit PIN" maxlength="6">
-          </div>
-        </div>
-
-        <div class="mb-3 d-none" id="otpField">
-          <label for="otp" class="form-label">One-Time Password</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-sms"></i></span>
-            <input type="text" class="form-control" id="otp" placeholder="Enter 6-digit code" maxlength="6">
-            <button class="btn btn-outline-secondary" type="button" id="sendOtpBtn">Send OTP</button>
           </div>
         </div>
 
@@ -444,13 +445,7 @@
         </button>
       </form>
 
-      <div class="biometric-option">
-        <p class="text-muted mb-2">Or use biometric authentication</p>
-        <div class="biometric-btn">
-          <i class="fas fa-fingerprint"></i>
-        </div>
-        <p id="status"></p>
-      </div>
+      
 
       <div class="divider">
         <span>Or continue with</span>
@@ -480,7 +475,7 @@
 <!-- Bootstrap 5.4 JS Bundle with Popper -->
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/common.js?21aafffassfdfasdfkk23}" defer></script>
-<script th:src="@{/js/login.js?21aafabfsfgsdgafasdcdfasdfkk23}" defer></script>
+<script th:src="@{/js/login.js?21aafabfewrwesfgretersdgafasdcdfasdfkk23}" defer></script>
 <script>
   // Theme switcher functionality
   const themeSwitcher = document.getElementById('themeSwitcher');
@@ -506,36 +501,16 @@
           document.getElementById('usernameField').classList.remove('d-none');
           document.getElementById('passwordField').classList.add('d-none');
           document.getElementById('pinField').classList.add('d-none');
-          document.getElementById('otpField').classList.add('d-none');
+          document.getElementById('biometricOption').classList.add('d-none');
 
           if (methodType === 'password') {
               document.getElementById('passwordField').classList.remove('d-none');
           } else if (methodType === 'pin') {
               document.getElementById('pinField').classList.remove('d-none');
-          } else if (methodType === 'otp') {
-              document.getElementById('otpField').classList.remove('d-none');
-              document.getElementById('usernameField').classList.add('d-none');
+          } else if (methodType === 'biometric') {
+              document.getElementById('biometricOption').classList.remove('d-none');
           }
       });
-  });
-
-  // OTP sending functionality
-  document.getElementById('sendOtpBtn').addEventListener('click', function() {
-      this.disabled = true;
-      this.textContent = 'Sending...';
-
-      // Simulate OTP sending
-      setTimeout(() => {
-          this.textContent = 'Sent!';
-          this.classList.add('btn-success');
-
-          // Re-enable after 30 seconds
-          setTimeout(() => {
-              this.disabled = false;
-              this.textContent = 'Send OTP';
-              this.classList.remove('btn-success');
-          }, 30000);
-      }, 1500);
   });
 
   // Form submission
@@ -552,9 +527,9 @@
       } else if (activeMethod === 'pin') {
           const pin = document.getElementById('pin').value;
           isValid = pin && pin.length === 6;
-      } else if (activeMethod === 'otp') {
-          const otp = document.getElementById('otp').value;
-          isValid = otp && otp.length === 6;
+      } else if (activeMethod === 'biometric') {
+          document.querySelector('.biometric-btn').click();
+          isValid = true;
       }
 
       if (isValid) {
@@ -566,7 +541,7 @@
 
           // Simulate authentication process
           setTimeout(() => {
-              alert('Login successful! Redirecting to dashboard...');
+              // alert('Login successful! Redirecting to dashboard...');
               submitBtn.disabled = false;
               submitBtn.innerHTML = originalText;
 

@@ -69,7 +69,7 @@ public class LoginController {
 
         UserRecord user = users.get(username);
         user.credentialId = (String) credential.get("id");
-        return "Registered successfully";
+        return "Registered successfully, now click fingerprint again to login";
     }
 
     // 📌 Login challenge

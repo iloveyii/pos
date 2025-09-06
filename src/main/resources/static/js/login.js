@@ -20,7 +20,7 @@ async function registerPasskey() {
     });
 
     localStorage.setItem(username, true);
-    document.getElementById("status").innerText = "✅ Passkey registered!";
+    document.getElementById("status").innerText = "✅ Passkey registered, now click fingerprint again to login!";
     return true;
 }
 
