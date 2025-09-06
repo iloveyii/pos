@@ -221,7 +221,7 @@ function showWaiting() {
     setTimeout(function() {
         modal.hide();
         if(modal._isShown)
-            alert('Please refresh the page and try again');
+            window.location.href = '/auth/login';
     }, 15000);
     return modal;
 }

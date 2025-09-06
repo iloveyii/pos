@@ -153,7 +153,7 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> removeItem(
             @PathVariable Long orderId,
-            @PathVariable Long itemId) {
+            @PathVariable Long itemId) throws InterruptedException {
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
@@ -175,10 +175,15 @@ public class OrderController {
                 order.getOrderProducts().remove(orderProduct);
                 orderProductRepository.delete(orderProduct);
                 // Order savedOrder = orderRepository.save(order);
-                return ResponseEntity.ok(Helpers.orderToDto(order));
+                OrderDTO orderDto = Helpers.orderToDto(order);
+                orderUpdateService.sendOrderUpdate(orderDto);
+                return ResponseEntity.ok(orderDto);
             }
         }
-
+        Thread.sleep(1500);
+        // Refresh order products
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(orderId);
+        order.setOrderProducts(orderProducts);
         OrderDTO orderDto = Helpers.orderToDto(order);
         orderUpdateService.sendOrderUpdate(orderDto);
         return ResponseEntity.ok(orderDto);
