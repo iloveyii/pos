@@ -437,7 +437,7 @@
     function displayOrderUpdate(order) {
         console.log(order);
         orderData = order;
-        if(order && order.command && order.command == 'list') {
+        if(order && order.command && order.command == 'invoice') {
             loadOrderData();
             openTab('receipt');
         }

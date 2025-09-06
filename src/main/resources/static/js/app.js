@@ -738,7 +738,7 @@ function sendCommandToShow(cmd) {
         sendCommandRequest({ id: id, command: 'qr'});
     }
     if(cmd == 'invoice') {
-        sendCommandRequest({ id: id, command: 'list'});
+        sendCommandRequest({ id: id, command: 'invoice'});
     }
 }
 
