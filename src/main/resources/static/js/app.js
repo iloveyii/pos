@@ -140,11 +140,7 @@ function loadProducts() {
         console.error('Error fetching dash_products:', error);
 
         // Show user-friendly message
-        const shouldRefresh = confirm('Failed to load dash_products. Click OK to refresh the page.');
-
-        if (shouldRefresh) {
-          window.location.reload(); // Refresh the page
-        }
+        window.location.href = '/auth/login';
       });
 }
 

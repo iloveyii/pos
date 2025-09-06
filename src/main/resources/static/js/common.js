@@ -35,12 +35,13 @@ async function makeApiRequest(httpMethod, endPoint, data) {
     .catch(error => {
         // Error handling
         console.error('Error fetching products:', error);
+        window.location.href = "/auth/login";
         // Show user-friendly message
-        const shouldRefresh = confirm('Failed to load products. Click OK to login');
-        if (shouldRefresh) {
-            window.location.href = "/auth/login";
+        // const shouldRefresh = confirm('Failed to load products. Click OK to login');
+        // if (shouldRefresh) {
+            // window.location.href = "/auth/login";
             // window.location.reload(); // Refresh the page
-        }
+        //}
     });
 }
 
