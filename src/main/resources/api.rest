@@ -40,6 +40,7 @@ GET http://localhost:8080/api/products/1/3
 ###################
 ## Get request
 GET http://localhost:8080/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGkiLCJyb2xlcyI6WyJVU0VSIl0sImlhdCI6MTc1NzE0ODcyOCwiZXhwIjoxNzU3MTUyMzI4fQ.RQep1SBPcu1P_Y_zsCjPWJ3YI2HnzO_HB4_vSp2m9CE
 
 ###################
 ## Get paginated request

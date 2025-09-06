@@ -455,9 +455,10 @@
     const maxReconnectAttempts = 5;
     const reconnectDelay = 5000; // 5 seconds
     let stompClient = null;
+    let socket = null;
 
     function connectWebSocket() {
-        const socket = new SockJS('https://pos.softhem.net/ws');
+        socket = new SockJS('https://pos.softhem.net/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({},
             (frame)=> {

@@ -103,7 +103,7 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDTO> addItem(
             @PathVariable Long orderId,
-            @RequestBody OrderItemRequest request) {
+            @RequestBody OrderItemRequest request) throws InterruptedException {
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
@@ -138,10 +138,11 @@ public class OrderController {
             item.setPriceAtPurchase(product.getPrice());
             orderProductRepository.save(item);
         }
+        Thread.sleep(1500);
         // Get order with new item added/saved
-        order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
-
+        // Refresh
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(orderId);
+        order.setOrderProducts(orderProducts);
         OrderDTO orderDto = Helpers.orderToDto(order);
         orderUpdateService.sendOrderUpdate(orderDto);
         return ResponseEntity.ok(orderDto);

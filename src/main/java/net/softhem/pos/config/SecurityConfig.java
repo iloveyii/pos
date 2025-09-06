@@ -18,12 +18,18 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // ✅ allow static files
-                        .requestMatchers("/js/**", "/css/**", "/images/**", "/webjars/**").permitAll()
+                        .requestMatchers("/js/**", "/css/**", "/images/**", "/webjars/**", "favicon.ico").permitAll()
                         // ✅ allow login + auth endpoints & other public pages
-                        .requestMatchers("/auth/**", "/", "/pos", "/ws", "/ws/info").permitAll()
+                        .requestMatchers("/auth/**", "/", "/pos", "/ws/**", "/ws/info", "/pay", "/h2-console/**", "/h2-console/login.do?**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
+                )
+                .headers(headers -> headers
+                        // Allow embedding in iframe for same origin
+                        .frameOptions(frame -> frame.sameOrigin())
+                        // OR allow from specific origins (choose one approach)
+                        // .frameOptions(frame -> frame.disable()) // Use with caution!
                 )
                 .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
