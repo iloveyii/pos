@@ -581,11 +581,19 @@ function setupEventListeners() {
 
     // Show QR to customer
     document.getElementById('btn-qr').addEventListener('click', function() {
-      sendCommandToShow('qr');
+        sendCommandToShow('qr');
+        this.disabled = true;
+        const btn = this;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>  Qr';
+        setTimeout(() => { this.innerHTML = '<i class="fas fa-qrcode me-1"></i> Qr'; btn.disabled = false; }, 3000);
     });
     // Show invoice to customer
     document.getElementById('btn-invoice').addEventListener('click', function() {
       sendCommandToShow('invoice');
+      this.disabled = true;
+      const btn = this;
+      this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>  Invoice';
+      setTimeout(() => { this.innerHTML = '<i class="fas fa-file-invoice me-1"></i> Invoice'; btn.disabled = false; }, 3000);
     });
 
     // Change status to onhold
