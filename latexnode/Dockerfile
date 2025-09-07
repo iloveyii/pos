@@ -1,19 +1,22 @@
-# Stage 1: Install Node.js on a clean Ubuntu
-FROM ubuntu:16.04 as node_builder
+FROM fabtesta/ubuntu-xelatex
 
-RUN apt update -y
-RUN apt install -y curl
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+# Install dependencies
+RUN apt-get update && apt-get install -y curl ca-certificates bash git \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update -y
-RUN apt-get install -y software-properties-common -y
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y
-RUN apt-get update -y
-RUN apt-get install -y libc6
+# Set NVM directory
+ENV NVM_DIR=/root/.nvm
 
-RUN export NVM_DIR="$HOME/.nvm"
+# Install NVM
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-RUN nvm install 16
-# Verify installation
-# RUN node --version && npm --version
+# Install Node.js v16 using NVM
+RUN . "$NVM_DIR/nvm.sh" \
+    && nvm install 16 \
+    && nvm alias default 16 \
+    && nvm use default
 
+# Make Node.js available in later layers
+ENV PATH=$NVM_DIR/versions/node/v16.0.0/bin:$PATH
+
+CMD ["node", "--version"]
