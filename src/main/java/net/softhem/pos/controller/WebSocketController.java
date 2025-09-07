@@ -3,6 +3,7 @@ package net.softhem.pos.controller;
 import net.softhem.pos.dto.CommandDTO;
 import net.softhem.pos.dto.OrderDTO;
 import net.softhem.pos.model.ReceiptFormat;
+import net.softhem.pos.service.FileStorageService;
 import net.softhem.pos.service.OrderService;
 import net.softhem.pos.service.OrderUpdateService;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class WebSocketController {
     private final OrderUpdateService orderUpdateService;
     private final OrderService orderService;
+    private final FileStorageService fileStorageService;
 
-    public WebSocketController(OrderUpdateService orderUpdateService, OrderService orderService) {
+    public WebSocketController(OrderUpdateService orderUpdateService, OrderService orderService, FileStorageService fileStorageService) {
         this.orderUpdateService = orderUpdateService;
         this.orderService = orderService;
+        this.fileStorageService = fileStorageService;
     }
 
     @MessageMapping("/order") // Receives messages sent to /app/order
@@ -39,13 +42,13 @@ public class WebSocketController {
     public ResponseEntity<OrderDTO> commandEndPoint(@RequestBody CommandDTO commandDTO) {
         OrderDTO orderDTO = orderService.getOrderById(commandDTO.getId());
         orderDTO.setCommand(commandDTO.getCommand());
-        genPdf();
+        genPdf(orderDTO);
         orderUpdateService.sendOrderUpdate(orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDTO);
     }
 
     // Utility method to test the class
-    public static void genPdf() {
+    public void genPdf(OrderDTO orderDTO) {
         String jsonOrder = "{\n" +
                 "    \"id\": 10,\n" +
                 "    \"orderDate\": \"2025-09-06T19:31:27.491238\",\n" +
@@ -87,13 +90,11 @@ public class WebSocketController {
                 "}";
 
         try {
-            String latexReceipt = ReceiptFormat.generateLatexReceipt(jsonOrder);
-            System.out.println("=== RECEIPT LATEX ===\n");
-            System.out.println(latexReceipt);
 
             System.out.println("\n=== PAYMENT QR LATEX ===\n");
-            String latexPayment = ReceiptFormat.generatePaymentQRLatex(jsonOrder);
+            String latexPayment = ReceiptFormat.generatePaymentQRLatex(orderDTO);
             System.out.println(latexPayment);
+            fileStorageService.writeLatexStringToFile(orderDTO.getId().toString() + ".tex", latexPayment);
 
         } catch (Exception e) {
             e.printStackTrace();

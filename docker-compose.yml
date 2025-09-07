@@ -17,6 +17,18 @@ services:
       - .m2:/root/.m2
     restart: unless-stopped
 
+  springlatex:
+    container_name: springlatex
+    image: fabtesta/ubuntu-xelatex
+    volumes:
+      - ./src/main/resources/static/tex:/data/tex:rw
+      - ./src/main/resources/static/fonts:/data/fonts:rw
+      - ./src/main/resources/static/pdf:/data/pdf:rw
+    working_dir: /data
+    entrypoint: bash
+    tty: true
+    stdin_open: true
+
 volumes:
   h2_data:
   .m2:

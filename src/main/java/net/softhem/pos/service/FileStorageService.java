@@ -4,17 +4,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class FileStorageService {
 
     private final Path imagesLocation;
     private final Path targetImagesLocation;
+    private final Path targetPdfFilesLocation;
+    private final Path targetTexFilesLocation;
+    private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
     public FileStorageService() throws IOException {
         // Development: save to target/classes/static/images/products
@@ -24,10 +30,16 @@ public class FileStorageService {
         // Create path to resources/static/images/products
         this.imagesLocation = Paths.get("src/main/resources/static/images/products")
                 .toAbsolutePath().normalize();
+        this.targetPdfFilesLocation = Paths.get("src/main/resources/static/pdf")
+                .toAbsolutePath().normalize();
+        this.targetTexFilesLocation = Paths.get("src/main/resources/static/tex")
+                .toAbsolutePath().normalize();
 
         // Create both directories
         Files.createDirectories(targetImagesLocation);
         Files.createDirectories(imagesLocation);
+        Files.createDirectories(targetPdfFilesLocation);
+        Files.createDirectories(targetTexFilesLocation);
     }
 
     public String storeBase64Image(String base64Data) throws IOException {
@@ -109,7 +121,16 @@ public class FileStorageService {
         }
     }
 
-    public Path getImagesLocation() {
-        return imagesLocation;
+    /**
+     * Write StringBuilder to file using Files.write()
+     */
+    public void writeLatexStringToFile(String filename, String content) throws IOException {
+        Path destinationFile = targetTexFilesLocation.resolve(filename).normalize();
+        String fileNameAsPath = destinationFile.getFileName().toString();
+        Files.createDirectories(Path.of(fileNameAsPath.replace(".tex", "")));
+
+        Files.writeString(destinationFile, content);
+        logger.info("StringBuilder content written to: {}", destinationFile);
     }
+
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import net.softhem.pos.dto.OrderDTO;
+import net.softhem.pos.dto.OrderProductDTO;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -13,7 +15,7 @@ import java.util.Date;
 
 public class ReceiptFormat {
 
-    private static final DecimalFormat currencyFormat = new DecimalFormat("$#,##0.00");
+    private static final DecimalFormat currencyFormat = new DecimalFormat("#,##0.00");
     private static final DecimalFormat taxFormat = new DecimalFormat("0%");
 
     public static String generateLatexReceipt(String jsonOrder) throws Exception {
@@ -148,29 +150,25 @@ public class ReceiptFormat {
         return latex.toString();
     }
 
-    public static String generatePaymentQRLatex(String jsonOrder) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode order = mapper.readTree(jsonOrder);
-
+    public static String generatePaymentQRLatex(OrderDTO orderDTO) throws Exception {
         StringBuilder latex = new StringBuilder();
 
         latex.append("\\documentclass{article} \n");
         latex.append("\\usepackage[\n");
         latex.append("paperwidth=80mm,\n");
         latex.append("paperheight=200mm,\n");
-        latex.append("margin=5mm\n");
+        latex.append("top=15mm,left=5mm,right=5mm,bottom=15mm\n"); // margin=5mm
         latex.append("]{geometry}\n");
 
         latex.append("\\usepackage{fontspec} \n");
 
-
         latex.append("\\setmainfont[ \n");
-        latex.append("Path = ./fonts/, \n");
+        latex.append("Path = ../fonts/, \n");
         latex.append("Extension = .ttf, \n");
         latex.append("]{CourierPrime-Regular} \n");
 
         latex.append("\\newfontfamily\\barcodefont[ \n");
-        latex.append("Path = ./fonts/,\n");
+        latex.append("Path = ../fonts/,\n");
         latex.append("Extension = .ttf, \n");
         latex.append("]{LibreBarcode39-Regular} \n");
 
@@ -192,8 +190,8 @@ public class ReceiptFormat {
         latex.append("\\end{center} \n");
 
         latex.append("\\begin{tabular}{@{}p{0.3\\textwidth}p{0.6\\textwidth}@{}} \n");
-        latex.append("Order \\#: & 10\\\\ \n");
-        String orderDate = formatOrderDate(order.get("orderDate").asText());
+        latex.append("Order \\#: & ").append(orderDTO.getId()).append("\\\\\n");
+        String orderDate = formatOrderDate(orderDTO.getOrderDate().toString());
         latex.append("Date: & ").append(orderDate).append("\\\\\n");
         latex.append("Customer: & Walk-in\\\\ \n");
         latex.append("Status: & PENDING\\\\ \n");
@@ -205,7 +203,7 @@ public class ReceiptFormat {
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm}\n");
         latex.append("\n\n");
 
-        latex.append("\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.325\\textwidth}p{0.135\\textwidth}rr@{}} \n");
+        latex.append("\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.375\\textwidth}p{0.130\\textwidth}rr@{}} \n");
         latex.append("\\textbf{Item} & \\textbf{Qty} & \\textbf{Price} & \\textbf{Total}\\\\ \n");
         latex.append("\\end{tabular} \n");
 
@@ -213,11 +211,23 @@ public class ReceiptFormat {
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \n");
         latex.append("\n\n");
 
-        latex.append("\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.35\\textwidth}p{0.07\\textwidth}rr@{}} \n");
-        latex.append("Bluetooth Speaker & 1 & 59.99 & 59.99\\\\ \n");
-        latex.append("Smartwatch & 1 & 149.99 & 149.99\\\\ \n");
-        latex.append("Wireless Headphones & 1 & 99.00 & 99.00\\\\ \n");
+        latex.append("\\small");
+        latex.append("\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.45\\textwidth}p{0.07\\textwidth}rr@{}} \n");
+
+        for (OrderProductDTO orderProductDto : orderDTO.getOrderProducts()) {
+            String productName = orderProductDto.getProductName();
+            int quantity = orderProductDto.getQuantity();
+            double price = orderProductDto.getPriceAtPurchase();
+            double total = quantity * price;
+
+            latex.append(escapeLatex(productName)).append(" & ");
+            latex.append(quantity).append(" & ");
+            latex.append(currencyFormat.format(price)).append(" & ");
+            latex.append(currencyFormat.format(total)).append("\\\\\n");
+        }
+
         latex.append("\\end{tabular} \n");
+        latex.append("\\normalsize");
 
         latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \n");
@@ -232,8 +242,8 @@ public class ReceiptFormat {
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \\\\ \n");
         latex.append("\n\n");
 
-        double totalAmount = order.get("totalAmount").asDouble();
-        latex.append("\\textbf{TOTAL:} & \\").append(currencyFormat.format(totalAmount)).append("\\\\\n");
+        double totalAmount = orderDTO.getTotalAmount();
+        latex.append("\\textbf{TOTAL:} & \\$").append(currencyFormat.format(totalAmount)).append("\\\\\n");
         latex.append("\\end{tabular} \n");
         latex.append("\\vspace{0.15cm} \n");
 
