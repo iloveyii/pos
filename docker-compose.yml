@@ -15,11 +15,14 @@ services:
     volumes:
       - h2_data:/data
       - .m2:/root/.m2
+      - ./src/main/resources/static/tex:/data/tex:rw
+      - ./src/main/resources/static/fonts:/data/fonts:rw
+      - ./src/main/resources/static/pdf:/data/pdf:rw
     restart: unless-stopped
 
   springlatex:
     container_name: springlatex
-    image: fabtesta/ubuntu-xelatex
+    build: latexnode
     volumes:
       - ./src/main/resources/static/tex:/data/tex:rw
       - ./src/main/resources/static/fonts:/data/fonts:rw

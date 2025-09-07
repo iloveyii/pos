@@ -32,7 +32,7 @@ public class FileStorageService {
                 .toAbsolutePath().normalize();
         this.targetPdfFilesLocation = Paths.get("src/main/resources/static/pdf")
                 .toAbsolutePath().normalize();
-        this.targetTexFilesLocation = Paths.get("src/main/resources/static/tex")
+        this.targetTexFilesLocation = Paths.get("/data/tex")
                 .toAbsolutePath().normalize();
 
         // Create both directories
@@ -126,8 +126,7 @@ public class FileStorageService {
      */
     public void writeLatexStringToFile(String filename, String content) throws IOException {
         Path destinationFile = targetTexFilesLocation.resolve(filename).normalize();
-        String fileNameAsPath = destinationFile.getFileName().toString();
-        Files.createDirectories(Path.of(fileNameAsPath.replace(".tex", "")));
+        Files.createDirectories(Path.of("/data/pdf/" + filename.replace(".tex", "")));
 
         Files.writeString(destinationFile, content);
         logger.info("StringBuilder content written to: {}", destinationFile);
