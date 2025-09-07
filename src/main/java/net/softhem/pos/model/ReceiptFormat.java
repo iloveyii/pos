@@ -46,7 +46,10 @@ public class ReceiptFormat {
         latex.append("Tel: (555) 123-4567\\\\\n");
         latex.append("receipt.example.com\\\\\n");
         latex.append("\\end{center}\n");
+
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.5pt}{10pt}\\\\\n");
+        latex.append("\n\n");
 
         // Order information
         latex.append("\\vspace{0.2cm}\n");
@@ -59,8 +62,10 @@ public class ReceiptFormat {
         latex.append("Customer: & Walk-in\\\\\n");
         latex.append("Status: & ").append(order.get("status").asText()).append("\\\\\n");
         latex.append("\\end{tabular}\n");
-        latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.5pt}{10pt}\\\\\n");
 
+        latex.append("\n\n");
+        latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.5pt}{10pt}\\\\\n");
+        latex.append("\n\n");
         // Order items
         latex.append("\\vspace{0.2cm}\n");
         latex.append("\\begin{tabular}{@{}p{0.5\\textwidth}rrr@{}}\n");
@@ -80,7 +85,10 @@ public class ReceiptFormat {
             latex.append(currencyFormat.format(total)).append("\\\\\n");
         }
         latex.append("\\end{tabular}\n");
+
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.5pt}{10pt}\\\\\n");
+        latex.append("\n\n");
 
         // Totals section
         latex.append("\\vspace{0.2cm}\n");
@@ -95,10 +103,17 @@ public class ReceiptFormat {
         latex.append("Subtotal: & ").append(currencyFormat.format(subTotal)).append("\\\\\n");
         latex.append("Tax (").append(taxFormat.format(taxRate)).append("): & ").append(currencyFormat.format(taxAmount)).append("\\\\\n");
         latex.append("Discount: & ").append(currencyFormat.format(discount)).append("\\\\\n");
+
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{0.7\\textwidth}{0.5pt}{10pt}\\\\\n");
+        latex.append("\n\n");
+
         latex.append("\\textbf{TOTAL:} & \\textbf{").append(currencyFormat.format(totalAmount)).append("}\\\\\n");
         latex.append("\\end{tabular}\n");
+
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.5pt}{10pt}\\\\\n");
+        latex.append("\n\n");
 
         // Payment information
         latex.append("\\vspace{0.2cm}\n");
@@ -185,14 +200,18 @@ public class ReceiptFormat {
         latex.append("\\end{tabular} \n");
 
         latex.append("\\vspace{0.5cm}\n");
+
         latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm}\n");
+        latex.append("\n\n");
 
         latex.append("\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.325\\textwidth}p{0.135\\textwidth}rr@{}} \n");
         latex.append("\\textbf{Item} & \\textbf{Qty} & \\textbf{Price} & \\textbf{Total}\\\\ \n");
         latex.append("\\end{tabular} \n");
 
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \n");
+        latex.append("\n\n");
 
         latex.append("\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.35\\textwidth}p{0.07\\textwidth}rr@{}} \n");
         latex.append("Bluetooth Speaker & 1 & 59.99 & 59.99\\\\ \n");
@@ -200,18 +219,28 @@ public class ReceiptFormat {
         latex.append("Wireless Headphones & 1 & 99.00 & 99.00\\\\ \n");
         latex.append("\\end{tabular} \n");
 
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \n");
+        latex.append("\n\n");
+
         latex.append("\\begin{tabular}{@{}p{0.7\\textwidth}r@{}} \n");
         latex.append("Subtotal: & 308.98\\\\ \n");
         latex.append("Tax (8\\%): & 24.72\\\\ \n");
         latex.append("Discount: & 0.00\\\\ \n");
+
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \\\\ \n");
+        latex.append("\n\n");
 
         double totalAmount = order.get("totalAmount").asDouble();
         latex.append("\\textbf{TOTAL:} & \\").append(currencyFormat.format(totalAmount)).append("\\\\\n");
         latex.append("\\end{tabular} \n");
         latex.append("\\vspace{0.15cm} \n");
+
+        latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \\\\ \n");
+        latex.append("\n\n");
+
         latex.append("\\begin{tabular}{@{}p{0.5\\textwidth}p{0.4\\textwidth}@{}} \n");
         latex.append("Payment Method: & Not Paid\\\\ \n");
         latex.append("\\end{tabular} \n");
