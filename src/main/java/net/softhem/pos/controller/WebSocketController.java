@@ -50,8 +50,10 @@ public class WebSocketController {
     public ResponseEntity<OrderDTO> commandEndPoint(@RequestBody CommandDTO commandDTO) throws Exception {
         OrderDTO orderDTO = orderService.getOrderById(commandDTO.getId());
         orderDTO.setCommand(commandDTO.getCommand());
+        System.out.print("Command::" + commandDTO.getCommand());
 
         if(Objects.equals(commandDTO.getCommand(), "gen-receipt")) {
+            System.out.print("Command is gen::" + commandDTO.getCommand());
             genLatex(orderDTO);
             String url = genPdf(orderDTO.getId());
             orderDTO.setUrl(url);
