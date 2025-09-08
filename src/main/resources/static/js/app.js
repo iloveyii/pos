@@ -366,8 +366,9 @@ function processPayment() {
         showNotification('Cart is empty', 'danger');
         return;
     }
-     clearCart();
-     objOrder.id = null;
+
+    clearCart();
+    objOrder.id = null;
 }
 
 function updateCartOnBackend() {
@@ -507,7 +508,25 @@ function setupEventListeners() {
     applyDiscountBtn.addEventListener('click', applyDiscount);
 
     // Process payment
-    processPaymentBtn.addEventListener('click', processPayment);
+    processPaymentBtn.addEventListener('click', function() {
+
+        if (cart.length === 0) {
+            showNotification('Cart is empty', 'danger');
+            return;
+        }
+
+        sendCommandToShow('gen-receipt');
+        this.disabled = true;
+        const btn = this;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>   Process Payment';
+        setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-credit-card me-2"></i>  Process Payment';
+            btn.disabled = false;
+            clearCart();
+            objOrder.id = null;
+        }, 3000);
+
+    });
 
     // Allow Enter key for discount
     discountAmountInput.addEventListener('keypress', (e) => {

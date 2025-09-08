@@ -1,5 +1,7 @@
 package net.softhem.pos.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.softhem.pos.dto.CommandDTO;
 import net.softhem.pos.dto.OrderDTO;
 import net.softhem.pos.model.ReceiptFormat;
@@ -18,6 +20,7 @@ import java.net.http.HttpClient;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Objects;
 
 @Controller
 public class WebSocketController {
@@ -47,13 +50,18 @@ public class WebSocketController {
     public ResponseEntity<OrderDTO> commandEndPoint(@RequestBody CommandDTO commandDTO) throws Exception {
         OrderDTO orderDTO = orderService.getOrderById(commandDTO.getId());
         orderDTO.setCommand(commandDTO.getCommand());
-        genLatex(orderDTO);
-        genPdf(orderDTO.getId());
+
+        if(Objects.equals(commandDTO.getCommand(), "gen-receipt")) {
+            genLatex(orderDTO);
+            String url = genPdf(orderDTO.getId());
+            orderDTO.setUrl(url);
+        }
+
         orderUpdateService.sendOrderUpdate(orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDTO);
     }
 
-    private void genPdf(long id) throws Exception {
+    private String genPdf(long id) throws Exception {
         String json = String.format("""
         {
           "id": %d,
@@ -74,6 +82,13 @@ public class WebSocketController {
 
         System.out.println("Status: " + response.statusCode());
         System.out.println("Response: " + response.body());
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonObject = mapper.readTree(response.body());
+        if(jsonObject.has("data")) {
+            String url = jsonObject.get("data").get("url").asText();
+            return url;
+        }
+        return "";
     }
 
     // Utility method to test the class

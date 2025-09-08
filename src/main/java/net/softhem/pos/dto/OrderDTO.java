@@ -20,6 +20,7 @@ public class OrderDTO {
     private String notes;
     private List<OrderProductDTO> orderProducts;
     private String command;
+    private String url;
 
     public String getOrderDateString() {
         // Desired format
