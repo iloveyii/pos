@@ -529,5 +529,123 @@ body {
 
 .filter-btn-products.active, .filter-btn-orders.active {
     border: 1px solid #eee;
+}
 
+.btn-pdf {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.btn-pdf:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+/* PDF Modal Styles */
+.pdf-modal .modal-dialog {
+    max-width: 350px;
+    height: 80vh;
+    margin: 10vh auto;
+}
+
+.pdf-modal .modal-content {
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+}
+
+.pdf-modal .modal-header {
+    background: #34495e;
+    color: white;
+    padding: 15px;
+    border-bottom: 2px solid #2c3e50;
+}
+
+.pdf-modal .modal-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.pdf-modal .modal-body {
+    padding: 0;
+    height: calc(100% - 120px);
+    background: #f8f9fa;
+}
+
+.pdf-modal .modal-footer {
+    background: #ecf0f1;
+    padding: 12px 15px;
+    border-top: 1px solid #ddd;
+}
+
+#pdfFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.pdf-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+    background: #f8f9fa;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: #3498db;
+}
+
+.btn-download {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.btn-download:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+.instructions {
+    background: #e8f4fc;
+    border-left: 4px solid #3498db;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+
+.feature-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.feature-list li {
+    padding: 8px 0;
+    padding-left: 30px;
+    position: relative;
+}
+
+.feature-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #27ae60;
+    font-weight: bold;
 }
