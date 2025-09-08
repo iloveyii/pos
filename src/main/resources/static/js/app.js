@@ -755,6 +755,10 @@ function sendCommandToShow(cmd) {
     if(cmd == 'invoice') {
         sendCommandRequest({ id: id, command: 'invoice'});
     }
+
+    if(cmd == 'gen-invoice') {
+        sendCommandRequest({ id: id, command: 'gen-invoice'});
+    }
 }
 
 // Initialize the POS when DOM is loaded
