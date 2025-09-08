@@ -133,4 +133,17 @@ Content-Type: application/json
     ]
 }
 
+######################################
+############### NODE #################
+######################################
 
+
+## Send Post
+POST http://localhost:8082/generate
+Content-Type: application/json
+
+{
+  "name": "iPhone 20",
+  "price": 12.345,
+  "inStock": 200
+}

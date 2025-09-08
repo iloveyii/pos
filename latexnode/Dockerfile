@@ -22,7 +22,9 @@ RUN chown appuser:appuser /usr/src/app
 COPY --chown=appuser:appuser ./package*.json ./
 
 # Install dependencies as non-root user
-USER appuser
+USER root
+RUN mkdir /home/appuser
+
 RUN npm ci --only=production
 
 # Copy application code

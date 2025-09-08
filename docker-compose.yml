@@ -23,14 +23,16 @@ services:
   springlatex:
     container_name: springlatex
     build: latexnode
+    ports:
+      - "8082:3001"
     volumes:
       - ./src/main/resources/static/tex:/data/tex:rw
       - ./src/main/resources/static/fonts:/data/fonts:rw
       - ./src/main/resources/static/pdf:/data/pdf:rw
     working_dir: /usr/src/app
-    entrypoint: bash
-    tty: true
-    stdin_open: true
+    # entrypoint: bash
+    # tty: true
+    # stdin_open: true
 
 volumes:
   h2_data:
