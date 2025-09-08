@@ -574,7 +574,7 @@ body {
 
 .pdf-modal .modal-body {
     padding: 0;
-    height: calc(100% - 120px);
+    height: calc(100% - 70px);
     background: #f8f9fa;
 }
 
