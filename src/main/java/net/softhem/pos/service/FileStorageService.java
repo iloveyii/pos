@@ -4,14 +4,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class FileStorageService {
@@ -20,7 +17,7 @@ public class FileStorageService {
     private final Path targetImagesLocation;
     private final Path targetPdfFilesLocation;
     private final Path targetTexFilesLocation;
-    private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
+    // private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
     public FileStorageService() throws IOException {
         // Development: save to target/classes/static/images/products
@@ -32,7 +29,11 @@ public class FileStorageService {
                 .toAbsolutePath().normalize();
         this.targetPdfFilesLocation = Paths.get("src/main/resources/static/pdf")
                 .toAbsolutePath().normalize();
-        this.targetTexFilesLocation = Paths.get("/data/tex")
+        String texPath = "/data/tex";
+        if(!Files.exists(Path.of(texPath))) {
+            texPath = "src/main/resources/static/tex";
+        }
+        this.targetTexFilesLocation = Paths.get(texPath)
                 .toAbsolutePath().normalize();
 
         // Create both directories
@@ -129,7 +130,7 @@ public class FileStorageService {
         Files.createDirectories(Path.of("/data/pdf/" + filename.replace(".tex", "")));
 
         Files.writeString(destinationFile, content);
-        logger.info("StringBuilder content written to: {}", destinationFile);
+        // logger.info("StringBuilder content written to: {}", destinationFile);
     }
 
 }

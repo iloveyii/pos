@@ -88,6 +88,13 @@ const searchOrders = document.getElementById('searchOrders');
 const filterButtonsOrders = document.querySelectorAll('.filter-btn-orders');
 const printOrderBtn = document.querySelector('#printOrderBtn');
 
+
+const pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
+const pdfFrame = document.getElementById('pdfFrame');
+const pdfLoading = document.getElementById('pdfLoading');
+const pdfOrderId = document.getElementById('pdfOrderId');
+const downloadPdf = document.getElementById('downloadPdf');
+
 // Global variables to track current pagination state
 let currentPageOrders = 0;
 let currentPageSizeOrders = 10;
@@ -211,6 +218,13 @@ function addEventListenerForOrderRowsActions(){
         });
     });
 
+    document.querySelectorAll('.pdf-view-receipt').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const orderId = parseInt(this.getAttribute('data-id'));
+            openPdfModal(orderId);
+        });
+    });
+
     document.querySelectorAll('.view-order').forEach(btn => {
         btn.addEventListener('click', function() {
             const orderId = parseInt(this.getAttribute('data-id'));
@@ -246,6 +260,9 @@ function renderOrdersTable(orders) {
                 </button>
                 <button class="btn btn-sm btn-outline-secondary action-btn print-order" data-id="${order.id}">
                     <i class="fas fa-print"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary action-btn pdf-view-receipt" data-id="${order.id}">
+                    <i class="fas fa-file-pdf"></i>
                 </button>
             </td>
         `;
@@ -395,6 +412,57 @@ function getStatusBadgeClassForOrders(status) {
 function formatStatusOrders(status) {
     return status.charAt(0).toUpperCase() + status.slice(1);
 }
+
+
+    // PDF Modal functionality
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Reset modal when closed
+        document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function() {
+            pdfFrame.src = 'about:blank';
+        });
+    });
+
+// Function to open PDF modal
+function openPdfModal(orderId) {
+    const pdfUrl = `https://pos.softhem.net/pdf/${orderId}`;
+
+    // Set modal title
+    pdfOrderId.textContent = orderId;
+
+    // Set download link
+    downloadPdf.href = pdfUrl;
+    downloadPdf.setAttribute('download', `order-${orderId}.pdf`);
+
+    // Show loading state
+    pdfLoading.style.display = 'flex';
+    pdfFrame.style.display = 'none';
+
+    // Show modal
+    pdfModal.show();
+
+    // Load PDF after a short delay to allow modal to animate
+    setTimeout(() => {
+        pdfFrame.src = pdfUrl;
+
+        // Handle when PDF is loaded
+        pdfFrame.onload = function() {
+            pdfLoading.style.display = 'none';
+            pdfFrame.style.display = 'block';
+        };
+
+        // Handle PDF loading errors
+        pdfFrame.onerror = function() {
+            pdfLoading.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Failed to load PDF document. Please try again later.
+                </div>
+            `;
+        };
+    }, 300);
+}
+
 
 (async function(){
     console.log("Document is fully loaded.");

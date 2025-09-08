@@ -529,10 +529,40 @@
     </div>
 </div>
 
+<!-- PDF Modal -->
+<div class="modal fade pdf-modal" id="pdfModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order PDF - #<span id="pdfOrderId"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="pdf-loading" id="pdfLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading PDF...</span>
+                    </div>
+                    <p class="mt-2">Loading PDF document...</p>
+                </div>
+                <iframe id="pdfFrame" src="about:blank" style="display: none;"></iframe>
+            </div>
+            <div class="pdf-actions">
+                <div>
+                    <a href="#" class="btn btn-outline-primary btn-sm" id="downloadPdf">
+                        <i class="fas fa-download me-1"></i> Download
+                    </a>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Bootstrap 5.4 JS Bundle with Popper -->
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/common.js?21aaffsvzfasdxfasfvffsddfasdfkk23}" defer></script>
-<script th:src="@{/js/orders.js?2hkjhdff9fasflkj3}" defer></script>
+<script th:src="@{/js/orders.js?2hkjhdfasdfasff9fasflkj3}" defer></script>
 <script th:src="@{/js/products.js?33hadkfasdj8fdfadf1f}" defer></script>
 <script th:src="@{/js/app.js?a9fasdffasasdfwerfasfr}" defer></script>
 </body>
