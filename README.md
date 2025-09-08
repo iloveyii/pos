@@ -46,4 +46,11 @@ FROM
 - `docker exec -i springlatex xelatex -output-directory=/data/pdf/${order.service_number} -jobname=${order.service_number} /data/pdf_files/${order.service_number}/generated.tex`; 
 - `docker exec -i springlatex xelatex -output-directory=/data/pdf/9 -jobname=9 /data/tex/9.tex`; 
 
+## Generate PDF
+
+- It generates for now by click QR button
+- Browse using <https://pos.softhem.net/pdf/9>
+- Served by PdfController
+
+
 
