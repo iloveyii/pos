@@ -1,30 +1,38 @@
 FROM fabtesta/ubuntu-xelatex
 
-# Create app directory
+# Install Node.js directly (more efficient than NVM in containers)
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    bash \
+    git \
+    && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/* \
+    && corepack enable
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Create app directory and set permissions
 WORKDIR /usr/src/app
+RUN chown appuser:appuser /usr/src/app
 
-# Install dependencies
-RUN apt-get update && apt-get install -y curl ca-certificates bash git \
-    && rm -rf /var/lib/apt/lists/*
+# Copy package files first
+COPY --chown=appuser:appuser ./package*.json ./
 
-# Set NVM directory
-ENV NVM_DIR=/root/.nvm
+# Install dependencies as non-root user
+USER appuser
+RUN npm ci --only=production
 
-# Install NVM
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+# Copy application code
+COPY --chown=appuser:appuser . .
 
-# Install Node.js v16 (must source nvm.sh in the same RUN)
-RUN bash -c ". $NVM_DIR/nvm.sh \
-    && nvm install 16 \
-    && nvm alias default 16"
+# Expose port (if your server uses one)
+EXPOSE 3000
 
-# Make Node + npm available for later steps
-ENV PATH=$NVM_DIR/versions/node/v16.0.0/bin:$PATH
-
-# Copy package.json and install dependencies
-COPY ./package*.json ./
-
-# Copy source code
-COPY . .
+# Health check (optional)
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:3000/health || exit 1
 
 CMD ["node", "server.js"]
