@@ -756,7 +756,7 @@ function sendCommandToShow(cmd) {
         sendCommandRequest({ id: id, command: 'invoice'});
     }
 
-    if(cmd == 'gen-invoice') {
+    if(cmd == 'gen-receipt') {
         sendCommandRequest({ id: id, command: 'gen-invoice'});
     }
 }
