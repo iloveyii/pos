@@ -235,7 +235,7 @@ function  updateCartButtons(){
                 : document.getElementById('btnInvoice').checked = false;
 
     // Change paymentMethod to CASH
-    order.paymentMethod.includes('CASH')
+    order && order.paymentMethod && order.paymentMethod.includes('CASH')
                 ? document.getElementById('btnPaymentCash').checked = true
                 : document.getElementById('btnPaymentCash').checked = false;
 
