@@ -18,7 +18,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // ✅ allow static files
-                        .requestMatchers("/js/**", "/css/**", "/images/**", "/webjars/**", "favicon.ico").permitAll()
+                        .requestMatchers("/js/**", "/css/**", "/images/**", "/pdf/**", "/webjars/**", "favicon.ico").permitAll()
                         // ✅ allow login + auth endpoints & other public pages
                         .requestMatchers("/auth/**", "/", "/pos", "/ws/**", "/ws/info", "/pay", "/h2-console/**", "/h2-console/login.do?**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
