@@ -27,7 +27,7 @@ services:
       - ./src/main/resources/static/tex:/data/tex:rw
       - ./src/main/resources/static/fonts:/data/fonts:rw
       - ./src/main/resources/static/pdf:/data/pdf:rw
-    working_dir: /data
+    working_dir: /usr/src/app
     entrypoint: bash
     tty: true
     stdin_open: true
