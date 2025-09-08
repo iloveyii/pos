@@ -14,6 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpClient;
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 @Controller
 public class WebSocketController {
     private final OrderUpdateService orderUpdateService;
@@ -39,16 +44,40 @@ public class WebSocketController {
     }
 
     @PostMapping("/command")
-    public ResponseEntity<OrderDTO> commandEndPoint(@RequestBody CommandDTO commandDTO) {
+    public ResponseEntity<OrderDTO> commandEndPoint(@RequestBody CommandDTO commandDTO) throws Exception {
         OrderDTO orderDTO = orderService.getOrderById(commandDTO.getId());
         orderDTO.setCommand(commandDTO.getCommand());
-        genPdf(orderDTO);
+        genLatex(orderDTO);
+        genPdf(orderDTO.getId());
         orderUpdateService.sendOrderUpdate(orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDTO);
     }
 
+    private void genPdf(long id) throws Exception {
+        String json = String.format("""
+        {
+          "id": %d,
+          "customer": "Walk-in",
+          "total": 112.28
+        }
+        """, id);
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("http://springlatex:3001/generate"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("Status: " + response.statusCode());
+        System.out.println("Response: " + response.body());
+    }
+
     // Utility method to test the class
-    public void genPdf(OrderDTO orderDTO) {
+    public void genLatex(OrderDTO orderDTO) {
         String jsonOrder = "{\n" +
                 "    \"id\": 10,\n" +
                 "    \"orderDate\": \"2025-09-06T19:31:27.491238\",\n" +

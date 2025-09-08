@@ -163,12 +163,12 @@ public class ReceiptFormat {
         latex.append("\\usepackage{fontspec} \n");
 
         latex.append("\\setmainfont[ \n");
-        latex.append("Path = ../fonts/, \n");
+        latex.append("Path = /data/fonts/, \n");
         latex.append("Extension = .ttf, \n");
         latex.append("]{CourierPrime-Regular} \n");
 
         latex.append("\\newfontfamily\\barcodefont[ \n");
-        latex.append("Path = ../fonts/,\n");
+        latex.append("Path = /data/fonts/,\n");
         latex.append("Extension = .ttf, \n");
         latex.append("]{LibreBarcode39-Regular} \n");
 
