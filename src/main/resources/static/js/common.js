@@ -241,20 +241,23 @@ function base64urlToUint8Array(base64url) {
     return outputArray;
 }
 
-function fileExistsOnServer(url, errorDivId) {
-    fetch(url, { method: "HEAD" })
+async function fileExistsOnServer(url, errorDivId) {
+    return fetch(url, { method: "HEAD" })
     .then(res => {
       if (res.ok) {
         document.getElementById(errorDivId).innerHTML =
                   "<p style='color:green;'>✅ PDF file found.</p>";
+                  return true;
       } else {
         document.getElementById(errorDivId).innerHTML =
           "<p style='color:red;'>❌ PDF file not found.</p>";
+          return false;
       }
     })
     .catch((e) => {
       document.getElementById(errorDivId).innerHTML =
         "<p style='color:red;'>⚠️ Error loading PDF.</p>" + e.message;
         console.log(e);
+        return false;
     });
 }

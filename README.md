@@ -51,6 +51,7 @@ FROM
 - It generates for now by click QR button
 - Browse using <https://pos.softhem.net/pdf/9>
 - Served by PdfController
+- var ret = await fileExistsOnServer('https://pos.softhem.net/pdf/4', 'pdfLoading'); ret;
 
 
 

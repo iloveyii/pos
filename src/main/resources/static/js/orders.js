@@ -424,9 +424,8 @@ function formatStatusOrders(status) {
     });
 
 // Function to open PDF modal
-function openPdfModal(orderId) {
+async function openPdfModal(orderId) {
     const pdfUrl = `https://pos.softhem.net/pdf/${orderId}`;
-
     // Set modal title
     pdfOrderId.textContent = orderId;
 
@@ -441,7 +440,18 @@ function openPdfModal(orderId) {
     // Show modal
     pdfModal.show();
 
-    // Load PDF after a short delay to allow modal to animate
+    const fileExists = await fileExistsOnServer('https://pos.softhem.net/pdf/4', 'pdfLoading');
+    if(fileExists) {
+        showPdfInFrame(pdfUrl);
+    } else {
+        pdfLoading.style.display = 'block';
+        pdfFrame.style.display = 'none';
+        setTimeout(() => showPdfInFrame(pdfUrl), 3000);
+    }
+}
+
+function showPdfInFrame(pdfUrl) {
+// Load PDF after a short delay to allow modal to animate
     setTimeout(() => {
         pdfFrame.src = pdfUrl;
 
@@ -462,7 +472,7 @@ function openPdfModal(orderId) {
                 </div>
             `;
         };
-    }, 300);
+    }, 500);
 }
 
 
