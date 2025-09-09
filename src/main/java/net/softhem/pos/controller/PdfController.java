@@ -27,7 +27,7 @@ public class PdfController {
         this.orderService = orderService;
     }
 
-    @RequestMapping(value = "/{filename:.+}", method = RequestMethod.HEAD)
+    @RequestMapping(value = "/{id}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkPdfExists(@PathVariable Long id) throws IOException {
         Path filePath = Paths.get("/data/pdf/" + id + "/" + id + ".pdf");
         if (Files.exists(filePath)) {
