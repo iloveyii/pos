@@ -22,7 +22,10 @@ public class PdfService {
 
     public String generatePdfReceipt(OrderDTO orderDTO) throws Exception {
         genLatex(orderDTO);
-        return genPdf(orderDTO.getId());
+        Thread.sleep(2500);
+        String pdfUrl = genPdf(orderDTO.getId());
+        Thread.sleep(1000);
+        return  pdfUrl;
     }
 
     private String genPdf(long id) throws Exception {
