@@ -453,6 +453,8 @@ function openPdfModal(orderId) {
 
         // Handle PDF loading errors
         pdfFrame.onerror = function() {
+            pdfLoading.style.display = 'block';
+            pdfFrame.style.display = 'none';
             pdfLoading.innerHTML = `
                 <div class="alert alert-danger">
                     <i class="fas fa-exclamation-triangle me-2"></i>

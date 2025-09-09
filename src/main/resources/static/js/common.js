@@ -240,3 +240,21 @@ function base64urlToUint8Array(base64url) {
     }
     return outputArray;
 }
+
+function fileExistsOnServer(url, errorDivId) {
+    fetch(url, { method: "HEAD" })
+    .then(res => {
+      if (res.ok) {
+        document.getElementById(errorDivId).innerHTML =
+                  "<p style='color:green;'>✅ PDF file found.</p>";
+      } else {
+        document.getElementById(errorDivId).innerHTML =
+          "<p style='color:red;'>❌ PDF file not found.</p>";
+      }
+    })
+    .catch((e) => {
+      document.getElementById(errorDivId).innerHTML =
+        "<p style='color:red;'>⚠️ Error loading PDF.</p>" + e.message;
+        console.log(e);
+    });
+}
