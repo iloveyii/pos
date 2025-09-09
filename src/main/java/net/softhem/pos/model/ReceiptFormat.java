@@ -234,7 +234,7 @@ public class ReceiptFormat {
         latex.append("\n\n");
 
         latex.append("\\begin{tabular}{@{}p{0.7\\textwidth}r@{}} \n");
-        latex.append("Subtotal: &").append(orderDTO.getSubTotal()).append("\\\\ \n");
+        latex.append("Subtotal: &").append(String.format("%.2f", orderDTO.getSubTotal())).append("\\\\ \n");
         latex.append("Tax (8\\%): & ").append(String.format("%.2f", orderDTO.getSubTotal() * 0.08)).append("\\\\ \n");
         latex.append("Discount: & 0.00\\\\ \n");
 
