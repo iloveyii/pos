@@ -28,11 +28,14 @@ public class PdfController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.HEAD)
-    public ResponseEntity<Void> checkPdfExists(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Void> checkPdfExists(@PathVariable Long id) throws Exception {
         Path filePath = Paths.get("/data/pdf/" + id + "/" + id + ".pdf");
         if (Files.exists(filePath)) {
             return ResponseEntity.ok().build(); // 200 OK
         } else {
+            // Create one
+            OrderDTO orderDto = orderService.getOrderById(id);
+            pdfService.generatePdfReceipt(orderDto);
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
