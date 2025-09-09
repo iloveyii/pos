@@ -9,12 +9,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -28,6 +26,17 @@ public class PdfController {
         this.pdfService = pdfService;
         this.orderService = orderService;
     }
+
+    @RequestMapping(value = "/{filename:.+}", method = RequestMethod.HEAD)
+    public ResponseEntity<Void> checkPdfExists(@PathVariable Long id) throws IOException {
+        Path filePath = Paths.get("/data/pdf/" + id + "/" + id + ".pdf");
+        if (Files.exists(filePath)) {
+            return ResponseEntity.ok().build(); // 200 OK
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+    }
+
 
     @GetMapping("/{filename:.+}")
     public ResponseEntity<?> getPdf(@PathVariable Long filename) throws Exception {
