@@ -46,7 +46,8 @@ public class PdfController {
     @GetMapping("/{filename:.+}")
     public ResponseEntity<?> getPdf(@PathVariable Long filename) {
         try {
-            Path file = Paths.get("/data/pdf/" + filename).resolve(filename + ".pdf").normalize();
+            Path file = Paths.get(Helpers.getDirectoryPath("pdf" + "/" + filename)).resolve(filename + ".pdf").normalize();
+            System.out.println("Resolved :: " + filename.toString());
             Resource resource = new UrlResource(file.toUri());
             if (!resource.exists()) {
                 // Create one
