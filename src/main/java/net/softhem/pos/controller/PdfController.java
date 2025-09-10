@@ -47,13 +47,15 @@ public class PdfController {
     public ResponseEntity<?> getPdf(@PathVariable Long filename) {
         try {
             Path file = Paths.get(Helpers.getDirectoryPath("pdf" + "/" + filename)).resolve(filename + ".pdf").normalize();
-            System.out.println("Resolved :: " + filename.toString());
-            Resource resource = new UrlResource(file.toUri());
-            if (!resource.exists()) {
+            String filePath = String.format("%s/%s/%s.pdf", Helpers.getDirectoryPath("pdf"), filename, filename);
+            System.out.println("Checking path :: " + filePath);
+
+            if (! Files.exists(Path.of(filePath))) {
                 // Create one
                 OrderDTO orderDto = orderService.getOrderById(filename);
                 pdfService.generatePdfReceipt(orderDto);
                 Thread.sleep(2000);
+                Resource resource = new UrlResource(Path.of(filePath).toUri());
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + ".pdf\"")
                         .contentType(MediaType.APPLICATION_PDF)

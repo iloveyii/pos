@@ -153,6 +153,7 @@ public class Helpers {
         return dirPath;
     }
 
+    // Directory exists
     public static boolean fileExists(String filename) throws IOException {
         return Files.exists(Path.of(getDirectoryPath(filename)));
     }
