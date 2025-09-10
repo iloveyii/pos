@@ -46,7 +46,6 @@ public class PdfController {
     @GetMapping("/{filename:.+}")
     public ResponseEntity<?> getPdf(@PathVariable Long filename) {
         try {
-            Path file = Paths.get(Helpers.getDirectoryPath("pdf" + "/" + filename)).resolve(filename + ".pdf").normalize();
             String filePath = String.format("%s/%s/%s.pdf", Helpers.getDirectoryPath("pdf"), filename, filename);
             System.out.println("Checking path :: " + filePath);
 
