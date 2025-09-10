@@ -245,13 +245,11 @@ async function fileExistsOnServer(url, errorDivId) {
     return fetch(url, { method: "HEAD" })
     .then(res => {
       if (res.ok) {
-        document.getElementById(errorDivId).innerHTML =
-                  "<p style='color:green;'>✅ PDF file found.</p>";
-                  return true;
+        console.log('✅ PDF file found.');
+        return true;
       } else {
-        document.getElementById(errorDivId).innerHTML =
-          "<p style='color:red;'>❌ PDF file not found.</p>";
-          return false;
+        console.log('❌ PDF file not found.');
+        return false;
       }
     })
     .catch((e) => {
