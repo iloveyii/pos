@@ -52,6 +52,7 @@ public class PdfController {
                 // Create one
                 OrderDTO orderDto = orderService.getOrderById(filename);
                 pdfService.generatePdfReceipt(orderDto);
+                Thread.sleep(2000);
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + ".pdf\"")
                         .contentType(MediaType.APPLICATION_PDF)
