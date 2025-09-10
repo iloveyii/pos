@@ -413,15 +413,13 @@ function formatStatusOrders(status) {
     return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
-
-    // PDF Modal functionality
-    document.addEventListener('DOMContentLoaded', function() {
-
-        // Reset modal when closed
-        document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function() {
-            pdfFrame.src = 'about:blank';
-        });
+// PDF Modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Reset modal when closed
+    document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function() {
+        pdfFrame.src = 'about:blank';
     });
+});
 
 // Function to open PDF modal
 async function openPdfModal(orderId) {
@@ -446,7 +444,7 @@ async function openPdfModal(orderId) {
     } else {
         pdfLoading.style.display = 'block';
         pdfFrame.style.display = 'none';
-        setTimeout(() => showPdfInFrame(pdfUrl), 3000);
+        setTimeout(() => showPdfInFrame(pdfUrl), 300);
     }
 }
 

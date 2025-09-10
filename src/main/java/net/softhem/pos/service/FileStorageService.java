@@ -1,5 +1,6 @@
 package net.softhem.pos.service;
 
+import net.softhem.pos.model.Helpers;
 import org.springframework.stereotype.Service;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -25,22 +26,12 @@ public class FileStorageService {
                 .toAbsolutePath().normalize();
 
         // Create path to resources/static/images/products
-        this.imagesLocation = Paths.get("src/main/resources/static/images/products")
+        this.imagesLocation = Paths.get(Helpers.getDirectoryPath("products", true))
                 .toAbsolutePath().normalize();
-        this.targetPdfFilesLocation = Paths.get("src/main/resources/static/pdf")
+        this.targetPdfFilesLocation = Paths.get(Helpers.getDirectoryPath("pdf", true))
                 .toAbsolutePath().normalize();
-        String texPath = "/data/tex";
-        if(!Files.exists(Path.of(texPath))) {
-            texPath = "src/main/resources/static/tex";
-        }
-        this.targetTexFilesLocation = Paths.get(texPath)
+        this.targetTexFilesLocation = Paths.get(Helpers.getDirectoryPath("tex", true))
                 .toAbsolutePath().normalize();
-
-        // Create both directories
-        Files.createDirectories(targetImagesLocation);
-        Files.createDirectories(imagesLocation);
-        Files.createDirectories(targetPdfFilesLocation);
-        Files.createDirectories(targetTexFilesLocation);
     }
 
     public String storeBase64Image(String base64Data) throws IOException {
@@ -126,11 +117,8 @@ public class FileStorageService {
      * Write StringBuilder to file using Files.write()
      */
     public void writeLatexStringToFile(String filename, String content) throws IOException {
-        Path destinationFile = targetTexFilesLocation.resolve(filename).normalize();
-        Files.createDirectories(Path.of("/data/pdf/" + filename.replace(".tex", "")));
-
-        Files.writeString(destinationFile, content);
-        // logger.info("StringBuilder content written to: {}", destinationFile);
+        String destinationFile = Helpers.getDirectoryPath("tex", true);
+        Files.writeString(Path.of(String.format("%s/%s", destinationFile, filename)), content);
     }
 
 }

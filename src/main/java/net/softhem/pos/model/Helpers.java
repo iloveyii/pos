@@ -5,7 +5,11 @@ import net.softhem.pos.dto.OrderProductDTO;
 import net.softhem.pos.dto.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.parameters.P;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Helpers {
+    private static String devDataPath = "./src/main/resources/static";
 
     public static ProductDTO productToDto(Product product) {
         ProductDTO dto = new ProductDTO();
@@ -128,5 +133,27 @@ public class Helpers {
 
     public static int getUpdatedInStock(int existing, int requested) {
         return existing - requested;
+    }
+
+    public static String getDirectoryPath(String dirname) {
+        String dataPath = String.format("/data/%s", dirname);
+
+        if(!Files.exists(Path.of(dataPath))) {
+            dataPath = String.format("%s/%s", devDataPath, dirname);
+        }
+
+        return  dataPath;
+    }
+
+    public static String getDirectoryPath(String dirname, boolean create) throws IOException {
+        String dirPath = getDirectoryPath(dirname);
+        if(!Files.exists(Path.of(dirPath))) {
+            Files.createDirectories(Path.of(dirPath));
+        }
+        return dirPath;
+    }
+
+    public static boolean fileExists(String filename) throws IOException {
+        return Files.exists(Path.of(getDirectoryPath(filename)));
     }
 }

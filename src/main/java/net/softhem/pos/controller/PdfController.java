@@ -1,6 +1,7 @@
 package net.softhem.pos.controller;
 
 import net.softhem.pos.dto.OrderDTO;
+import net.softhem.pos.model.Helpers;
 import net.softhem.pos.model.ReceiptFormat;
 import net.softhem.pos.service.OrderService;
 import net.softhem.pos.service.PdfService;
@@ -29,8 +30,8 @@ public class PdfController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkPdfExists(@PathVariable Long id) throws Exception {
-        Path filePath = Paths.get("/data/pdf/" + id + "/" + id + ".pdf");
-        if (Files.exists(filePath)) {
+        String filePath = String.format("pdf/%s/%s.pdf", id, id);
+        if (Helpers.fileExists(filePath)) {
             return ResponseEntity.ok().build(); // 200 OK
         } else {
             // Create one

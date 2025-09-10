@@ -7,11 +7,33 @@ const path = require('path');
 const { setTimeout } = require('timers/promises');
 
 
+
+const create_dir = async(id) => {
+  if(id) {
+    command = `mkdir -p /data/pdf/${id}`
+    // Execute the command
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.log(`Error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`Stderr: ${stderr}`);
+        return;
+      }
+
+      // Send the command output
+      console.log(`Command Output:\n${stdout}`);
+    });
+  }
+}
+
 const generate_pdf_invoice = async(order) => {
     console.log('order in generate_pdf_invoice', order);
   if(order && order.id) {
     console.log('order id:' + order.id);
-    await setTimeout(1000);
+    // Create path
+    await create_dir(order.id);
     // xelatex -output-directory=/data/pdf/9 -jobname=9 /data/tex/9.tex
     const command = `xelatex -output-directory=/data/pdf/${order.id} -jobname=${order.id} /data/tex/${order.id}.tex`;
     console.log('command::' + command);
@@ -29,7 +51,7 @@ const generate_pdf_invoice = async(order) => {
       // Send the command output
       console.log(`Command Output in generate_pdf_invoice:\n${stdout}`);
     });
-
+    await setTimeout(1000);
     return `/pdf/${order.id}/${order.id}.pdf`;
   } else {
     console.log(`Command Output in generate_pdf_invoice: no order.id found \n`);
