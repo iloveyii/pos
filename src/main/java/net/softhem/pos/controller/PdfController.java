@@ -54,12 +54,13 @@ public class PdfController {
                 OrderDTO orderDto = orderService.getOrderById(filename);
                 pdfService.generatePdfReceipt(orderDto);
                 Thread.sleep(2000);
-                Resource resource = new UrlResource(Path.of(filePath).toUri());
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + ".pdf\"")
-                        .contentType(MediaType.APPLICATION_PDF)
-                        .body(resource);
             }
+            Resource resource = new UrlResource(Path.of(filePath).toUri());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + ".pdf\"")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+
         } catch (Exception e) {
             System.out.println("Error in returning pdf file");
             System.out.println(e);
