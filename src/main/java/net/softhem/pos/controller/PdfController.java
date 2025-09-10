@@ -44,18 +44,23 @@ public class PdfController {
 
 
     @GetMapping("/{filename:.+}")
-    public ResponseEntity<?> getPdf(@PathVariable Long filename) throws Exception {
-        Path file = Paths.get("/data/pdf/" + filename).resolve(filename + ".pdf").normalize();
-        Resource resource = new UrlResource(file.toUri());
-        if (!resource.exists()) {
-            // Create one
-            OrderDTO orderDto = orderService.getOrderById(filename);
-            pdfService.generatePdfReceipt(orderDto);
-            // return ResponseEntity.notFound().build();
+    public ResponseEntity<?> getPdf(@PathVariable Long filename) {
+        try {
+            Path file = Paths.get("/data/pdf/" + filename).resolve(filename + ".pdf").normalize();
+            Resource resource = new UrlResource(file.toUri());
+            if (!resource.exists()) {
+                // Create one
+                OrderDTO orderDto = orderService.getOrderById(filename);
+                pdfService.generatePdfReceipt(orderDto);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + ".pdf\"")
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(resource);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in returning pdf file");
+            System.out.println(e);
         }
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + ".pdf\"")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(resource);
+        return ResponseEntity.notFound().build();
     }
 }
