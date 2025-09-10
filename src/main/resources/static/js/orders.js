@@ -444,7 +444,7 @@ async function openPdfModal(orderId) {
     } else {
         pdfLoading.style.display = 'block';
         pdfFrame.style.display = 'none';
-        setTimeout(() => showPdfInFrame(pdfUrl), 300);
+        setTimeout(() => showPdfInFrame(pdfUrl), 1500);
     }
 }
 

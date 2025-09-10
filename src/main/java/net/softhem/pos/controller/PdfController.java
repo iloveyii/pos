@@ -37,7 +37,8 @@ public class PdfController {
             // Create one
             OrderDTO orderDto = orderService.getOrderById(id);
             pdfService.generatePdfReceipt(orderDto);
-            return ResponseEntity.notFound().build(); // 404 Not Found
+            // return ResponseEntity.notFound().build(); // 404 Not Found
+            return ResponseEntity.ok().build(); // 200 OK
         }
     }
 
