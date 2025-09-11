@@ -212,7 +212,7 @@ public class ReceiptFormat {
         latex.append("\n\n");
 
         latex.append("\\small");
-        latex.append("\\small\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.38\\textwidth}@{\\hspace{7pt}}>{\\centering\\arraybackslash}p{0.10\\textwidth}@{\\hspace{7pt}}r@{\\hspace{10pt}}r@{}}\n \n");
+        latex.append("\\small\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.38\\textwidth}@{\\hspace{2pt}}>{\\centering\\arraybackslash}p{0.10\\textwidth}@{\\hspace{7pt}}r@{\\hspace{10pt}}r@{}}\n \n");
 
         for (OrderProductDTO orderProductDto : orderDTO.getOrderProducts()) {
             String productName = orderProductDto.getProductName();
