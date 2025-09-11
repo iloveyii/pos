@@ -176,6 +176,7 @@ public class ReceiptFormat {
         latex.append("\\usepackage{dashrule} \n");
         latex.append("\\usepackage{arydshln} \n");
         latex.append("\\usepackage{makecell} \n");
+        latex.append("\\usepackage{tabularx} \n");
 
         latex.append("\\setlength{\\parindent}{0pt} \n");
         latex.append("\\pagestyle{empty} \n");
@@ -203,7 +204,8 @@ public class ReceiptFormat {
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm}\n");
         latex.append("\n\n");
 
-        latex.append("\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.30\\textwidth}@{\\hspace{5pt}}>{\\centering\\arraybackslash}p{0.24\\textwidth}@{\\hspace{1pt}}l@{\\hspace{23pt}}r@{}} \n");
+        latex.append("\\small");
+        latex.append("\\begin{tabularx}{69mm}{@{} >{\\raggedright\\arraybackslash}X r >{\\raggedleft\\arraybackslash}X >{\\raggedleft\\arraybackslash}X @{}}\n \n");
         latex.append("\\textbf{Item} & \\textbf{Qty} & \\textbf{Price} & \\textbf{Total}\\\\ \n");
         latex.append("\\end{tabular} \n");
 
@@ -211,8 +213,7 @@ public class ReceiptFormat {
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \n");
         latex.append("\n\n");
 
-        latex.append("\\small");
-        latex.append("\\small\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{0.38\\textwidth}@{\\hspace{2pt}}>{\\centering\\arraybackslash}p{0.10\\textwidth}@{\\hspace{5pt}}r@{\\hspace{5pt}}r@{}}\n \n");
+        latex.append("\\begin{tabularx}{69mm}{@{} >{\\raggedright\\arraybackslash}X r >{\\raggedleft\\arraybackslash}X >{\\raggedleft\\arraybackslash}X @{}}\n \n");
 
         for (OrderProductDTO orderProductDto : orderDTO.getOrderProducts()) {
             String productName = orderProductDto.getProductName();
