@@ -207,7 +207,7 @@ public class ReceiptFormat {
         latex.append("\\small");
         latex.append("\\begin{tabularx}{69mm}{@{} >{\\raggedright\\arraybackslash}X r >{\\raggedleft\\arraybackslash}X >{\\raggedleft\\arraybackslash}X @{}}\n \n");
         latex.append("\\textbf{Item} & \\textbf{Qty} & \\textbf{Price} & \\textbf{Total}\\\\ \n");
-        latex.append("\\end{tabular} \n");
+        latex.append("\\end{tabularx} \n");
 
         latex.append("\n\n");
         latex.append("\\hdashrule[0.5ex]{\\textwidth}{0.1pt}{1mm} \n");
@@ -227,7 +227,7 @@ public class ReceiptFormat {
             latex.append(currencyFormat.format(total)).append("\\\\\n");
         }
 
-        latex.append("\\end{tabular} \n");
+        latex.append("\\end{tabularx} \n");
         latex.append("\\normalsize");
 
         latex.append("\n\n");
