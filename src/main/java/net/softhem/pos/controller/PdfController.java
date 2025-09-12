@@ -53,6 +53,7 @@ public class PdfController {
                 // Create one
                 OrderDTO orderDto = orderService.getOrderById(filename);
                 pdfService.generatePdfReceipt(orderDto);
+                pdfService.generatePdfInvoice(orderDto);
                 Thread.sleep(2000);
             }
             Resource resource = new UrlResource(Path.of(filePath).toUri());

@@ -45,6 +45,7 @@ FROM
 
 - `docker exec -i springlatex xelatex -output-directory=/data/pdf/${order.service_number} -jobname=${order.service_number} /data/pdf_files/${order.service_number}/generated.tex`; 
 - `docker exec -i springlatex xelatex -output-directory=/data/pdf/2 -jobname=2 /data/tex/2.tex`; 
+- `docker exec -i springlatex xelatex -output-directory=/data/pdf/1 -jobname=1_invoice /data/tex/1_invoice.tex`;
 
 ## Generate PDF
 

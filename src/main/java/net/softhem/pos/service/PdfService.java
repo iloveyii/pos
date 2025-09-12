@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.softhem.pos.dto.OrderDTO;
 import net.softhem.pos.model.Helpers;
+import net.softhem.pos.model.InvoiceFormat;
 import net.softhem.pos.model.ReceiptFormat;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,11 @@ public class PdfService {
         String pdfUrl = genPdf(orderDTO.getId());
         Thread.sleep(1000);
         return pdfUrl;
+    }
+
+    public String generatePdfInvoice(OrderDTO orderDTO) throws Exception {
+        boolean result = generateLatexInvoice(orderDTO);
+        return result? "success": "fail";
     }
 
     private String genPdf(long id) throws Exception {
@@ -62,16 +68,29 @@ public class PdfService {
     }
 
     // Utility method to test the class
-    private void genLatex(OrderDTO orderDTO) {
+    private boolean genLatex(OrderDTO orderDTO) {
         try {
             System.out.println("\n=== PAYMENT QR LATEX ===\n");
             String latexPayment = ReceiptFormat.generatePaymentQRLatex(orderDTO);
             System.out.println(latexPayment);
             fileStorageService.writeLatexStringToFile(orderDTO.getId().toString() + ".tex", latexPayment);
-
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return  false;
         }
+    }
 
+    private boolean generateLatexInvoice(OrderDTO orderDTO) {
+        try {
+            System.out.println("\n=== INVOICE LATEX ===\n");
+            String latexInvoice = InvoiceFormat.generateLatexInvoice(orderDTO);
+            System.out.println(latexInvoice);
+            fileStorageService.writeLatexStringToFile(orderDTO.getId().toString() + "_invoice.tex", latexInvoice);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  false;
+        }
     }
 }
