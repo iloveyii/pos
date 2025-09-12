@@ -64,7 +64,7 @@ public class Order {
     }
 
     public String getErrorDescription() {
-        if(errorDescription.isEmpty()) {
+        if(errorDescription == null || errorDescription.isEmpty()) {
             return "Skärmen behöver bytas då den är sprucken. Batterikapaciteten visar 73% så batteriet behöver bytas ut för att det ska fungera som normalt igen. Båda hög-talarna är dåliga så de behöver servas för att fungera som vanligt igen.";
         }
         return errorDescription;
