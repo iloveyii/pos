@@ -51,9 +51,9 @@ public class InvoiceFormat {
         latex.append("\\begin{minipage}{0.2\\textwidth} \n");
         latex.append("\\begin{flushleft} \n");
         latex.append("\\textbf{Servicenummer:}  \\\\ \n");
-        latex.append("\\texttt{J001552} \\\\ \n");
+        latex.append("\\texttt{").append(String.format("JO%05d", orderDTO.getId())).append("} \\\\ \n");
         latex.append("\\textbf{Datum:} \\\\ \n");
-        latex.append("\\texttt{2025-07-10} \n");
+        latex.append("\\texttt{").append(Helpers.formatOrderDate(orderDTO.getOrderDate().toString(), true)).append("} \n");
         latex.append("\\end{flushleft} \n");
         latex.append("\\end{minipage} \n");
         latex.append("\\end{center} \n");
@@ -86,12 +86,19 @@ public class InvoiceFormat {
         latex.append("\\hline \n");
         latex.append("\\textbf{Åtgärd} & \\textbf{Pris} \\\\ \n");
         latex.append("\\hline \n");
-        latex.append("iPhone 13 - skärmbyte & 1699:- \\\\ \n");
-        latex.append("\\hline \n");
-        latex.append("iPhone 13 - Batteribyte & 799:- \\\\ \n");
-        latex.append("\\hline \n");
-        latex.append("Högtalare & 899:- \\\\ \n");
-        latex.append("\\hline \n");
+
+        for (OrderProductDTO orderProductDto : orderDTO.getOrderProducts()) {
+            String productName = orderProductDto.getProductName();
+            int quantity = orderProductDto.getQuantity();
+            double price = orderProductDto.getPriceAtPurchase();
+            double total = quantity * price;
+
+            latex.append(Helpers.escapeLatex(productName)).append(" x ");
+            latex.append(quantity).append(" & ");
+            latex.append(currencyFormat.format(total)).append("\\\\ \n");
+            latex.append("\\hline \n");
+        }
+
         latex.append("\\end{longtable} \n");
         latex.append("\\vspace{1em} \n");
         // total

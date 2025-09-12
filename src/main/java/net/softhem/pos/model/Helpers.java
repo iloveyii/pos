@@ -10,6 +10,8 @@ import org.springframework.security.core.parameters.P;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -169,5 +171,27 @@ public class Helpers {
                 .replace("}", "\\}")
                 .replace("~", "\\textasciitilde")
                 .replace("^", "\\textasciicircum");
+    }
+
+    public static String formatOrderDate(String dateString) {
+        try {
+            // Parse ISO date format
+            LocalDateTime dateTime = LocalDateTime.parse(dateString.substring(0, 19));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            return dateTime.format(formatter);
+        } catch (Exception e) {
+            return dateString; // Return original if parsing fails
+        }
+    }
+
+    public static String formatOrderDate(String dateString, boolean shortdate) {
+        try {
+            // Parse ISO date format
+            LocalDateTime dateTime = LocalDateTime.parse(dateString.substring(0, 19));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            return dateTime.format(formatter);
+        } catch (Exception e) {
+            return dateString; // Return original if parsing fails
+        }
     }
 }

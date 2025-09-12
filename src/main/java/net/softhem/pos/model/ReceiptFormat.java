@@ -59,7 +59,7 @@ public class ReceiptFormat {
         latex.append("Order \\#: & ").append(order.get("id").asText()).append("\\\\\n");
 
         // Format date
-        String orderDate = formatOrderDate(order.get("orderDate").asText());
+        String orderDate = Helpers.formatOrderDate(order.get("orderDate").asText());
         latex.append("Date: & ").append(orderDate).append("\\\\\n");
         latex.append("Customer: & Walk-in\\\\\n");
         latex.append("Status: & ").append(order.get("status").asText()).append("\\\\\n");
@@ -192,7 +192,7 @@ public class ReceiptFormat {
 
         latex.append("\\begin{tabular}{@{}p{0.3\\textwidth}p{0.6\\textwidth}@{}} \n");
         latex.append("Order \\#: & ").append(orderDTO.getId()).append("\\\\\n");
-        String orderDate = formatOrderDate(orderDTO.getOrderDate().toString());
+        String orderDate = Helpers.formatOrderDate(orderDTO.getOrderDate().toString());
         latex.append("Date: & ").append(orderDate).append("\\\\\n");
         latex.append("Customer: & Walk-in\\\\ \n");
         latex.append("Status: & PENDING\\\\ \n");
@@ -273,17 +273,6 @@ public class ReceiptFormat {
         latex.append("\\end{center} \n");
         latex.append("\\end{document} \n");
         return latex.toString();
-    }
-
-    private static String formatOrderDate(String dateString) {
-        try {
-            // Parse ISO date format
-            LocalDateTime dateTime = LocalDateTime.parse(dateString.substring(0, 19));
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            return dateTime.format(formatter);
-        } catch (Exception e) {
-            return dateString; // Return original if parsing fails
-        }
     }
 
     private static String escapeLatex(String text) {
