@@ -66,6 +66,7 @@ public class Helpers {
         dto.setTotalAmount(order.getTotalAmount());
         dto.setPaymentMethod(order.getPaymentMethod());
         dto.setNotes(order.getNotes());
+        dto.setErrorDescription(order.getErrorDescription());
 
         List<OrderProductDTO> orderProductDTOs = order.getOrderProducts().stream()
                 .map(op -> {
@@ -156,5 +157,17 @@ public class Helpers {
     // Directory exists
     public static boolean fileExists(String filename) throws IOException {
         return Files.exists(Path.of(getDirectoryPath(filename)));
+    }
+
+    public static String escapeLatex(String text) {
+        return text.replace("&", "\\&")
+                .replace("%", "\\%")
+                .replace("$", "\\$")
+                .replace("#", "\\#")
+                .replace("_", "\\_")
+                .replace("{", "\\{")
+                .replace("}", "\\}")
+                .replace("~", "\\textasciitilde")
+                .replace("^", "\\textasciicircum");
     }
 }

@@ -41,6 +41,9 @@ public class Order {
     @Column(name = "notes", nullable = true)
     private String notes;
 
+    @Column(name = "error_description", nullable = true)
+    private String errorDescription;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
@@ -58,5 +61,12 @@ public class Order {
 
     public Float getTotalAmount() {
         return getSubTotal() + 0.08f * getSubTotal();
+    }
+
+    public String getErrorDescription() {
+        if(errorDescription.isEmpty()) {
+            return "Skärmen behöver bytas då den är sprucken. Batterikapaciteten visar 73% så batteriet behöver bytas ut för att det ska fungera som normalt igen. Båda hög-talarna är dåliga så de behöver servas för att fungera som vanligt igen.";
+        }
+        return errorDescription;
     }
 }

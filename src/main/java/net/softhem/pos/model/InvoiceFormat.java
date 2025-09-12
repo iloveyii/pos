@@ -73,15 +73,16 @@ public class InvoiceFormat {
         latex.append(" \n");
         latex.append("\\vspace{0.5em} \n");
         latex.append(" \n");
-        // description
+        // Error description
         latex.append("\\noindent\\textbf{Felkbeskrivning vid inlämnande:} \\\\\n \n");
-        latex.append(":Felkbeskrivning: \n");
+        latex.append("\\noindent \n");
+        latex.append(Helpers.escapeLatex(orderDTO.getErrorDescription())).append("\n");
         latex.append(" \n");
         latex.append("\\vspace{1em} \n");
         latex.append(" \n");
         // items table
         latex.append("\\renewcommand{\\arraystretch}{1.3} \n \n");
-        latex.append("\\begin{longtable}{|>{\\raggedright\\arraybackslash}p{0.6\\textwidth}|>{\\raggedleft\\arraybackslash}p{0.3\\textwidth}|}\n \n");
+        latex.append("\\begin{longtable}{|>{\\raggedright\\arraybackslash}p{0.63\\textwidth}|>{\\raggedleft\\arraybackslash}p{0.3\\textwidth}|}\n \n");
         latex.append("\\hline \n");
         latex.append("\\textbf{Åtgärd} & \\textbf{Pris} \\\\ \n");
         latex.append("\\hline \n");

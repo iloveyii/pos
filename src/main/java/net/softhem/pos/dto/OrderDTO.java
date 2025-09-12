@@ -18,6 +18,7 @@ public class OrderDTO {
     private Float totalAmount;
     private String paymentMethod;
     private String notes;
+    private String errorDescription;
     private List<OrderProductDTO> orderProducts;
     private String command;
     private String url;

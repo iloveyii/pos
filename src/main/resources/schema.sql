@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     total_amount FLOAT DEFAULT 0.0,
     payment_method VARCHAR(50) DEFAULT 'CARD',
     notes VARCHAR(255) DEFAULT 'http://localhost:8080/pdf/invoice-sample2.pdf',
+    error_description VARCHAR(512) DEFAULT 'Skärmen behöver bytas då den är sprucken. Batterikapaciteten visar 73% så batteriet behöver bytas ut för att det ska fungera som normalt igen. Båda hög-talarna är dåliga så de behöver servas för att fungera som vanligt igen.',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
