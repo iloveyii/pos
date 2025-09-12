@@ -47,7 +47,7 @@ body {
     overflow-y: auto;
     background: white;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
-    padding-right: 30px !important;
+    /* padding-right: 30px !important; */
 }
 
 .cart-item {
@@ -396,7 +396,7 @@ body {
 
 /* For JavaFX web view */
 .bg-dark, .page-container  {
-    padding-right: 25px;
+    /* padding-right: 25px; */
 }
 
 /* for vertical scroll bard */
@@ -646,4 +646,11 @@ body {
     left: 0;
     color: #27ae60;
     font-weight: bold;
+}
+
+.cart-item-name {
+    min-width: 100px;
+}
+.cart-controls {
+    min-width: 210px;
 }

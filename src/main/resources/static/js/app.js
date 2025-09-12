@@ -193,7 +193,7 @@ function renderCart() {
                     <h6 class="mb-1">${product.name}</h6>
                     <small class="text-muted">$${product.price.toFixed(2)} × ${item.quantity}</small>
                 </div>
-                <div class="text-end">
+                <div class="text-end cart-controls">
                     <span class="cart-item-price">$${(product.price * item.quantity).toFixed(2)}</span>
                     <div class="btn-group btn-group-sm ms-2">
                         <button class="btn quantity-btn decrease-quantity" data-id="${product.id}">-</button>
