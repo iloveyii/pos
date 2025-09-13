@@ -28,14 +28,18 @@ const create_dir = async(id) => {
   }
 }
 
-const generate_pdf_invoice = async(order) => {
-    console.log('order in generate_pdf_invoice', order);
+const run_latex_command = async(order) => {
+    console.log('order in run_latex_command', order);
   if(order && order.id) {
     console.log('order id:' + order.id);
     // Create path
     await create_dir(order.id);
-    // xelatex -output-directory=/data/pdf/9 -jobname=9 /data/tex/9.tex
-    const command = `xelatex -output-directory=/data/pdf/${order.id} -jobname=${order.id} /data/tex/${order.id}.tex`;
+    let command = 'ls';
+    if(order.type == 'receipt')
+        command = `xelatex -output-directory=/data/pdf/${order.id} -jobname=${order.id} /data/tex/${order.id}.tex`;
+    if(order.type == 'invoice')
+        command = `xelatex -output-directory=/data/pdf/${order.id} -jobname=${order.id}_invoice /data/tex/${order.id}_invoice.tex`;
+
     console.log('command::' + command);
     // Execute the command
     exec(command, (error, stdout, stderr) => {
@@ -49,12 +53,12 @@ const generate_pdf_invoice = async(order) => {
       }
 
       // Send the command output
-      console.log(`Command Output in generate_pdf_invoice:\n${stdout}`);
+      console.log(`Command Output in run_latex_command:\n${stdout}`);
     });
     await setTimeout(1000);
     return `/pdf/${order.id}/${order.id}.pdf`;
   } else {
-    console.log(`Command Output in generate_pdf_invoice: no order.id found \n`);
+    console.log(`Command Output in run_latex_command: no order.id found \n`);
     return "no order.id found";
   }
 }
@@ -73,7 +77,7 @@ const server = http.createServer((req, res) => {
       try {
         const jsonData = JSON.parse(body);
         console.log('Received JSON new:', jsonData); // Log to console
-        const pdf_url = await generate_pdf_invoice(jsonData);
+        const pdf_url = await run_latex_command(jsonData);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ 

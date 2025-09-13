@@ -474,7 +474,7 @@ async function openPdfModalInvoice(orderId) {
     if(fileExists) {
         pdfFrameInvoice.src = pdfUrl;
     } else {
-          setTimeout(() => pdfFrameInvoice.src = pdfUrl, 1500);
+        setTimeout(() => pdfFrameInvoice.src = pdfUrl, 1500);
     }
 }
 

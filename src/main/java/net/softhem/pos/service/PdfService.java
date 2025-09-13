@@ -24,27 +24,33 @@ public class PdfService {
 
     public String generatePdfReceipt(OrderDTO orderDTO) throws Exception {
         genLatex(orderDTO);
-        Thread.sleep(2500);
-        String pdfUrl = genPdf(orderDTO.getId());
+        Thread.sleep(1000);
+        String pdfUrl = genPdf(orderDTO.getId(), "receipt");
         Thread.sleep(1000);
         return pdfUrl;
     }
 
     public String generatePdfInvoice(OrderDTO orderDTO) throws Exception {
         boolean result = generateLatexInvoice(orderDTO);
-        return result? "success": "fail";
+        if(!result) return "";
+        Thread.sleep(1000);
+        String pdfUrl = genPdf(orderDTO.getId(), "invoice");
+        Thread.sleep(1000);
+        return pdfUrl;
     }
 
-    private String genPdf(long id) throws Exception {
+    private String genPdf(long id, String type) throws Exception {
         // Prepare dir pdf/9
         Helpers.getDirectoryPath(String.format("pdf/%s", id), true);
         String json = String.format("""
         {
           "id": %d,
-          "customer": "Walk-in",
-          "total": 112.28
+          "type": "%s",
+          "path": "pdf/"
         }
-        """, id);
+        """, id, type);
+
+        System.out.println("Sending json::" + json);
 
         HttpClient client = HttpClient.newHttpClient();
 
