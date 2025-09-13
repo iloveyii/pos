@@ -654,3 +654,8 @@ body {
 .cart-controls {
     min-width: 210px;
 }
+
+#pdfFrameInvoice {
+    height: 70vh;
+    width: 100%;
+}

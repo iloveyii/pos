@@ -28,7 +28,7 @@ public class PdfController {
         this.orderService = orderService;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.HEAD)
+    @RequestMapping(value = {"/{id}", "/invoice/{id}"}, method = RequestMethod.HEAD)
     public ResponseEntity<Void> checkPdfExists(@PathVariable Long id) throws Exception {
         String filePath = String.format("pdf/%s/%s.pdf", id, id);
         if (Helpers.fileExists(filePath)) {
@@ -59,6 +59,31 @@ public class PdfController {
             Resource resource = new UrlResource(Path.of(filePath).toUri());
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + ".pdf\"")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+
+        } catch (Exception e) {
+            System.out.println("Error in returning pdf file");
+            System.out.println(e);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/invoice/{filename:.+}")
+    public ResponseEntity<?> getPdfInvoice(@PathVariable Long filename) {
+        try {
+            String filePath = String.format("%s/%s/%s_invoice.pdf", Helpers.getDirectoryPath("pdf"), filename, filename);
+            System.out.println("Checking path :: " + filePath);
+
+            if (! Files.exists(Path.of(filePath))) {
+                // Create one
+                OrderDTO orderDto = orderService.getOrderById(filename);
+                pdfService.generatePdfInvoice(orderDto);
+                Thread.sleep(2000);
+            }
+            Resource resource = new UrlResource(Path.of(filePath).toUri());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "_invoice.pdf\"")
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(resource);
 

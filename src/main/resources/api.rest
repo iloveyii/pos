@@ -148,3 +148,13 @@ Content-Type: application/json
   "price": 12.345,
   "inStock": 200
 }
+
+
+##############################
+
+HEAD https://pos.softhem.net/pdf/invoice/1
+
+
+##############################
+
+HEAD https://pos.softhem.net/pdf/1

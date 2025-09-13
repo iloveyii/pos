@@ -191,7 +191,6 @@ function addEventListenerForOrders() {
         searchOrders.value = '';
         document.getElementById('allOrders').click();
     });
-
 }
 
 function addEventListenerForOrderRowsActions(){
@@ -218,12 +217,22 @@ function addEventListenerForOrderRowsActions(){
         });
     });
 
+    document.querySelectorAll('.pdf-view-invoice').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const orderId = parseInt(this.getAttribute('data-id'));
+            openPdfModalInvoice(orderId);
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            setTimeout(() => this.innerHTML = '<i class="fas fa-file-pdf"></i>', 3000);
+        });
+    });
+
     document.querySelectorAll('.pdf-view-receipt').forEach(btn => {
         btn.addEventListener('click', function() {
             const orderId = parseInt(this.getAttribute('data-id'));
             openPdfModal(orderId);
         });
     });
+
 
     document.querySelectorAll('.view-order').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -261,8 +270,11 @@ function renderOrdersTable(orders) {
                 <button class="btn btn-sm btn-outline-secondary action-btn print-order" data-id="${order.id}">
                     <i class="fas fa-print"></i>
                 </button>
-                <button class="btn btn-sm btn-outline-secondary action-btn pdf-view-receipt" data-id="${order.id}">
+                <button class="btn btn-sm btn-outline-secondary action-btn pdf-view-invoice" data-id="${order.id}">
                     <i class="fas fa-file-pdf"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary action-btn pdf-view-receipt" data-id="${order.id}">
+                    <i class="fas fa-file-invoice"></i>
                 </button>
             </td>
         `;
@@ -438,11 +450,31 @@ async function openPdfModal(orderId) {
     // Show modal
     pdfModal.show();
     pdfLoading.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading PDF...</span></div><p class="mt-2">Loading PDF document...</p>';
-    const fileExists = await fileExistsOnServer('https://pos.softhem.net/pdf/4', 'pdfLoading');
+    const fileExists = await fileExistsOnServer(pdfUrl, 'pdfLoading');
     if(fileExists) {
         showPdfInFrame(pdfUrl);
     } else {
           setTimeout(() => showPdfInFrame(pdfUrl), 1500);
+    }
+}
+
+async function openPdfModalInvoice(orderId) {
+    const pdfUrl = `https://pos.softhem.net/pdf/invoice/${orderId}`;
+
+    document.getElementById('pdfLoadingInvoice').style.display = 'flex';
+    document.getElementById('pdfFrameInvoice').style.display = 'none';
+    const pdfModalInvoice = new bootstrap.Modal(document.getElementById('pdfModalInvoice'));
+    pdfModalInvoice.show();
+    const fileExists = await fileExistsOnServer(pdfUrl, 'pdfLoading');
+    const pdfFrameInvoice = document.getElementById('pdfFrameInvoice');
+    pdfFrameInvoice.onload = function() {
+        document.getElementById('pdfLoadingInvoice').style.display = 'none';
+        document.getElementById('pdfFrameInvoice').style.display = 'flex';
+    }
+    if(fileExists) {
+        pdfFrameInvoice.src = pdfUrl;
+    } else {
+          setTimeout(() => pdfFrameInvoice.src = pdfUrl, 1500);
     }
 }
 
