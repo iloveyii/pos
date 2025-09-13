@@ -470,7 +470,12 @@ async function openPdfModalInvoice(orderId) {
     pdfFrameInvoice.onload = function() {
         document.getElementById('pdfLoadingInvoice').style.display = 'none';
         document.getElementById('pdfFrameInvoice').style.display = 'flex';
+        document.getElementById('orderIdHeaderInvoice').textContent = orderId;
     }
+    pdfFrameInvoice.onerror = function() {
+        alert('Some error occurred please refresh the page and try again!');
+    }
+
     if(fileExists) {
         pdfFrameInvoice.src = pdfUrl;
     } else {
