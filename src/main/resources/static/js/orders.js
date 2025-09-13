@@ -204,7 +204,7 @@ function addEventListenerForOrders() {
         await makeApiRequest('DELETE', `pdf/${orderId}`, {}, false);
         await makeApiRequest('HEAD', `pdf/invoice/${orderId}`, {}, false);
         pdfFrameInvoice.src = `pdf/invoice/${orderId}`;
-        setTimeout(() => this.innerHTML = '<i class="fas fa-sync"></i> Refresh'; this.disabled = false;, 3000);
+        setTimeout(() => { this.innerHTML = '<i class="fas fa-sync"></i> Refresh'; this.disabled = false; }, 3000);
     })
 }
 
