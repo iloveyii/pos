@@ -37,9 +37,16 @@ public class PdfController {
             // Create one
             OrderDTO orderDto = orderService.getOrderById(id);
             pdfService.generatePdfReceipt(orderDto);
+            pdfService.generatePdfInvoice(orderDto);
             // return ResponseEntity.notFound().build(); // 404 Not Found
             return ResponseEntity.ok().build(); // 200 OK
         }
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public void deletePdfFiles(@PathVariable Long id) {
+        String filePath = String.format("%s/%s/%s.pdf", Helpers.getDirectoryPath("pdf"), id, id);
+        System.out.println("Deleting path :: " + filePath);
     }
 
 

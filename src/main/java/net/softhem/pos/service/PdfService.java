@@ -26,17 +26,20 @@ public class PdfService {
         genLatex(orderDTO);
         Thread.sleep(1000);
         String pdfUrl = genPdf(orderDTO.getId(), "receipt");
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         return pdfUrl;
     }
 
-    public String generatePdfInvoice(OrderDTO orderDTO) throws Exception {
+    public void generatePdfInvoice(OrderDTO orderDTO) throws Exception {
         boolean result = generateLatexInvoice(orderDTO);
-        if(!result) return "";
+        if(!result) return;
         Thread.sleep(1000);
         String pdfUrl = genPdf(orderDTO.getId(), "invoice");
-        Thread.sleep(1000);
-        return pdfUrl;
+        Thread.sleep(1500);
+    }
+
+    public void deletePdfFile(long id) throws Exception {
+        genPdf(id, "delete");
     }
 
     private String genPdf(long id, String type) throws Exception {

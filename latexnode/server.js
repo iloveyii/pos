@@ -39,7 +39,9 @@ const run_latex_command = async(order) => {
         command = `xelatex -output-directory=/data/pdf/${order.id} -jobname=${order.id} /data/tex/${order.id}.tex`;
     if(order.type == 'invoice')
         command = `xelatex -output-directory=/data/pdf/${order.id} -jobname=${order.id}_invoice /data/tex/${order.id}_invoice.tex`;
-
+    if(order.type == 'delete')
+        command = `rm -rf /data/pdf/${order.id}`;
+    // sh -c "rm -r /data/pdf/*"
     console.log('command::' + command);
     // Execute the command
     exec(command, (error, stdout, stderr) => {
