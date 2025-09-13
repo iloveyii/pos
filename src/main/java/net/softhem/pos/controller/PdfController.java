@@ -53,7 +53,7 @@ public class PdfController {
                 // Create one
                 OrderDTO orderDto = orderService.getOrderById(filename);
                 pdfService.generatePdfReceipt(orderDto);
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             }
             Resource resource = new UrlResource(Path.of(filePath).toUri());
             return ResponseEntity.ok()
@@ -78,7 +78,7 @@ public class PdfController {
                 // Create one
                 OrderDTO orderDto = orderService.getOrderById(filename);
                 pdfService.generatePdfInvoice(orderDto);
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             }
             Resource resource = new UrlResource(Path.of(filePath).toUri());
             return ResponseEntity.ok()
