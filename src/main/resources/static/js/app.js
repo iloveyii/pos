@@ -240,7 +240,7 @@ function  updateCartButtons(){
                 : document.getElementById('btnPaymentCash').checked = false;
 
     // Change paymentMethod to CARD
-    order.paymentMethod.includes('CARD')
+    order.paymentMethod?.includes('CARD')
                 ? document.getElementById('btnPaymentCard').checked = true
                 : document.getElementById('btnPaymentCard').checked = false;
 
