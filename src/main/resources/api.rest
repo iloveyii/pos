@@ -158,3 +158,8 @@ HEAD https://pos.softhem.net/pdf/invoice/4
 ##############################
 
 HEAD https://pos.softhem.net/pdf/4
+
+
+##############################
+
+DELETE  https://pos.softhem.net/pdf/1

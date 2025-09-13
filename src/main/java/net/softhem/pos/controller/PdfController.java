@@ -44,9 +44,10 @@ public class PdfController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deletePdfFiles(@PathVariable Long id) {
+    public void deletePdfFiles(@PathVariable Long id) throws Exception {
         String filePath = String.format("%s/%s/%s.pdf", Helpers.getDirectoryPath("pdf"), id, id);
         System.out.println("Deleting path :: " + filePath);
+        pdfService.deletePdfFile(id);
     }
 
 
