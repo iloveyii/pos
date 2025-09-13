@@ -579,21 +579,29 @@
                 </div>
                 <iframe id="pdfFrameInvoice" src="about:blank" style="display: none;"></iframe>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-pos-primary" id="printOrderBtnInvoice">
-                    <i class="fas fa-print me-1"></i> Print
+
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-success" id="pdfRefresh">
+                    <i class="fas fa-sync"></i>
+                    Refresh
                 </button>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-pos-primary" id="printOrderBtnInvoice">
+                        <i class="fas fa-print me-1"></i> Print
+                    </button>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
 
 <!-- Bootstrap 5.4 JS Bundle with Popper -->
 <script src="/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/common.js?21aaffsvzfasdxfasfvffsddfasdfkk23}" defer></script>
-<script th:src="@{/js/orders.js?2hfa3}" defer></script>
-<script th:src="@{/js/products.js?33hadkfasdj8fdfadf1f}" defer></script>
-<script th:src="@{/js/app.js?a9fasdffafasdfsffsasdfwerfasfr}" defer></script>
+<script th:src="@{/js/common.js?21aaffsvzfasfasfdsdxfasfvffsddfasdfkk23}" defer></script>
+<script th:src="@{/js/orders.js?2hfasdfa3}" defer></script>
+<script th:src="@{/js/products.js?33hadkffasdfasdj8fdfadf1f}" defer></script>
+<script th:src="@{/js/app.js?a9fasdffafafasfsdfsffsasdfwerfasfr}" defer></script>
 </body>
 </html>

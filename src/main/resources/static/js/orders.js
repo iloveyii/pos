@@ -94,6 +94,8 @@ const pdfFrame = document.getElementById('pdfFrame');
 const pdfLoading = document.getElementById('pdfLoading');
 const pdfOrderId = document.getElementById('pdfOrderId');
 const downloadPdf = document.getElementById('downloadPdf');
+const pdfFrameInvoice = document.getElementById('pdfFrameInvoice');
+
 
 // Global variables to track current pagination state
 let currentPageOrders = 0;
@@ -191,6 +193,19 @@ function addEventListenerForOrders() {
         searchOrders.value = '';
         document.getElementById('allOrders').click();
     });
+
+    // Refresh pdf files by order id
+    document.getElementById('pdfRefresh').addEventListener('click', async function(e) {
+        e.preventDefault();
+        const orderId = document.getElementById('orderIdHeaderInvoice').textContent;
+        this.innerHTML = '';
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refresh';
+        this.disabled = true;
+        await makeApiRequest('DELETE', `pdf/${orderId}`, {}, false);
+        await makeApiRequest('HEAD', `pdf/invoice/${orderId}`, {}, false);
+        pdfFrameInvoice.src = `pdf/invoice/${orderId}`;
+        setTimeout(() => this.innerHTML = '<i class="fas fa-sync"></i> Refresh'; this.disabled = false;, 3000);
+    })
 }
 
 function addEventListenerForOrderRowsActions(){
@@ -466,7 +481,6 @@ async function openPdfModalInvoice(orderId) {
     const pdfModalInvoice = new bootstrap.Modal(document.getElementById('pdfModalInvoice'));
     pdfModalInvoice.show();
     const fileExists = await fileExistsOnServer(pdfUrl, 'pdfLoading');
-    const pdfFrameInvoice = document.getElementById('pdfFrameInvoice');
     pdfFrameInvoice.onload = function() {
         document.getElementById('pdfLoadingInvoice').style.display = 'none';
         document.getElementById('pdfFrameInvoice').style.display = 'flex';

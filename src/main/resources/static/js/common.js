@@ -1,16 +1,18 @@
 // API request
-async function makeApiRequest(httpMethod, endPoint, data) {
+async function makeApiRequest(httpMethod, endPoint, data, prefix = true) {
     // Make the request to /api/endpoint
     if(httpMethod === 'GET' && Object.keys(data).length > 0) {
         Object.keys(data).map( k => endPoint = endPoint + `/${data[k]}`)
     }
-    return await fetch('/api/' + endPoint, {
+    const prefixed = prefix ? '/api/' : '';
+
+    return await fetch(prefixed + endPoint, {
         method: httpMethod,
         headers: {
              'Content-Type': 'application/json',
              "Authorization": "Bearer " + localStorage.getItem("jwt")
         },
-        body: httpMethod === 'GET'? null : JSON.stringify(data)
+        body: httpMethod === 'GET' || httpMethod == 'DELETE' || httpMethod == 'HEAD' ? null : JSON.stringify(data)
     })
     .then(response => {
         // Check if response is successful (status code 200-299)
@@ -35,7 +37,7 @@ async function makeApiRequest(httpMethod, endPoint, data) {
     .catch(error => {
         // Error handling
         console.error('Error fetching products:', error);
-        window.location.href = "/auth/login";
+        // window.location.href = "/auth/login";
         // Show user-friendly message
         // const shouldRefresh = confirm('Failed to load products. Click OK to login');
         // if (shouldRefresh) {
