@@ -53,6 +53,8 @@ FROM
 - Browse using <https://pos.softhem.net/pdf/9>
 - Served by PdfController
 - var ret = await fileExistsOnServer('https://pos.softhem.net/pdf/4', 'pdfLoading'); ret;
+- Clean pdf files `docker exec -ti springlatex sh -c "rm -r /data/pdf/*"`
+- Clean lex files `docker exec -ti springlatex sh -c "rm -r /data/tex/*" `
 
 
 
