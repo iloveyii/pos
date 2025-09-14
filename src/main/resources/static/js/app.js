@@ -245,7 +245,7 @@ function  updateCartButtons(){
                 : document.getElementById('btnPaymentCard').checked = false;
 
     // Change paymentMethod to MOBILE
-    order.paymentMethod.includes('MOBILE')
+    order.paymentMethod?.includes('MOBILE')
                 ? document.getElementById('btnPaymentMobile').checked = true
                 : document.getElementById('btnPaymentMobile').checked = false;
 }
