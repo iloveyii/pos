@@ -221,9 +221,9 @@
             </div>
 
             <!-- Products Filters -->
-            <div class="d-flex rounded flex-wrap align-items-center mb-4 bg-filter bg-gradient p-2">
-                <div class="me-3 mb-2 mb-md-0">
-                    <div class="input-group" style="width: 250px;">
+            <div class="rounded row g-0 mb-4 bg-filter bg-gradient p-2">
+                <div class="col-sm-3 pe-sm-3 mb-3 mb-sm-0">
+                    <div class="input-group">
                         <input id="searchProducts" type="text" class="form-control bg-light" placeholder="Search products...">
                         <button class="btn btn-search" type="button">
                             <i id="btnProductsClear" class="fas fa-close me-3"></i>
@@ -231,14 +231,20 @@
                         </button>
                     </div>
                 </div>
-                <div class="btn-group btn-group-toggle border-2" data-toggle="buttons">
-                    <button id="allProducts" class="btn filter-btn-products active" data-filter="allProducts">All</button>
-                    <button class="btn filter-btn-products" data-filter="activeProducts">Active</button>
-                    <button class="btn filter-btn-products" data-filter="inActiveProducts">In Active</button>
-                    <button class="btn filter-btn-products" data-filter="outOfStockProducts">Out of stock</button>
+
+                <div class="col-sm-7">
+                    <div class="btn-group btn-group-toggle border-2" data-toggle="buttons">
+                        <button id="allProducts" class="btn filter-btn-products active" data-filter="allProducts">All</button>
+                        <button class="btn filter-btn-products" data-filter="activeProducts">Active</button>
+                        <button class="btn filter-btn-products" data-filter="inActiveProducts">In Active</button>
+                        <button class="btn filter-btn-products" data-filter="outOfStockProducts">Out of stock</button>
+                    </div>
                 </div>
-                <div class="ms-auto">
-                    <input type="date" class="form-control" id="productDateFilter">
+
+                <div class="col-sm-2">
+                    <div class="ms-auto">
+                        <input type="date" class="form-control" id="productDateFilter" />
+                    </div>
                 </div>
             </div>
 
