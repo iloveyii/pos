@@ -1,0 +1,30 @@
+<div class="rounded g-0 row mb-4 bg-filter bg-gradient p-2">
+  <div class="col-sm-3 pe-sm-3 mb-3 mb-sm-0">
+    <div class="input-group">
+      <input id="searchOrders" type="text" class="form-control bg-light flex-1" placeholder="Search orders...">
+      <button class="btn btn-search" type="button">
+        <i id="btnOrdersClear" class="fas fa-close me-3"></i>
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="col-sm-7">
+    <div class="btn-group btn-group-toggle flex-wrap border-2 mb-1 mb-md-0" data-toggle="buttons">
+      <button class="btn filter-btn-orders active" data-filter="all" id="allOrders">All</button>
+      <button class="btn filter-btn-orders" data-filter="pending">Pending</button>
+      <button class="btn filter-btn-orders" data-filter="processing">Processing</button>
+      <button class="btn filter-btn-orders" data-filter="onhold">Onhold</button>
+      <button class="btn filter-btn-orders" data-filter="completed">Completed</button>
+      <button class="btn filter-btn-orders" data-filter="shipped">Shipped</button>
+      <button class="btn filter-btn-orders" data-filter="cancelled">Cancelled</button>
+    </div>
+  </div>
+
+  <div class="col-sm-2">
+    <div class="ms-auto">
+      <input type="date" class="form-control flex-1" id="orderDateFilter">
+    </div>
+  </div>
+
+</div>
